@@ -37,14 +37,16 @@ import {
   updateUser,
   useFireBaseUsers,
 } from './firebase/useFireBaseUsers';
-import { auth, messaging } from './firebase/firebase';
-import { getToken, isSupported, onMessage } from 'firebase/messaging';
+import { getRedirectResult, onAuthStateChanged } from 'firebase/auth';
+// import { getToken, isSupported, onMessage } from 'firebase/messaging';
 import { useEffect, useState } from 'react';
 
 import { GenericEdit } from './components/GenericEdit';
 import Login from './components/Login';
 import NavBar from './components/NavBar';
-import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase/firebase';
+
+// import { messaging } from './firebase/firebase';
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -56,25 +58,44 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
-  // Background Notifications part START
-  if (!isSupported()) {
-    console.error('Push messaging is not supported in this browser.');
-    return;
-  }
-  async function requestPermission() {
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted') {
-      const token = await getToken(messaging, {
-        vapidKey:
-          'BGcN5vgj7ODg7OkRypDlAcbVimjJ7flqf_V0jO8r8IkFUsv6d2xZomZ9Qxa-C8E7_4fGHb_iXl3JctwwEOdHDCQ',
-      });
-      console.log('FCM Token:', token);
-    }
-  }
+  useEffect(() => {
+    const fetchUser = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      const result = await getRedirectResult(auth);
+      if (result) {
+        console.log('Got result App.jsx', result);
+        // After redirect, handle user info
+        const newUser = result.user;
+        addUser(newUser);
 
-  onMessage(messaging, (payload) => {
-    console.log('Foreground Notification:', payload);
-  });
+        // Add user to Firestore
+        await addUser({
+          name: newUser.displayName,
+          email: newUser.email,
+          contactPhone: newUser.phoneNumber,
+        });
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  // Background Notifications part START
+
+  // async function requestPermission() {
+  //   const permission = await Notification.requestPermission();
+  //   if (permission === 'granted') {
+  //     const token = await getToken(messaging, {
+  //       vapidKey:
+  //         'BGcN5vgj7ODg7OkRypDlAcbVimjJ7flqf_V0jO8r8IkFUsv6d2xZomZ9Qxa-C8E7_4fGHb_iXl3JctwwEOdHDCQ',
+  //     });
+  //     console.log('FCM Token:', token);
+  //   }
+  // }
+
+  // onMessage(messaging, (payload) => {
+  //   console.log('Foreground Notification:', payload);
+  // });
 
   // Background Notifications part END
 
