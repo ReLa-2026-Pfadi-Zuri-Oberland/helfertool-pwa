@@ -3,6 +3,7 @@ import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 import Button from '../../components/Button/Button';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import DayCard from '../../components/DayCard';
+import { Link } from 'react-router-dom';
 import PlaceIcon from '@mui/icons-material/Place';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import SubjectIcon from '@mui/icons-material/Subject';
@@ -85,7 +86,16 @@ const EngagementDetail = () => {
             </div>
             <div className='mb-1'>{location}</div>
             <div className='mb-1'>{locationDescription}</div>
-            <div className='mb-2'>Link: LINK ZU GOOGLE MAPS</div>
+            <div className='mb-2'>
+              Link: &nbsp;
+              <Link
+                to={`https://www.google.com/maps/search/${locationDescription
+                  .split(' ')
+                  .join('+')}`}
+              >
+                Google Maps
+              </Link>
+            </div>
             <div className='d-f f-ac mb-1'>
               <SubjectIcon className='mr-2' />
               <h4 className='m-0'>Ort</h4>
