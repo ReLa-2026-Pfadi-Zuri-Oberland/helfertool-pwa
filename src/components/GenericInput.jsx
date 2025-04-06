@@ -1,8 +1,14 @@
 import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from '@mui/material';
+import {
   LocalizationProvider,
   MobileDateTimePicker,
 } from '@mui/x-date-pickers';
-import { MenuItem, Select, TextField } from '@mui/material';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -151,23 +157,28 @@ const GenericInput = ({
       )}
 
       {kind === 'select' && (
-        <Select
-          fullWidth
-          value={value}
-          onChange={handleChange}
-          displayEmpty
-          disabled={readOnly}
-          error={error}
-        >
-          <MenuItem value=''>
-            <em>None</em>
-          </MenuItem>
-          {data.map((item) => (
-            <MenuItem key={item.value} value={item.value}>
-              {item.label}
-            </MenuItem>
-          ))}
-        </Select>
+        <FormControl fullWidth={true}>
+          <InputLabel id={`${displayName}-label`}>{`${displayName}${
+            readOnly ? ' (readonly)' : ''
+          }`}</InputLabel>
+          <Select
+            labelId={`${displayName}-label`}
+            id={`${displayName}`}
+            label={`${displayName}${readOnly ? ' (readonly)' : ''}`}
+            fullWidth
+            value={value}
+            onChange={handleChange}
+            displayEmpty
+            disabled={readOnly}
+            error={error}
+          >
+            {data.map((item) => (
+              <MenuItem key={item.value} value={item.value}>
+                {item.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       )}
 
       {kind === 'date' && (

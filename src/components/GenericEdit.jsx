@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import Button from './assets/Button';
+import Button from './Button/Button';
 
 export const GenericEdit = ({
   useFirebase,

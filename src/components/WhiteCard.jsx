@@ -1,6 +1,9 @@
-const WhiteCard = ({ children, className, onClick }) => {
+const WhiteCard = ({ children, className, onClick, thin }) => {
   return (
-    <div className={`bcol-fff br-1 p-2 ${className}`} onClick={onClick}>
+    <div
+      className={`bcol-fff br-1 ${thin ? '' : 'p-2'} ${className}`}
+      onClick={onClick}
+    >
       {children}
     </div>
   );

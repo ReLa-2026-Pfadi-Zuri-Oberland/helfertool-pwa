@@ -7,7 +7,7 @@ import {
   removeEngagement,
   updateEngagement,
   useFireBaseEngagements,
-} from './firebase/useFireBaseEngagement';
+} from './firebase/useFireBaseEngagements';
 import {
   addJobType,
   removeJobType,
@@ -39,6 +39,8 @@ import {
   useFireBaseUsers,
 } from './firebase/useFireBaseUsers';
 
+import DashboardEngagement from './pages/Dashboard/Engagement/DashboardEngagement';
+import DashboardEngagementDetail from './pages/Dashboard/Engagement/DashboardEngagementDetail';
 import DashboardJobType from './pages/Dashboard/JobType/DashboardJobType';
 import DashboardJobTypeDetail from './pages/Dashboard/JobType/DashboardJobTypeDetail';
 import DashboardLocation from './pages/Dashboard/Location/DashboardLocation';
@@ -47,6 +49,8 @@ import DashboardOrganization from './pages/Dashboard/Organization/DashboardOrgan
 import DashboardOrganizationDetail from './pages/Dashboard/Organization/DashboardOrganizationDetail';
 import DashboardShift from './pages/Dashboard/Shift/DashboardShift';
 import DashboardShiftDetail from './pages/Dashboard/Shift/DashboardShiftDetail';
+import EngagementDetail from './pages/EngagementList/EngagementDetail';
+import EngagementList from './pages/EngagementList/EngagementList';
 import { GenericEdit } from './components/GenericEdit';
 import Login from './pages/Login/Login';
 import NavBar from './components/NavBar';
@@ -107,6 +111,8 @@ const App = () => {
       <div className='pr-2 pl-2'>
         <Routes>
           <Route path='/' element={<User />} />
+          <Route path='/anmelden' element={<EngagementList />} />
+          <Route path='/anmelden/:id' element={<EngagementDetail />} />
           <Route
             path='/users'
             element={
@@ -143,18 +149,13 @@ const App = () => {
             element={<DashboardJobTypeDetail />}
           />
           <Route
-            path='dashb/jobTypes'
-            element={
-              <GenericEdit
-                useFirebase={useFireBaseJobTypes}
-                name={'Location'}
-                updateFunction={updateJobType}
-                addFunction={addJobType}
-                removeFunction={removeJobType}
-              />
-            }
+            path='dashboard/engagements'
+            element={<DashboardEngagement />}
           />
-
+          <Route
+            path='/dashboard/engagement/:id'
+            element={<DashboardEngagementDetail />}
+          />
           <Route
             path='/engagements'
             element={

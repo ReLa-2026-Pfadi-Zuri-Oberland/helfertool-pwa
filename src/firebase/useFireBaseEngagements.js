@@ -28,7 +28,7 @@ const addEngagement = async () => {
       jobType: '',
       shift: '',
       location: '',
-      targetNumberOfHelpers: 1,
+      targetNumberOfHelpers: '1',
       helpers: [],
     };
 
