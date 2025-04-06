@@ -49,3 +49,8 @@
   background-color: #e8a7a6;
   /* Slightly darker light red */
 }
+
+body{
+  margin: 0;
+  background-color: #FDE8E7;
+}

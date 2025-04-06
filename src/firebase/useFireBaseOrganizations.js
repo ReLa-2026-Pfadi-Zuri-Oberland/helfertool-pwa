@@ -26,18 +26,22 @@ const addOrganization = async () => {
     const organizationsCollection = collection(db, 'Organizations');
     const newOrganization = {
       name: 'New Organization',
-      adress: 'New Organization Address',
+      street: 'New Organization Address',
+      city: 'New City',
       contactEmail: 'contact@temp.ch',
       contactName: 'New Organization Contact',
       contactPhone: 'New Phone Number',
       country: 'New Country',
-      customLink: '',
       website: 'https://www.example.com',
       administrators: [],
       engagements: [],
     };
 
-    await addDoc(organizationsCollection, newOrganization);
+    const docRef = await addDoc(organizationsCollection, newOrganization);
+    if (docRef.id) {
+      return docRef.id;
+    }
+    return null;
   } catch (error) {
     console.error('Error adding organization:', error);
   }

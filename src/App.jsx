@@ -1,4 +1,5 @@
 import './ReLaCSS.css';
+import './cssClasses.css';
 
 import { Route, Routes } from 'react-router-dom';
 import {
@@ -37,27 +38,27 @@ import {
   updateUser,
   useFireBaseUsers,
 } from './firebase/useFireBaseUsers';
-import { getRedirectResult, onAuthStateChanged } from 'firebase/auth';
-// import { getToken, isSupported, onMessage } from 'firebase/messaging';
-import { useEffect, useState } from 'react';
 
+import DashboardJobType from './pages/Dashboard/JobType/DashboardJobType';
+import DashboardJobTypeDetail from './pages/Dashboard/JobType/DashboardJobTypeDetail';
+import DashboardLocation from './pages/Dashboard/Location/DashboardLocation';
+import DashboardLocationDetail from './pages/Dashboard/Location/DashboardLocationDetail';
+import DashboardOrganization from './pages/Dashboard/Organization/DashboardOrganization';
+import DashboardOrganizationDetail from './pages/Dashboard/Organization/DashboardOrganizationDetail';
+import DashboardShift from './pages/Dashboard/Shift/DashboardShift';
+import DashboardShiftDetail from './pages/Dashboard/Shift/DashboardShiftDetail';
 import { GenericEdit } from './components/GenericEdit';
-import Login from './components/Login';
+import Login from './pages/Login/Login';
 import NavBar from './components/NavBar';
+import User from './pages/UserProfile/UserProfile';
 import { auth } from './firebase/firebase';
+import { getRedirectResult } from 'firebase/auth';
+// import { getToken, isSupported, onMessage } from 'firebase/messaging';
+import { useEffect } from 'react';
 
 // import { messaging } from './firebase/firebase';
 
 const App = () => {
-  const [currentUser, setCurrentUser] = useState(null);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-    });
-    return () => unsubscribe();
-  }, []);
-
   useEffect(() => {
     const fetchUser = async () => {
       await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -102,20 +103,10 @@ const App = () => {
   return (
     <>
       <NavBar />
-      {currentUser ? (
-        <p>Logged in as {currentUser.displayName}</p>
-      ) : (
-        <p>Not logged in</p>
-      )}
 
-      <div className='p-4'>
+      <div className='pr-2 pl-2'>
         <Routes>
-          <Route
-            path='/'
-            element={
-              <h3>This is the home, please select in the nav the according</h3>
-            }
-          />
+          <Route path='/' element={<User />} />
           <Route
             path='/users'
             element={
@@ -129,31 +120,30 @@ const App = () => {
             }
           />
           <Route
-            path='/organizations'
-            element={
-              <GenericEdit
-                useFirebase={useFireBaseOrganizations}
-                name={'Organization'}
-                updateFunction={updateOrganization}
-                addFunction={addOrganization}
-                removeFunction={removeOrganization}
-              />
-            }
+            path='dashboard/organizations'
+            element={<DashboardOrganization />}
           />
           <Route
-            path='/locations'
-            element={
-              <GenericEdit
-                useFirebase={useFireBaseLocations}
-                name={'Location'}
-                updateFunction={updateLocation}
-                addFunction={addLocation}
-                removeFunction={removeLocation}
-              />
-            }
+            path='dashboard/organization/:id'
+            element={<DashboardOrganizationDetail />}
+          />
+          <Route path='dashboard/locations' element={<DashboardLocation />} />
+          <Route
+            path='/dashboard/location/:id'
+            element={<DashboardLocationDetail />}
+          />
+          <Route path='dashboard/shifts' element={<DashboardShift />} />
+          <Route
+            path='/dashboard/shift/:id'
+            element={<DashboardShiftDetail />}
+          />
+          <Route path='dashboard/jobTypes' element={<DashboardJobType />} />
+          <Route
+            path='/dashboard/jobType/:id'
+            element={<DashboardJobTypeDetail />}
           />
           <Route
-            path='/jobTypes'
+            path='dashb/jobTypes'
             element={
               <GenericEdit
                 useFirebase={useFireBaseJobTypes}
@@ -164,18 +154,7 @@ const App = () => {
               />
             }
           />
-          <Route
-            path='/shifts'
-            element={
-              <GenericEdit
-                useFirebase={useFireBaseShifts}
-                name={'Shift'}
-                updateFunction={updateShift}
-                addFunction={addShift}
-                removeFunction={removeShift}
-              />
-            }
-          />
+
           <Route
             path='/engagements'
             element={

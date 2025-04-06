@@ -7,8 +7,8 @@ import {
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 
-import { addUser } from '../firebase/useFireBaseUsers';
-import { auth } from '../firebase/firebase';
+import { addUser } from '../../firebase/useFireBaseUsers';
+import { auth } from '../../firebase/firebase';
 
 const provider = new GoogleAuthProvider();
 
@@ -17,7 +17,7 @@ const isMobile = () => {
 };
 
 const Login = () => {
-  const [user, setUser] = useState(null);
+  const user = auth.currentUser;
 
   const handleLogin = async () => {
     console.log('Starting login...');
@@ -26,9 +26,11 @@ const Login = () => {
       // Redirect the user for authentication
 
       if (isMobile()) {
-        await signInWithRedirect(auth, provider);
+        const { user } = await signInWithRedirect(auth, provider);
+        console.log();
         return;
       }
+      // await signInWithRedirect(auth, provider);
       await signInWithPopup(auth, provider);
     } catch (error) {
       console.error('Login Error: ', error);
@@ -37,33 +39,21 @@ const Login = () => {
 
   const handleLogout = async () => {
     await signOut(auth);
-    setUser(null);
   };
 
-  //TODO redirect login not yet working
   useEffect(() => {
-    console.log(window.location.href); // Log the URL to check where you are
-
-    const fetchUser = async () => {
-      // Only call getRedirectResult after redirecting
-      const result = await getRedirectResult(auth);
-      if (result) {
-        console.log('Got result Login.jsx', result);
-
-        const newUser = result.user;
-        setUser(newUser); // Update state with the logged-in user
-
-        // Add user to Firestore or your database
-        await addUser({
-          name: newUser.displayName,
-          email: newUser.email,
-          contactPhone: newUser.phoneNumber,
-        });
-      }
+    const fetch = async () => {
+      const response = await getRedirectResult(auth);
+      console.log(response);
     };
+    fetch();
 
-    fetchUser();
-  }, []); // Run once on mount to check for the redirect result
+    //  await addUser({
+    //    name: newUser.displayName,
+    //    email: newUser.email,
+    //    contactPhone: newUser.phoneNumber,
+    //  });
+  }, []);
 
   return (
     <div>

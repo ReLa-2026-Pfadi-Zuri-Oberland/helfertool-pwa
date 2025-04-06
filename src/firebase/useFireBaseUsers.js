@@ -29,7 +29,8 @@ const addUser = async (userInformation) => {
     email: userInformation?.email || 'test@test.ch',
     tShirtSize: '',
     contactPhone: userInformation?.contactPhone || '079 123 45 67',
-    address: 'Teststrasse 1',
+    street: 'Teststrasse 1',
+    city: 'Zürich',
   };
   try {
     const user = auth.currentUser;
