@@ -1,9 +1,10 @@
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
+import { Link, useNavigate } from 'react-router-dom';
 
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Button from '../../components/Button/Button';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import DayCard from '../../components/DayCard';
-import { Link } from 'react-router-dom';
 import PlaceIcon from '@mui/icons-material/Place';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import SubjectIcon from '@mui/icons-material/Subject';
@@ -15,6 +16,7 @@ import { useFireBaseLocations } from '../../firebase/useFireBaseLocations';
 import { useFireBaseShifts } from '../../firebase/useFireBaseShifts';
 
 const EngagementDetail = () => {
+  let navigate = useNavigate();
   const [engagements, loading, error] = useFireBaseEngagements();
   const [shifts, shiftsLoading, shiftsError] = useFireBaseShifts();
   const [locations, locationsLoading, locationsError] = useFireBaseLocations();
@@ -61,7 +63,17 @@ const EngagementDetail = () => {
         ).format('YYYY-MM-DD')}
       />
       <WhiteCard>
-        <h2 className='mt-0'>{title}</h2>
+        <div className='d-f f-js f-ac col-rela-dark-red mb-2'>
+          <ArrowBackIcon
+            fontSize='medium'
+            className='mr-1 cursor-pointer'
+            onClick={() => {
+              navigate('/anmelden');
+            }}
+          />
+          <h2 className='m-0'>{title}</h2>
+        </div>
+
         <div className='d-f f-jb'>
           <div className='mb-3'>
             <div className='d-f f-ac mb-1'>
@@ -82,7 +94,7 @@ const EngagementDetail = () => {
             )} - ${dayjs(endDate, 'HH:mm').format('HH:mm')}`}</div>
             <div className='d-f f-ac mb-1'>
               <PlaceIcon className='mr-2' />
-              <h4 className='m-0'>Beschreibung</h4>
+              <h4 className='m-0'>Ort</h4>
             </div>
             <div className='mb-1'>{location}</div>
             <div className='mb-1'>{locationDescription}</div>
@@ -98,7 +110,7 @@ const EngagementDetail = () => {
             </div>
             <div className='d-f f-ac mb-1'>
               <SubjectIcon className='mr-2' />
-              <h4 className='m-0'>Ort</h4>
+              <h4 className='m-0'>Beschreibung</h4>
             </div>
             <div className='mb-2'>{jobTypeDescription}</div>
             <Button>ANMELDEN</Button>

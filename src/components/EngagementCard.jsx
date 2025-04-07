@@ -44,7 +44,7 @@ const EngagementCard = ({
         </div>
         <div>
           <Gauge
-            value={parseInt(currentAmountOfHelpers) + 3}
+            value={parseInt(currentAmountOfHelpers)}
             valueMax={parseInt(targetNumberOfHelpers)}
             height={150}
             width={150}

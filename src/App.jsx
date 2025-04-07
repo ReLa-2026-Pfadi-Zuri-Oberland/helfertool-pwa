@@ -2,42 +2,6 @@ import './ReLaCSS.css';
 import './cssClasses.css';
 
 import { Route, Routes } from 'react-router-dom';
-import {
-  addEngagement,
-  removeEngagement,
-  updateEngagement,
-  useFireBaseEngagements,
-} from './firebase/useFireBaseEngagements';
-import {
-  addJobType,
-  removeJobType,
-  updateJobType,
-  useFireBaseJobTypes,
-} from './firebase/useFireBaseJobTypes';
-import {
-  addLocation,
-  removeLocation,
-  updateLocation,
-  useFireBaseLocations,
-} from './firebase/useFireBaseLocations';
-import {
-  addOrganization,
-  removeOrganization,
-  updateOrganization,
-  useFireBaseOrganizations,
-} from './firebase/useFireBaseOrganizations';
-import {
-  addShift,
-  removeShift,
-  updateShift,
-  useFireBaseShifts,
-} from './firebase/useFireBaseShifts';
-import {
-  addUser,
-  removeUser,
-  updateUser,
-  useFireBaseUsers,
-} from './firebase/useFireBaseUsers';
 
 import DashboardEngagement from './pages/Dashboard/Engagement/DashboardEngagement';
 import DashboardEngagementDetail from './pages/Dashboard/Engagement/DashboardEngagementDetail';
@@ -51,10 +15,10 @@ import DashboardShift from './pages/Dashboard/Shift/DashboardShift';
 import DashboardShiftDetail from './pages/Dashboard/Shift/DashboardShiftDetail';
 import EngagementDetail from './pages/EngagementList/EngagementDetail';
 import EngagementList from './pages/EngagementList/EngagementList';
-import { GenericEdit } from './components/GenericEdit';
 import Login from './pages/Login/Login';
 import NavBar from './components/NavBar';
 import User from './pages/UserProfile/UserProfile';
+import { addUser } from './firebase/useFireBaseUsers';
 import { auth } from './firebase/firebase';
 import { getRedirectResult } from 'firebase/auth';
 // import { getToken, isSupported, onMessage } from 'firebase/messaging';
@@ -110,21 +74,11 @@ const App = () => {
 
       <div className='pr-2 pl-2'>
         <Routes>
-          <Route path='/' element={<User />} />
+          <Route path='/profile' element={<User />} />
+          <Route path='/' element={<EngagementList />} />
           <Route path='/anmelden' element={<EngagementList />} />
           <Route path='/anmelden/:id' element={<EngagementDetail />} />
-          <Route
-            path='/users'
-            element={
-              <GenericEdit
-                useFirebase={useFireBaseUsers}
-                name={'User'}
-                updateFunction={updateUser}
-                addFunction={addUser}
-                removeFunction={removeUser}
-              />
-            }
-          />
+
           <Route
             path='dashboard/organizations'
             element={<DashboardOrganization />}
@@ -156,18 +110,7 @@ const App = () => {
             path='/dashboard/engagement/:id'
             element={<DashboardEngagementDetail />}
           />
-          <Route
-            path='/engagements'
-            element={
-              <GenericEdit
-                useFirebase={useFireBaseEngagements}
-                name={'Engagement'}
-                updateFunction={updateEngagement}
-                addFunction={addEngagement}
-                removeFunction={removeEngagement}
-              />
-            }
-          />
+
           <Route path='/login' element={<Login />} />
         </Routes>
       </div>

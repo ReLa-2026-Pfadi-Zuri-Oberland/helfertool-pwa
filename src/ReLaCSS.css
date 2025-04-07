@@ -1,3 +1,5 @@
+/* Import Lato and Inter from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Lato&display=swap');
 :root {
   --primary-color: #F5BFBE;
   --primary-color-darker: #6a0c00;
@@ -14,6 +16,17 @@
   --padding-horizontal: 20px;
 }
 
+
+/* Base font for all text */
+body {
+  font-family: 'Lato', sans-serif;
+  color: #353333;
+}
+
+/* Override h1 to use Inter */
+h1 {
+  font-family: 'Inter', sans-serif;
+}
 
 /* Base button styling */
 .btn {

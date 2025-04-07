@@ -3,7 +3,8 @@ import dayjs from 'dayjs';
 import pirateHat from './assets/pirate-hat.png';
 
 const DayCard = ({ day }) => {
-  const date = dayjs(day);
+  console.log(day);
+  const date = dayjs(day, 'DD.MM.YYYY');
   const monthArray = [
     'Januar',
     'Februar',
@@ -26,13 +27,14 @@ const DayCard = ({ day }) => {
           <img src={pirateHat} alt='pirate hat' />
           <h1
             style={{ top: '25px', left: '65px', transform: 'rotate(-20deg)' }}
-            className='position-absolute col-fff bcol-000'
+            className='position-absolute col-fff'
           >
             {date.date()}
           </h1>
         </div>
       </div>
-      <div className='d-f f-ac f-jc'>
+      <div className='d-f f-ac'>
+        <div className='w50p'></div>
         <h1 className='m-1'>{monthArray[date.month()]}</h1>
       </div>
     </WhiteCard>

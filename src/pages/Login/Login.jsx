@@ -9,12 +9,9 @@ import { useEffect, useState } from 'react';
 
 import { addUser } from '../../firebase/useFireBaseUsers';
 import { auth } from '../../firebase/firebase';
+import { isMobile } from '../../helpers/isMobile';
 
 const provider = new GoogleAuthProvider();
-
-const isMobile = () => {
-  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-};
 
 const Login = () => {
   const user = auth.currentUser;
