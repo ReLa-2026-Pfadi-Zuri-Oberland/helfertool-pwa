@@ -1,16 +1,6 @@
-import {
-  Box,
-  Chip,
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-} from '@mui/material';
+import { Chip, MenuItem, Select } from '@mui/material';
 
-import ClearIcon from '@mui/icons-material/Clear';
 import DayCard from '../../components/DayCard';
-import EngagementCard from '../../components/EngagementCard';
 import { filterDates } from '../../helpers/filterDates';
 import { useFireBaseEngagements } from '../../firebase/useFireBaseEngagements';
 import { useFireBaseJobTypes } from '../../firebase/useFireBaseJobTypes';
