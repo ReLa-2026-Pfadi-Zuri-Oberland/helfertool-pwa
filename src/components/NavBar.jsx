@@ -8,36 +8,30 @@ import { isMobile } from '../helpers/isMobile';
 import { onAuthStateChanged } from 'firebase/auth';
 import reLaLogo from './assets/reLaLogo.png';
 
-const Menu = () => {
+const Menu = ({ className }) => {
+  const navs = [
+    { text: 'Home', to: '/' },
+    { text: 'Organizations', to: 'dashboard/organizations' },
+    { text: 'Locations', to: 'dashboard/locations' },
+    { text: 'JobTypes', to: 'dashboard/jobTypes' },
+    { text: 'Shifts', to: 'dashboard/shifts' },
+    { text: 'Users', to: 'dashboard/users' },
+    { text: 'Engagements', to: 'dashboard/engagements' },
+    { text: 'Profile', to: '/profile' },
+    { text: 'Login', to: '/login' },
+  ];
+
   return (
     <>
-      <Link className='text-align-center' to='/'>
-        Home
-      </Link>
-      <Link className='text-align-center' to='dashboard/organizations'>
-        Organizations
-      </Link>
-      <Link className='text-align-center' to='dashboard/locations'>
-        Locations
-      </Link>
-      <Link className='text-align-center' to='dashboard/jobTypes'>
-        JobTypes
-      </Link>
-      <Link className='text-align-center' to='dashboard/shifts'>
-        Shifts
-      </Link>
-      <Link className='text-align-center' to='dashboard/users'>
-        Users
-      </Link>
-      <Link className='text-align-center' to='dashboard/engagements'>
-        Engagements
-      </Link>
-      <Link className='text-align-center' to='/profile'>
-        User Profile
-      </Link>
-      <Link className='text-align-center' to='/login'>
-        Login
-      </Link>
+      {navs.map((nav, index) => (
+        <Link
+          key={index}
+          className={`text-align-center deco-none text-uppercase text-bold rela-nav ${className}`}
+          to={nav.to}
+        >
+          {nav.text}
+        </Link>
+      ))}
     </>
   );
 };
@@ -69,7 +63,7 @@ const NavBar = () => {
         {isMobile() ? (
           <DehazeIcon onClick={() => setIsMobileMenuOpen(true)} />
         ) : (
-          <Menu />
+          <Menu className={'col-rela-dark-gray'} />
         )}
         {isMobileMenuOpen ? (
           <div
@@ -86,13 +80,13 @@ const NavBar = () => {
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <CloseIcon
-              className='position-fixed'
+              className='position-fixed col-fff'
               fontSize='large'
               style={{ top: 10, right: 20 }}
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <div className='d-f fd-c'>
-              <Menu />
+              <Menu className={'col-fff'} />
             </div>
           </div>
         ) : null}

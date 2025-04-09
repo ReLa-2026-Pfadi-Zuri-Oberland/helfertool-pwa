@@ -13,6 +13,8 @@ import DashboardOrganization from './pages/Dashboard/Organization/DashboardOrgan
 import DashboardOrganizationDetail from './pages/Dashboard/Organization/DashboardOrganizationDetail';
 import DashboardShift from './pages/Dashboard/Shift/DashboardShift';
 import DashboardShiftDetail from './pages/Dashboard/Shift/DashboardShiftDetail';
+import DashboardUserDetail from './pages/Dashboard/Users/DashboardUserDetail';
+import DashboardUsers from './pages/Dashboard/Users/DashboardUsers';
 import EngagementDetail from './pages/EngagementList/EngagementDetail';
 import EngagementList from './pages/EngagementList/EngagementList';
 import Login from './pages/Login/Login';
@@ -21,8 +23,9 @@ import User from './pages/UserProfile/UserProfile';
 import { addUser } from './firebase/useFireBaseUsers';
 import { auth } from './firebase/firebase';
 import { getRedirectResult } from 'firebase/auth';
-// import { getToken, isSupported, onMessage } from 'firebase/messaging';
 import { useEffect } from 'react';
+
+// import { getToken, isSupported, onMessage } from 'firebase/messaging';
 
 // import { messaging } from './firebase/firebase';
 
@@ -74,8 +77,8 @@ const App = () => {
 
       <div className='pr-2 pl-2'>
         <Routes>
-          <Route path='/profile' element={<User />} />
           <Route path='/' element={<EngagementList />} />
+          <Route path='/profile' element={<User />} />
           <Route path='/anmelden' element={<EngagementList />} />
           <Route path='/anmelden/:id' element={<EngagementDetail />} />
 
@@ -110,6 +113,8 @@ const App = () => {
             path='/dashboard/engagement/:id'
             element={<DashboardEngagementDetail />}
           />
+          <Route path='dashboard/users' element={<DashboardUsers />} />
+          <Route path='/dashboard/user/:id' element={<DashboardUserDetail />} />
 
           <Route path='/login' element={<Login />} />
         </Routes>

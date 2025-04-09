@@ -72,6 +72,14 @@ h1 {
   cursor: not-allowed;
 }
 
+.rela-nav:hover{
+  border-top: var(--primary-color-darker) solid 3px;
+}
+.rela-nav{
+  border-top: solid 3px transparent;
+    transition: border-color 0.3s ease-in-out; /* Optional: Add a smooth transition */
+
+}
 body{
   margin: 0;
   background-color: #FDE8E7;
