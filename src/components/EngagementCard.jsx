@@ -2,6 +2,7 @@ import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 
 import Button from './Button/Button';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import EngagementGauge from './EngagementGauge';
 import PlaceIcon from '@mui/icons-material/Place';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import WhiteCard from './WhiteCard';
@@ -16,6 +17,7 @@ const EngagementCard = ({
   end,
   currentAmountOfHelpers,
   targetNumberOfHelpers,
+  isRegistered,
 }) => {
   let navigate = useNavigate();
   const date = dayjs(start).format('DD.MM.YYYY');
@@ -42,28 +44,11 @@ const EngagementCard = ({
             MEHR ERFAHREN
           </Button>
         </div>
-        <div>
-          <Gauge
-            value={parseInt(currentAmountOfHelpers)}
-            valueMax={parseInt(targetNumberOfHelpers)}
-            height={150}
-            width={150}
-            sx={() => ({
-              [`& .${gaugeClasses.valueText}`]: {
-                fontSize: '1rem',
-              },
-              [`& .${gaugeClasses.valueArc}`]: {
-                fill: '#6A0C00',
-              },
-              [`& .${gaugeClasses.referenceArc}`]: {
-                fill: '#FDE8E7',
-              },
-            })}
-            text={({ value, valueMax }) =>
-              `NOCH ${valueMax - value} \n GESUCHT`
-            }
-          />
-        </div>
+        <EngagementGauge
+          currentAmountOfHelpers={parseInt(currentAmountOfHelpers)}
+          targetNumberOfHelpers={parseInt(targetNumberOfHelpers)}
+          isRegistered={isRegistered}
+        />
       </div>
     </WhiteCard>
   );

@@ -97,11 +97,11 @@ const NavBar = () => {
           </div>
         ) : null}
       </nav>
-      {/* {currentUser ? (
+      {currentUser ? (
         <p>Logged in as {currentUser.displayName}</p>
       ) : (
         <p>Not logged in</p>
-      )} */}
+      )}
     </>
   );
 };

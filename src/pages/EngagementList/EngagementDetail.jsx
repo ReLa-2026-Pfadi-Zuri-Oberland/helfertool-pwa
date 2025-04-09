@@ -1,16 +1,21 @@
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 import { Link, useNavigate } from 'react-router-dom';
+import {
+  registerForEngagement,
+  useFireBaseEngagements,
+} from '../../firebase/useFireBaseEngagements';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Button from '../../components/Button/Button';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import DayCard from '../../components/DayCard';
+import EngagementGauge from '../../components/EngagementGauge';
 import PlaceIcon from '@mui/icons-material/Place';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import SubjectIcon from '@mui/icons-material/Subject';
 import WhiteCard from '../../components/WhiteCard';
+import { auth } from '../../firebase/firebase';
 import dayjs from 'dayjs';
-import { useFireBaseEngagements } from '../../firebase/useFireBaseEngagements';
 import { useFireBaseJobTypes } from '../../firebase/useFireBaseJobTypes';
 import { useFireBaseLocations } from '../../firebase/useFireBaseLocations';
 import { useFireBaseShifts } from '../../firebase/useFireBaseShifts';
@@ -28,6 +33,7 @@ const EngagementDetail = () => {
 
   const engagementId = window.location.pathname.split('/').pop();
   const engagement = engagements.find((eng) => eng.id === engagementId);
+
   if (!engagement)
     return (
       <div>
@@ -55,6 +61,7 @@ const EngagementDetail = () => {
   const jobTypeDescription = jobTypes.find(
     (j) => j.id === engagement.jobType
   )?.description;
+
   return (
     <div>
       <DayCard
@@ -113,30 +120,19 @@ const EngagementDetail = () => {
               <h4 className='m-0'>Beschreibung</h4>
             </div>
             <div className='mb-2'>{jobTypeDescription}</div>
-            <Button>ANMELDEN</Button>
+            <Button
+              onClick={() => registerForEngagement(engagementId)}
+              disabled={engagement.isRegistered}
+            >
+              ANMELDEN
+            </Button>
+            {console.log(engagement)}
           </div>
-          <div>
-            <Gauge
-              value={parseInt(engagement.helpers.length)}
-              valueMax={parseInt(engagement.targetNumberOfHelpers)}
-              height={150}
-              width={150}
-              sx={() => ({
-                [`& .${gaugeClasses.valueText}`]: {
-                  fontSize: '1rem',
-                },
-                [`& .${gaugeClasses.valueArc}`]: {
-                  fill: '#6A0C00',
-                },
-                [`& .${gaugeClasses.referenceArc}`]: {
-                  fill: '#FDE8E7',
-                },
-              })}
-              text={({ value, valueMax }) =>
-                `NOCH ${valueMax - value} \n GESUCHT`
-              }
-            />
-          </div>
+          <EngagementGauge
+            currentAmountOfHelpers={parseInt(engagement.helpers.length)}
+            targetNumberOfHelpers={parseInt(engagement.targetNumberOfHelpers)}
+            isRegistered={engagement.isRegistered}
+          />
         </div>
       </WhiteCard>
     </div>

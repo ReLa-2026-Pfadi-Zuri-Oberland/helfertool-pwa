@@ -24,16 +24,18 @@ const updateUser = async (userId, options) => {
 };
 
 const addUser = async (userInformation) => {
-  const newUser = {
-    name: userInformation?.name || 'New User',
-    email: userInformation?.email || 'test@test.ch',
-    tShirtSize: '',
-    contactPhone: userInformation?.contactPhone || '079 123 45 67',
-    street: 'Teststrasse 1',
-    city: 'Zürich',
-  };
   try {
     const user = auth.currentUser;
+
+    const newUser = {
+      name: userInformation?.name || user?.displayName || 'New User',
+      email: userInformation?.email || user?.email || 'test@test.ch',
+      tShirtSize: '',
+      contactPhone:
+        userInformation?.contactPhone || user?.phoneNumber || '079 123 45 67',
+      street: 'Teststrasse 1',
+      city: 'Zürich',
+    };
 
     const userRef = doc(db, 'Users', user.uid);
     const userDoc = await getDoc(userRef);

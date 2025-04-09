@@ -63,6 +63,15 @@ h1 {
   /* Slightly darker light red */
 }
 
+.disabled {
+  background-color: #C4C4C4;
+  cursor: not-allowed;
+}
+.disabled:hover {
+  background-color: #C4C4C4;
+  cursor: not-allowed;
+}
+
 body{
   margin: 0;
   background-color: #FDE8E7;

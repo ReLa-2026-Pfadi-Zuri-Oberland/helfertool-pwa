@@ -1,6 +1,8 @@
 import { Chip, MenuItem, Select } from '@mui/material';
 
 import DayCard from '../../components/DayCard';
+import EngagementCard from '../../components/EngagementCard';
+import { auth } from '../../firebase/firebase';
 import { filterDates } from '../../helpers/filterDates';
 import { useFireBaseEngagements } from '../../firebase/useFireBaseEngagements';
 import { useFireBaseJobTypes } from '../../firebase/useFireBaseJobTypes';
@@ -189,6 +191,7 @@ const EngagementList = () => {
               }
               currentAmountOfHelpers={engagement.helpers?.length || 0}
               targetNumberOfHelpers={engagement.targetNumberOfHelpers}
+              isRegistered={engagement.isRegistered}
             />
           ))}
           <div className='mb-3' />

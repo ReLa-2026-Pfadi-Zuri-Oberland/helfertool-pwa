@@ -1,6 +1,7 @@
 import {
   GoogleAuthProvider,
   getRedirectResult,
+  onAuthStateChanged,
   signInWithPopup,
   signInWithRedirect,
   signOut,
@@ -14,6 +15,7 @@ import { isMobile } from '../../helpers/isMobile';
 const provider = new GoogleAuthProvider();
 
 const Login = () => {
+  const [currentUser, setCurrentUser] = useState(null);
   const user = auth.currentUser;
 
   const handleLogin = async () => {
@@ -24,11 +26,11 @@ const Login = () => {
 
       if (isMobile()) {
         const { user } = await signInWithRedirect(auth, provider);
-        console.log();
         return;
       }
       // await signInWithRedirect(auth, provider);
       await signInWithPopup(auth, provider);
+      addUser();
     } catch (error) {
       console.error('Login Error: ', error);
     }
@@ -37,6 +39,12 @@ const Login = () => {
   const handleLogout = async () => {
     await signOut(auth);
   };
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const fetch = async () => {

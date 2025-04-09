@@ -1,15 +1,29 @@
 import {
   addDoc,
+  arrayUnion,
   collection,
   deleteDoc,
   doc,
   updateDoc,
 } from 'firebase/firestore';
+import { auth, db } from './firebase';
 
-import { db } from './firebase';
 import useFirebase from './useFirebase';
 
-const useFireBaseEngagements = () => useFirebase('Engagements');
+const useFireBaseEngagements = () => {
+  const [engagements, loading, error] = useFirebase('Engagements');
+  let engagementsTransformed = engagements.map((engagement) => {
+    /* Use already registered */
+    const userId = auth.currentUser?.uid;
+    const isRegistered = engagement.helpers.includes(userId);
+
+    return {
+      ...engagement,
+      isRegistered,
+    };
+  });
+  return [engagementsTransformed, loading, error];
+};
 
 const updateEngagement = async (engagementId, options) => {
   try {
@@ -47,9 +61,28 @@ const removeEngagement = async (engagementId) => {
   }
 };
 
+const registerForEngagement = async (
+  engagementId,
+  userId = auth.currentUser.uid
+) => {
+  if (!userId) {
+    console.error('User not authenticated. Cannot register for engagement.');
+    return;
+  }
+  try {
+    const engagementRef = doc(db, 'Engagements', engagementId);
+    await updateDoc(engagementRef, {
+      helpers: arrayUnion(userId),
+    });
+  } catch (error) {
+    console.error('Error registering for engagement:', error);
+  }
+};
+
 export {
   useFireBaseEngagements,
   updateEngagement,
   addEngagement,
   removeEngagement,
+  registerForEngagement,
 };
