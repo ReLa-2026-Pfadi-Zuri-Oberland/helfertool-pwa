@@ -1,4 +1,5 @@
 import {
+  Chip,
   FormControl,
   InputLabel,
   MenuItem,
@@ -51,7 +52,11 @@ const GenericInput = ({
 
   const validateValue = useCallback(
     (value) => {
-      if (value && kind !== 'date' && value.trim() === '') {
+      if (
+        value &&
+        !['date', 'multi-select', 'select'].includes(kind) &&
+        value.trim() === ''
+      ) {
         return false;
       } else if (kind === 'email') {
         return validator.isEmail(value);
@@ -59,6 +64,8 @@ const GenericInput = ({
         return validator.isMobilePhone(value.replace('+41', '0'), 'any');
       } else if (kind === 'select') {
         return data.some((item) => item.value === value) && value !== '';
+      } else if (kind === 'multi-select') {
+        return typeof value === 'object';
       } else if (kind === 'date') {
         // return value instanceof Date && !isNaN(value);
         return true;
@@ -70,14 +77,19 @@ const GenericInput = ({
   );
 
   useEffect(() => {
-    if (initialValue === value) {
+    if (
+      initialValue === value ||
+      (kind === 'multi-select' &&
+        JSON.stringify(initialValue) === JSON.stringify(value))
+    ) {
+      setStatus('Saved');
       if (!validateValue(initialValue)) {
         setError(true);
       } else {
         setError(false);
       }
     }
-  }, [initialValue, validateValue, value]);
+  }, [initialValue, kind, validateValue, value]);
 
   const handleChange = (e) => {
     const newValue = e.target.value;
@@ -172,6 +184,50 @@ const GenericInput = ({
             disabled={readOnly}
             error={error}
           >
+            {data.map((item) => (
+              <MenuItem key={item.value} value={item.value}>
+                {item.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+
+      {kind === 'multi-select' && (
+        <FormControl fullWidth={true}>
+          <InputLabel id={`${displayName}-label`}>{`${displayName}${
+            readOnly ? ' (readonly)' : ''
+          }`}</InputLabel>
+          <Select
+            multiple
+            labelId={`${displayName}-label`}
+            id={`${displayName}`}
+            label={`${displayName}${readOnly ? ' (readonly)' : ''}`}
+            fullWidth
+            value={value}
+            onChange={handleChange}
+            displayEmpty
+            disabled={readOnly}
+            error={error}
+            renderValue={(selected) => {
+              if (selected.length === 0) {
+                return <em>Alle {displayName}</em>;
+              }
+              return (
+                <div className='d-f' style={{ gap: '0.5rem' }}>
+                  {selected.map((value) => (
+                    <Chip
+                      key={value}
+                      label={data.find((item) => item.value === value)?.label}
+                    />
+                  ))}
+                </div>
+              );
+            }}
+          >
+            <MenuItem disabled value=''>
+              <em>Alle {displayName}</em>
+            </MenuItem>
             {data.map((item) => (
               <MenuItem key={item.value} value={item.value}>
                 {item.label}

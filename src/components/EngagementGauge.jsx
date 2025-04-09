@@ -24,7 +24,7 @@ const EngagementGauge = ({
           },
         })}
         text={({ value, valueMax }) =>
-          valueMax - value === 0
+          valueMax - value <= 0
             ? 'Keine Plätze \n mehr frei'
             : `NOCH ${valueMax - value} \n GESUCHT`
         }

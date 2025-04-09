@@ -12,6 +12,7 @@ import WhiteCard from '../../../components/WhiteCard';
 import { useFireBaseJobTypes } from '../../../firebase/useFireBaseJobTypes';
 import { useFireBaseLocations } from '../../../firebase/useFireBaseLocations';
 import { useFireBaseShifts } from '../../../firebase/useFireBaseShifts';
+import { useFireBaseUsers } from '../../../firebase/useFireBaseUsers';
 import { useNavigate } from 'react-router-dom';
 
 const DashboardEngagementDetail = () => {
@@ -20,9 +21,16 @@ const DashboardEngagementDetail = () => {
   const [jobTypes, jobTypesLoading, jobTypesError] = useFireBaseJobTypes();
   const [locations, locationsLoading, locationsError] = useFireBaseLocations();
   const [shifts, shiftsLoading, shiftsError] = useFireBaseShifts();
-  if (loading || jobTypesLoading || locationsLoading || shiftsLoading)
+  const [users, usersLoading, usersError] = useFireBaseUsers();
+  if (
+    loading ||
+    jobTypesLoading ||
+    locationsLoading ||
+    shiftsLoading ||
+    usersLoading
+  )
     return <h3>Loading...</h3>;
-  if (error || jobTypesError || locationsError || shiftsError)
+  if (error || jobTypesError || locationsError || shiftsError || usersError)
     return <h3>Error: {error.message}</h3>;
   // Filter for engagement with id from url
   const engagementId = window.location.pathname.split('/').pop();
@@ -51,7 +59,6 @@ const DashboardEngagementDetail = () => {
       (shift) => shift.id === engagement.shift
     );
   }
-  console.log(engagement);
 
   return (
     <WhiteCard>
@@ -111,6 +118,19 @@ const DashboardEngagementDetail = () => {
           updateEngagement(engagement.id, { targetNumberOfHelpers: newValue })
         }
         initialValue={engagement.targetNumberOfHelpers}
+      />
+      <GenericInput
+        kind='multi-select'
+        displayName='Helfer'
+        updateFunction={(newValue) =>
+          updateEngagement(engagement.id, { helpers: newValue })
+        }
+        value={engagement.helpers}
+        data={users.map((user) => ({
+          value: user.id,
+          label: user.name,
+        }))}
+        initialValue={engagement.helpers || []}
       />
       <Button
         onClick={() => {
