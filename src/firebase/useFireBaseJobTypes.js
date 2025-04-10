@@ -21,15 +21,18 @@ const updateJobType = async (jobTypeId, options) => {
   }
 };
 
-const addJobType = async () => {
+const addJobType = async (jobType) => {
   try {
     const jobTypesCollection = collection(db, 'JobTypes');
     const newJobType = {
-      name: 'New Job Type',
-      description: 'New Job Type Description',
+      name: jobType?.name || 'New Job Type',
+      description: jobType?.description || 'New Job Type Description',
     };
 
-    await addDoc(jobTypesCollection, newJobType);
+    const docRef = await addDoc(jobTypesCollection, newJobType);
+    if (docRef.id) {
+      return docRef.id;
+    }
   } catch (error) {
     console.error('Error adding job type:', error);
   }

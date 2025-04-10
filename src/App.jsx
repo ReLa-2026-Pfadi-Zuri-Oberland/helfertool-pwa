@@ -11,6 +11,7 @@ import DashboardLocation from './pages/Dashboard/Location/DashboardLocation';
 import DashboardLocationDetail from './pages/Dashboard/Location/DashboardLocationDetail';
 import DashboardOrganization from './pages/Dashboard/Organization/DashboardOrganization';
 import DashboardOrganizationDetail from './pages/Dashboard/Organization/DashboardOrganizationDetail';
+import DashboardOverview from './pages/Dashboard/Overview/DashboardOverview';
 import DashboardShift from './pages/Dashboard/Shift/DashboardShift';
 import DashboardShiftDetail from './pages/Dashboard/Shift/DashboardShiftDetail';
 import DashboardUserDetail from './pages/Dashboard/Users/DashboardUserDetail';
@@ -115,6 +116,7 @@ const App = () => {
           />
           <Route path='dashboard/users' element={<DashboardUsers />} />
           <Route path='/dashboard/user/:id' element={<DashboardUserDetail />} />
+          <Route path='dashboard/overview' element={<DashboardOverview />} />
 
           <Route path='/login' element={<Login />} />
         </Routes>

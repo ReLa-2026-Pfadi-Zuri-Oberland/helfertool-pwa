@@ -21,20 +21,20 @@ const updateOrganization = async (organizationId, options) => {
   }
 };
 
-const addOrganization = async () => {
+const addOrganization = async (organization) => {
   try {
     const organizationsCollection = collection(db, 'Organizations');
     const newOrganization = {
-      name: 'New Organization',
-      street: 'New Organization Address',
-      city: 'New City',
-      contactEmail: 'contact@temp.ch',
-      contactName: 'New Organization Contact',
-      contactPhone: 'New Phone Number',
-      country: 'New Country',
-      website: 'https://www.example.com',
-      administrators: [],
-      engagements: [],
+      name: organization?.name || 'New Organization',
+      street: organization?.street || 'New Organization Address',
+      city: organization?.city || 'New City',
+      contactEmail: organization?.contactEmail || 'contact@temp.ch',
+      contactName: organization?.contactName || 'New Organization Contact',
+      contactPhone: organization?.contactPhone || 'New Phone Number',
+      country: organization?.country || 'New Country',
+      website: organization?.website || 'https://www.example.com',
+      administrators: organization?.administrators || [],
+      engagements: organization?.engagements || [],
     };
 
     const docRef = await addDoc(organizationsCollection, newOrganization);

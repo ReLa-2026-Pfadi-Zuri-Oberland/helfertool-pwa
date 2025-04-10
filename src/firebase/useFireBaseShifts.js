@@ -21,16 +21,19 @@ const updateShift = async (shiftId, options) => {
   }
 };
 
-const addShift = async () => {
+const addShift = async (shift) => {
   try {
     const shiftsCollection = collection(db, 'Shifts');
     const newShift = {
-      name: 'New Shift',
-      startDate: new Date().toISOString(),
-      endDate: new Date().toISOString(),
+      name: shift?.name || 'New Shift',
+      startDate: shift?.startDate || new Date().toISOString(),
+      endDate: shift?.endDate || new Date().toISOString(),
     };
 
-    await addDoc(shiftsCollection, newShift);
+    const docRef = await addDoc(shiftsCollection, newShift);
+    if (docRef.id) {
+      return docRef.id;
+    }
   } catch (error) {
     console.error('Error adding shift:', error);
   }

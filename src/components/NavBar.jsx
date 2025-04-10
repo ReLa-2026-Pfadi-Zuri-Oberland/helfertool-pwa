@@ -57,9 +57,13 @@ const NavBar = () => {
           // left: 0,
           // zIndex: 1000,
         }}
-        className='bcol-fff pt-1 pb-1 pl-2 pr-2 m-2 br-1 d-f f-jb f-ac'
+        className='bcol-fff pt-1 pb-1 pl-2 pr-2 m-2 br-2 d-f f-jb f-ac'
       >
-        <img src={reLaLogo} className='w25p' onClick={() => navigate('/')} />
+        <img
+          src={reLaLogo}
+          style={{ maxHeight: '70px' }}
+          onClick={() => navigate('/')}
+        />
         {isMobile() ? (
           <DehazeIcon onClick={() => setIsMobileMenuOpen(true)} />
         ) : (

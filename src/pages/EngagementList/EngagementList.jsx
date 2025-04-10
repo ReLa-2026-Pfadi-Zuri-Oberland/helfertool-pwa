@@ -2,7 +2,6 @@ import { Chip, MenuItem, Select } from '@mui/material';
 
 import DayCard from '../../components/DayCard';
 import EngagementCard from '../../components/EngagementCard';
-import { auth } from '../../firebase/firebase';
 import { filterDates } from '../../helpers/filterDates';
 import { useFireBaseEngagements } from '../../firebase/useFireBaseEngagements';
 import { useFireBaseJobTypes } from '../../firebase/useFireBaseJobTypes';
@@ -23,7 +22,6 @@ const EngagementList = () => {
     return <h3>Loading...</h3>;
   if (error || shiftsError || locationsError || jobTypesError)
     return <h3>Error: {error.message}</h3>;
-
   /* FILTER ENGAGEMENTS BY JOB TYPE */
 
   let engagementsFiltered = engagements.filter((engagement) => {
@@ -47,6 +45,8 @@ const EngagementList = () => {
 
   let engagementsGrouped = engagementsFiltered.reduce((acc, engagement) => {
     const shift = shifts.find((s) => s.id === engagement.shift);
+    console.log(shift);
+
     if (shift) {
       const date = new Date(shift.startDate).toLocaleDateString('de-DE', {
         year: 'numeric',
@@ -60,6 +60,7 @@ const EngagementList = () => {
     }
     return acc;
   }, {});
+  console.log(engagementsGrouped);
 
   /* Group ENGAGEMENTS BY JOB TYPE to get List for Select */
 

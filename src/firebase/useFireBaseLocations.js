@@ -21,15 +21,18 @@ const updateLocation = async (locationId, options) => {
   }
 };
 
-const addLocation = async () => {
+const addLocation = async (location) => {
   try {
     const locationsCollection = collection(db, 'Locations');
     const newLocation = {
-      name: 'New Location',
-      description: 'New Location Description',
+      name: location?.name || 'New Location',
+      description: location?.name || 'New Location Description',
     };
 
-    await addDoc(locationsCollection, newLocation);
+    const docRef = await addDoc(locationsCollection, newLocation);
+    if (docRef.id) {
+      return docRef.id;
+    }
   } catch (error) {
     console.error('Error adding location:', error);
   }

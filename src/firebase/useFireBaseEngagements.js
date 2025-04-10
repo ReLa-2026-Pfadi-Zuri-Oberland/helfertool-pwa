@@ -35,18 +35,21 @@ const updateEngagement = async (engagementId, options) => {
   }
 };
 
-const addEngagement = async () => {
+const addEngagement = async (engagement) => {
   try {
     const engagementsCollection = collection(db, 'Engagements');
     const newEngagement = {
-      jobType: '',
-      shift: '',
-      location: '',
-      targetNumberOfHelpers: '1',
-      helpers: [],
+      jobType: engagement?.jobType || '',
+      shift: engagement?.shift || '',
+      location: engagement?.location || '',
+      targetNumberOfHelpers: engagement?.targetNumberOfHelpers || '1',
+      helpers: engagement?.helpers || [],
     };
 
-    await addDoc(engagementsCollection, newEngagement);
+    const docRef = await addDoc(engagementsCollection, newEngagement);
+    if (docRef.id) {
+      return docRef.id;
+    }
   } catch (error) {
     console.error('Error adding engagement:', error);
   }
