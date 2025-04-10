@@ -10,7 +10,7 @@ import reLaLogo from './assets/reLaLogo.png';
 
 const Menu = ({ className }) => {
   const navs = [
-    { text: 'Home', to: '/' },
+    { text: 'Home', to: `0/anmelden` },
     { text: 'Organizations', to: 'dashboard/organizations' },
     { text: 'Locations', to: 'dashboard/locations' },
     { text: 'JobTypes', to: 'dashboard/jobTypes' },
@@ -62,7 +62,8 @@ const NavBar = () => {
         <img
           src={reLaLogo}
           style={{ maxHeight: '70px' }}
-          onClick={() => navigate('/')}
+          className='cursor-pointer'
+          onClick={() => navigate('/0/anmelden')}
         />
         {isMobile() ? (
           <DehazeIcon onClick={() => setIsMobileMenuOpen(true)} />

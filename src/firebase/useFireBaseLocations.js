@@ -26,7 +26,7 @@ const addLocation = async (location) => {
     const locationsCollection = collection(db, 'Locations');
     const newLocation = {
       name: location?.name || 'New Location',
-      description: location?.name || 'New Location Description',
+      description: location?.description || 'New Location Description',
     };
 
     const docRef = await addDoc(locationsCollection, newLocation);

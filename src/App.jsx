@@ -20,7 +20,7 @@ import EngagementDetail from './pages/EngagementList/EngagementDetail';
 import EngagementList from './pages/EngagementList/EngagementList';
 import Login from './pages/Login/Login';
 import NavBar from './components/NavBar';
-import User from './pages/UserProfile/UserProfile';
+import UserProfile from './pages/UserProfile/UserProfile';
 import { addUser } from './firebase/useFireBaseUsers';
 import { auth } from './firebase/firebase';
 import { getRedirectResult } from 'firebase/auth';
@@ -78,10 +78,10 @@ const App = () => {
 
       <div className='pr-2 pl-2'>
         <Routes>
-          <Route path='/' element={<EngagementList />} />
-          <Route path='/profile' element={<User />} />
-          <Route path='/anmelden' element={<EngagementList />} />
-          <Route path='/anmelden/:id' element={<EngagementDetail />} />
+          <Route path='/' element={<h1>No Org selected</h1>} />
+          <Route path='/profile' element={<UserProfile />} />
+          <Route path=':orgId/anmelden' element={<EngagementList />} />
+          <Route path=':orgId/anmelden/:id' element={<EngagementDetail />} />
 
           <Route
             path='dashboard/organizations'
@@ -119,6 +119,7 @@ const App = () => {
           <Route path='dashboard/overview' element={<DashboardOverview />} />
 
           <Route path='/login' element={<Login />} />
+          <Route path='*' element={<h1>404 Not Found</h1>} />
         </Routes>
       </div>
     </>

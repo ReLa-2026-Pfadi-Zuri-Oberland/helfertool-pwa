@@ -18,6 +18,7 @@ const EngagementCard = ({
   currentAmountOfHelpers,
   targetNumberOfHelpers,
   isRegistered,
+  orgId,
 }) => {
   let navigate = useNavigate();
   const date = dayjs(start).format('DD.MM.YYYY');
@@ -40,7 +41,10 @@ const EngagementCard = ({
             <CalendarTodayIcon className='mr-1' />
             <h4 className='m-1'>{date}</h4>
           </div>
-          <Button size='S' onClick={() => navigate('/anmelden/' + id)}>
+          <Button
+            size='S'
+            onClick={() => navigate('/' + orgId + '/anmelden/' + id)}
+          >
             MEHR ERFAHREN
           </Button>
         </div>

@@ -7,6 +7,7 @@ import Button from '../../../components/Button/Button';
 import DashbaordTitleCard from '../../../components/DashboardTitleCard';
 import DashboardDetailCard from '../../../components/DashboardDetailCard';
 import ScheduleIcon from '@mui/icons-material/Schedule';
+import dayjs from 'dayjs';
 import { useNavigate } from 'react-router';
 
 const DashboardShift = () => {
@@ -24,7 +25,7 @@ const DashboardShift = () => {
       {shifts.map((shift, index) => (
         <DashboardDetailCard
           key={index}
-          title={shift.name}
+          title={`${dayjs(shift.startDate).format('DD.MM.YYYY')} ${shift.name}`}
           icon={<ScheduleIcon fontSize='large' className='mr-2' />}
           details={['TEMP Details']}
           onNavigate={() => {

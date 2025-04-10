@@ -1,5 +1,4 @@
-import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   registerForEngagement,
   useFireBaseEngagements,
@@ -14,7 +13,6 @@ import PlaceIcon from '@mui/icons-material/Place';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import SubjectIcon from '@mui/icons-material/Subject';
 import WhiteCard from '../../components/WhiteCard';
-import { auth } from '../../firebase/firebase';
 import dayjs from 'dayjs';
 import { useFireBaseJobTypes } from '../../firebase/useFireBaseJobTypes';
 import { useFireBaseLocations } from '../../firebase/useFireBaseLocations';
@@ -22,6 +20,8 @@ import { useFireBaseShifts } from '../../firebase/useFireBaseShifts';
 
 const EngagementDetail = () => {
   let navigate = useNavigate();
+  let engagementId = useParams().id;
+
   const [engagements, loading, error] = useFireBaseEngagements();
   const [shifts, shiftsLoading, shiftsError] = useFireBaseShifts();
   const [locations, locationsLoading, locationsError] = useFireBaseLocations();
@@ -31,7 +31,6 @@ const EngagementDetail = () => {
   if (error || shiftsError || locationsError || jobTypesError)
     return <h3>Error: {error.message}</h3>;
 
-  const engagementId = window.location.pathname.split('/').pop();
   const engagement = engagements.find((eng) => eng.id === engagementId);
 
   if (!engagement)
@@ -75,7 +74,7 @@ const EngagementDetail = () => {
             fontSize='medium'
             className='mr-1 cursor-pointer'
             onClick={() => {
-              navigate('/anmelden');
+              navigate('/' + engagement.organization + '/anmelden');
             }}
           />
           <h2 className='m-0'>{title}</h2>
@@ -108,9 +107,10 @@ const EngagementDetail = () => {
             <div className='mb-2'>
               Link: &nbsp;
               <Link
-                to={`https://www.google.com/maps/search/${locationDescription
+                to={`http://maps.google.com/?q=${locationDescription
                   .split(' ')
                   .join('+')}`}
+                target='_blank'
               >
                 Google Maps
               </Link>

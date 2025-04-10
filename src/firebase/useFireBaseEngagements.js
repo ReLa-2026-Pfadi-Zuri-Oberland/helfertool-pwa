@@ -43,6 +43,7 @@ const addEngagement = async (engagement) => {
       shift: engagement?.shift || '',
       location: engagement?.location || '',
       targetNumberOfHelpers: engagement?.targetNumberOfHelpers || '1',
+      organization: engagement?.organization || '',
       helpers: engagement?.helpers || [],
     };
 

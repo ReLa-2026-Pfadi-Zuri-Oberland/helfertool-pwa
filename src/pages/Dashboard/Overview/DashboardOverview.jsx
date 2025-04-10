@@ -96,7 +96,7 @@ const DashboardOverview = () => {
 
     const locationId1 = await addLocation({
       name: 'Lagerplatz',
-      description: 'Bachwies, 8722 Kaltbrunn',
+      description: 'Bachwies 858, 8722 Kaltbrunn',
     });
     const locationId2 = await addLocation({
       name: 'Infra Zentrum',
@@ -116,24 +116,28 @@ const DashboardOverview = () => {
     });
 
     const engagementId1 = await addEngagement({
+      organization: orgId1,
       jobType: jobTypeId1,
       shift: shiftId1,
       location: locationId1,
       targetNumberOfHelpers: 5,
     });
     const engagementId2 = await addEngagement({
+      organization: orgId1,
       jobType: jobTypeId1,
       shift: shiftId2,
       location: locationId1,
       targetNumberOfHelpers: 7,
     });
     const engagementId3 = await addEngagement({
+      organization: orgId1,
       jobType: jobTypeId2,
       shift: shiftId2,
       location: locationId1,
       targetNumberOfHelpers: 3,
     });
     const engagementId4 = await addEngagement({
+      organization: orgId1,
       jobType: jobTypeId2,
       shift: shiftId3,
       location: locationId2,
