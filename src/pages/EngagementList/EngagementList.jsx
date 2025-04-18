@@ -5,6 +5,7 @@ import DayCard from '../../components/DayCard';
 import EngagementCard from '../../components/EngagementCard';
 import WhiteCard from '../../components/WhiteCard';
 import { filterDates } from '../../helpers/filterDates';
+import { isMobile } from '../../helpers/isMobile';
 import { useFireBaseEngagements } from '../../firebase/useFireBaseEngagements';
 import { useFireBaseJobTypes } from '../../firebase/useFireBaseJobTypes';
 import { useFireBaseLocations } from '../../firebase/useFireBaseLocations';
@@ -134,39 +135,41 @@ const EngagementList = () => {
 
   return (
     <div className='d-f mt-2'>
-      <div className='w25p'>
-        <WhiteCard
-          className={'h100p mr-2'}
-          style={{ background: 'rgba(255, 255, 255, 0.54)' }}
-        >
-          <div className='d-f f-ac mb-1'>
-            <h4 className='m-0'>Organisation</h4>
-          </div>
-          <div className='mb-2'>{organization.name}</div>
-          <div className='d-f f-ac mb-1'>
-            <h4 className='m-0'>Website</h4>
-          </div>
-          <div className='mb-2'>{organization.website}</div>
-          <div className='d-f f-ac mb-1'>
-            <h4 className='m-0'>Email</h4>
-          </div>
-          <div className='mb-2'>{organization.contactEmail}</div>
-          <div className='d-f f-ac mb-1'>
-            <h4 className='m-0'>KONTAKT</h4>
-          </div>
-          <div className='mb-2'>
-            {organization.contactName}
-            <br></br>
-            {organization.street}
-            <br></br>
-            {`${organization.city} - ${organization.country}`}
-            <br></br>
-            {organization.contactPhone}
-          </div>
-        </WhiteCard>
-      </div>
-      <div className='d-f f-jc w75p'>
-        <div className='w75p'>
+      {!isMobile() && (
+        <div className='w25p'>
+          <WhiteCard
+            className={'h100p mr-2'}
+            style={{ background: 'rgba(255, 255, 255, 0.54)' }}
+          >
+            <div className='d-f f-ac mb-1'>
+              <h4 className='m-0'>Organisation</h4>
+            </div>
+            <div className='mb-2'>{organization.name}</div>
+            <div className='d-f f-ac mb-1'>
+              <h4 className='m-0'>Website</h4>
+            </div>
+            <div className='mb-2'>{organization.website}</div>
+            <div className='d-f f-ac mb-1'>
+              <h4 className='m-0'>Email</h4>
+            </div>
+            <div className='mb-2'>{organization.contactEmail}</div>
+            <div className='d-f f-ac mb-1'>
+              <h4 className='m-0'>KONTAKT</h4>
+            </div>
+            <div className='mb-2'>
+              {organization.contactName}
+              <br></br>
+              {organization.street}
+              <br></br>
+              {`${organization.city} - ${organization.country}`}
+              <br></br>
+              {organization.contactPhone}
+            </div>
+          </WhiteCard>
+        </div>
+      )}
+      <div className={`d-f f-jc ${isMobile() ? 'w100p' : 'w75p'}`}>
+        <div className={!isMobile() && 'w75p'}>
           <div className='ml-2 mr-2'>
             <h1 className='col-rela-dark-red m-0'>Offene Helfereinsätze</h1>
             <h4>Du möchtest mit dabei sein, wir freuen uns auf dich</h4>

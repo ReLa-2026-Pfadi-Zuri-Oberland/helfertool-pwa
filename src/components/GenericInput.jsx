@@ -52,9 +52,11 @@ const GenericInput = ({
 
   const validateValue = useCallback(
     (value) => {
+      console.log('Value', value);
       if (
         value &&
         !['date', 'multi-select', 'select'].includes(kind) &&
+        typeof value === 'string' &&
         value.trim() === ''
       ) {
         return false;
@@ -70,7 +72,7 @@ const GenericInput = ({
         // return value instanceof Date && !isNaN(value);
         return true;
       } else {
-        return value && value.trim() !== '';
+        return value && typeof value === 'string' && value.trim() !== '';
       }
     },
     [kind, data]

@@ -120,28 +120,28 @@ const DashboardOverview = () => {
       jobType: jobTypeId1,
       shift: shiftId1,
       location: locationId1,
-      targetNumberOfHelpers: 5,
+      targetNumberOfHelpers: '5',
     });
     const engagementId2 = await addEngagement({
       organization: orgId1,
       jobType: jobTypeId1,
       shift: shiftId2,
       location: locationId1,
-      targetNumberOfHelpers: 7,
+      targetNumberOfHelpers: '7',
     });
     const engagementId3 = await addEngagement({
       organization: orgId1,
       jobType: jobTypeId2,
       shift: shiftId2,
       location: locationId1,
-      targetNumberOfHelpers: 3,
+      targetNumberOfHelpers: '3',
     });
     const engagementId4 = await addEngagement({
       organization: orgId1,
       jobType: jobTypeId2,
       shift: shiftId3,
       location: locationId2,
-      targetNumberOfHelpers: 4,
+      targetNumberOfHelpers: '4',
     });
     console.log('Finished Loading Data');
   };
