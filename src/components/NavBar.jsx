@@ -8,33 +8,97 @@ import { isMobile } from '../helpers/isMobile';
 import { onAuthStateChanged } from 'firebase/auth';
 import reLaLogo from './assets/reLaLogo.png';
 
-const Menu = ({ className }) => {
+const Menu = ({ className, grouped = true }) => {
+  const [isDashboardOpen, setDashboardOpen] = useState(false);
+  const [hoverTimeout, setHoverTimeout] = useState(null);
+
   const navs = [
     { text: 'Home', to: `0/anmelden` },
-    { text: 'Organizations', to: 'dashboard/organizations' },
-    { text: 'Locations', to: 'dashboard/locations' },
-    { text: 'JobTypes', to: 'dashboard/jobTypes' },
-    { text: 'Shifts', to: 'dashboard/shifts' },
-    { text: 'Users', to: 'dashboard/users' },
-    { text: 'Engagements', to: 'dashboard/engagements' },
+
     { text: 'Profile', to: '/profile' },
     { text: 'Login', to: '/login' },
+    {
+      text: 'Dashboard',
+      children: [
+        { text: 'Organizations', to: 'dashboard/organizations' },
+        { text: 'Locations', to: 'dashboard/locations' },
+        { text: 'JobTypes', to: 'dashboard/jobTypes' },
+        { text: 'Shifts', to: 'dashboard/shifts' },
+        { text: 'Users', to: 'dashboard/users' },
+        { text: 'Engagements', to: 'dashboard/engagements' },
+      ],
+    },
   ];
 
   return (
     <>
       {navs.map((nav, index) => (
-        <Link
-          key={index}
-          className={`text-align-center deco-none text-uppercase text-bold rela-nav ${className}`}
-          to={nav.to}
-        >
-          {nav.text}
-        </Link>
+        <>
+          {nav.children && grouped ? (
+            <div
+              key={index}
+              className={`d-f fd-c h100p  ${className}`}
+              onMouseLeave={() => {
+                const timeout = setTimeout(() => setDashboardOpen(false), 200);
+                setHoverTimeout(timeout);
+              }}
+              onMouseEnter={() => {
+                if (hoverTimeout) clearTimeout(hoverTimeout);
+                setDashboardOpen(true);
+              }}
+            >
+              <div
+                className='rela-nav text-uppercase text-bold'
+                onClick={() => setDashboardOpen(!isDashboardOpen)}
+                style={{ cursor: 'pointer' }}
+              >
+                {nav.text}
+              </div>
+              {isDashboardOpen && (
+                <div className='rela-nav-dropdown bcol-fff br-2 p-1 mt-3'>
+                  {nav.children.map((child, subIndex) => (
+                    <Link
+                      key={subIndex}
+                      className={`text-align-center deco-none text-uppercase text-bold rela-nav mb-1 ${className}`}
+                      to={child.to}
+                    >
+                      {child.text}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : null}
+          {nav.children && !grouped ? (
+            <>
+              {nav.children.map((child, index) => (
+                <Link
+                  key={index}
+                  className={`text-align-center deco-none text-uppercase text-bold rela-nav ${className}`}
+                  to={child.to}
+                >
+                  {child.text}
+                </Link>
+              ))}
+            </>
+          ) : null}
+          {!nav.children ? (
+            <Link
+              key={index}
+              className={`text-align-center deco-none text-uppercase text-bold rela-nav ${className}`}
+              to={nav.to}
+            >
+              {nav.text}
+            </Link>
+          ) : null}
+
+          {}
+        </>
       ))}
     </>
   );
 };
+
 const NavBar = () => {
   let navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
@@ -91,7 +155,7 @@ const NavBar = () => {
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <div className='d-f fd-c'>
-              <Menu className={'col-fff'} />
+              <Menu grouped={false} className={'col-fff'} />
             </div>
           </div>
         ) : null}

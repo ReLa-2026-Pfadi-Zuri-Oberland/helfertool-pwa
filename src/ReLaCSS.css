@@ -1,21 +1,20 @@
 /* Import Lato and Inter from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter&family=Lato&display=swap');
 :root {
-  --primary-color: #F5BFBE;
+  --primary-color: #f5bfbe;
   --primary-color-darker: #6a0c00;
   --text-color-light: #777777;
   --text-color-disabled: #666;
-    --text-white: #ffffff;
-      --text-red: #d32f2f;
+  --text-white: #ffffff;
+  --text-red: #d32f2f;
   --background-color-disabled: #ccc;
   --border-radius: 10px;
   --font-size: 16px;
-  --font-family:  "Lato", sans-serif;
+  --font-family: 'Lato', sans-serif;
   --transition-duration: 0.3s;
   --padding-vertical: 10px;
   --padding-horizontal: 20px;
 }
-
 
 /* Base font for all text */
 body {
@@ -30,7 +29,7 @@ h1 {
 
 /* Base button styling */
 .btn {
-  font-size: .97em;
+  font-size: 0.97em;
   font-size: var(--font-size);
   font-family: var(--font-family);
 
@@ -38,7 +37,8 @@ h1 {
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;
-  transition: background-color var(--transition-duration), transform var(--transition-duration);
+  transition: background-color var(--transition-duration),
+    transform var(--transition-duration);
 }
 
 /* Primary button - White text on Red */
@@ -64,23 +64,30 @@ h1 {
 }
 
 .disabled {
-  background-color: #C4C4C4;
+  background-color: #c4c4c4;
   cursor: not-allowed;
 }
 .disabled:hover {
-  background-color: #C4C4C4;
+  background-color: #c4c4c4;
   cursor: not-allowed;
 }
 
-.rela-nav:hover{
+.rela-nav:hover {
   border-top: var(--primary-color-darker) solid 3px;
 }
-.rela-nav{
+.rela-nav {
   border-top: solid 3px transparent;
-    transition: border-color 0.3s ease-in-out; /* Optional: Add a smooth transition */
-
+  transition: border-color 0.3s ease-in-out; /* Optional: Add a smooth transition */
 }
-body{
+.rela-nav-dropdown {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  right: 1rem;
+  /* temp for testing spacing issues */
+}
+body {
   margin: 0;
-  background-color: #FDE8E7;
+  background-color: #fde8e7;
 }
