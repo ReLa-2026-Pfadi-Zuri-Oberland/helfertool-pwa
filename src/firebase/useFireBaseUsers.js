@@ -1,13 +1,5 @@
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore';
 import { auth, db } from './firebase';
+import { deleteDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 import useFirebase from './useFirebase';
 
@@ -35,6 +27,7 @@ const addUser = async (userInformation) => {
         userInformation?.contactPhone || user?.phoneNumber || '079 123 45 67',
       street: 'Teststrasse 1',
       city: 'Zürich',
+      roles: [],
     };
 
     const userRef = doc(db, 'Users', user.uid);

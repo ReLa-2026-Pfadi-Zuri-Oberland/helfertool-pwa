@@ -1,7 +1,8 @@
 import './ReLaCSS.css';
 import './cssClasses.css';
 
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { useContext, useEffect } from 'react';
 
 import DashboardEngagement from './pages/Dashboard/Engagement/DashboardEngagement';
 import DashboardEngagementDetail from './pages/Dashboard/Engagement/DashboardEngagementDetail';
@@ -20,15 +21,17 @@ import EngagementDetail from './pages/EngagementList/EngagementDetail';
 import EngagementList from './pages/EngagementList/EngagementList';
 import Login from './pages/Login/Login';
 import NavBar from './components/NavBar';
+import { UserContext } from './context/UserContext';
 import UserProfile from './pages/UserProfile/UserProfile';
 import { addUser } from './firebase/useFireBaseUsers';
 import { auth } from './firebase/firebase';
 import { getRedirectResult } from 'firebase/auth';
-import { useEffect } from 'react';
 
-// import { getToken, isSupported, onMessage } from 'firebase/messaging';
-
-// import { messaging } from './firebase/firebase';
+// ProtectedRoute component
+const ProtectedRoute = ({ permission, children }) => {
+  const { hasPermission } = useContext(UserContext);
+  return hasPermission(permission) ? children : <Navigate to='/login' />;
+};
 
 const App = () => {
   useEffect(() => {
@@ -37,11 +40,9 @@ const App = () => {
       const result = await getRedirectResult(auth);
       if (result) {
         console.log('Got result App.jsx', result);
-        // After redirect, handle user info
         const newUser = result.user;
         addUser(newUser);
 
-        // Add user to Firestore
         await addUser({
           name: newUser.displayName,
           email: newUser.email,
@@ -52,25 +53,6 @@ const App = () => {
 
     fetchUser();
   }, []);
-
-  // Background Notifications part START
-
-  // async function requestPermission() {
-  //   const permission = await Notification.requestPermission();
-  //   if (permission === 'granted') {
-  //     const token = await getToken(messaging, {
-  //       vapidKey:
-  //         'BGcN5vgj7ODg7OkRypDlAcbVimjJ7flqf_V0jO8r8IkFUsv6d2xZomZ9Qxa-C8E7_4fGHb_iXl3JctwwEOdHDCQ',
-  //     });
-  //     console.log('FCM Token:', token);
-  //   }
-  // }
-
-  // onMessage(messaging, (payload) => {
-  //   console.log('Foreground Notification:', payload);
-  // });
-
-  // Background Notifications part END
 
   return (
     <>
@@ -85,38 +67,108 @@ const App = () => {
 
           <Route
             path='dashboard/organizations'
-            element={<DashboardOrganization />}
+            element={
+              <ProtectedRoute permission='dashboard:view'>
+                <DashboardOrganization />
+              </ProtectedRoute>
+            }
           />
           <Route
             path='dashboard/organization/:id'
-            element={<DashboardOrganizationDetail />}
+            element={
+              <ProtectedRoute permission='dashboard:view'>
+                <DashboardOrganizationDetail />
+              </ProtectedRoute>
+            }
           />
-          <Route path='dashboard/locations' element={<DashboardLocation />} />
+          <Route
+            path='dashboard/locations'
+            element={
+              <ProtectedRoute permission='dashboard:view'>
+                <DashboardLocation />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path='/dashboard/location/:id'
-            element={<DashboardLocationDetail />}
+            element={
+              <ProtectedRoute permission='dashboard:view'>
+                <DashboardLocationDetail />
+              </ProtectedRoute>
+            }
           />
-          <Route path='dashboard/shifts' element={<DashboardShift />} />
+          <Route
+            path='dashboard/shifts'
+            element={
+              <ProtectedRoute permission='dashboard:view'>
+                <DashboardShift />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path='/dashboard/shift/:id'
-            element={<DashboardShiftDetail />}
+            element={
+              <ProtectedRoute permission='dashboard:view'>
+                <DashboardShiftDetail />
+              </ProtectedRoute>
+            }
           />
-          <Route path='dashboard/jobTypes' element={<DashboardJobType />} />
+          <Route
+            path='dashboard/jobTypes'
+            element={
+              <ProtectedRoute permission='dashboard:view'>
+                <DashboardJobType />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path='/dashboard/jobType/:id'
-            element={<DashboardJobTypeDetail />}
+            element={
+              <ProtectedRoute permission='dashboard:view'>
+                <DashboardJobTypeDetail />
+              </ProtectedRoute>
+            }
           />
           <Route
             path='dashboard/engagements'
-            element={<DashboardEngagement />}
+            element={
+              <ProtectedRoute permission='dashboard:view'>
+                <DashboardEngagement />
+              </ProtectedRoute>
+            }
           />
           <Route
             path='/dashboard/engagement/:id'
-            element={<DashboardEngagementDetail />}
+            element={
+              <ProtectedRoute permission='dashboard:view'>
+                <DashboardEngagementDetail />
+              </ProtectedRoute>
+            }
           />
-          <Route path='dashboard/users' element={<DashboardUsers />} />
-          <Route path='/dashboard/user/:id' element={<DashboardUserDetail />} />
-          <Route path='dashboard/overview' element={<DashboardOverview />} />
+          <Route
+            path='dashboard/users'
+            element={
+              <ProtectedRoute permission='dashboard:view'>
+                <DashboardUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/dashboard/user/:id'
+            element={
+              <ProtectedRoute permission='dashboard:view'>
+                <DashboardUserDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='dashboard/overview'
+            element={
+              <ProtectedRoute permission='dashboard:view'>
+                <DashboardOverview />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path='/login' element={<Login />} />
           <Route path='*' element={<h1>404 Not Found</h1>} />

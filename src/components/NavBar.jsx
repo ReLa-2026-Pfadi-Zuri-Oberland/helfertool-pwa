@@ -1,24 +1,24 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 
 import CloseIcon from '@mui/icons-material/Close';
 import DehazeIcon from '@mui/icons-material/Dehaze';
-import { auth } from '../firebase/firebase';
+import { UserContext } from '../context/UserContext';
 import { isMobile } from '../helpers/isMobile';
-import { onAuthStateChanged } from 'firebase/auth';
 import reLaLogo from './assets/reLaLogo.png';
 
 const Menu = ({ className, grouped = true }) => {
+  const { hasPermission } = useContext(UserContext);
   const [isDashboardOpen, setDashboardOpen] = useState(false);
   const [hoverTimeout, setHoverTimeout] = useState(null);
 
   const navs = [
     { text: 'Home', to: `0/anmelden` },
-
     { text: 'Profile', to: '/profile' },
     { text: 'Login', to: '/login' },
     {
       text: 'Dashboard',
+      rights: ['dashboard:view'],
       children: [
         { text: 'Organizations', to: 'dashboard/organizations' },
         { text: 'Locations', to: 'dashboard/locations' },
@@ -32,83 +32,88 @@ const Menu = ({ className, grouped = true }) => {
 
   return (
     <>
-      {navs.map((nav, index) => (
-        <>
-          {nav.children && grouped ? (
-            <div
-              key={index}
-              className={`d-f fd-c h100p  ${className}`}
-              onMouseLeave={() => {
-                const timeout = setTimeout(() => setDashboardOpen(false), 200);
-                setHoverTimeout(timeout);
-              }}
-              onMouseEnter={() => {
-                if (hoverTimeout) clearTimeout(hoverTimeout);
-                setDashboardOpen(true);
-              }}
-            >
-              <div
-                className='rela-nav text-uppercase text-bold'
-                onClick={() => setDashboardOpen(!isDashboardOpen)}
-                style={{ cursor: 'pointer' }}
-              >
-                {nav.text}
-              </div>
-              {isDashboardOpen && (
-                <div className='rela-nav-dropdown bcol-fff br-2 p-1 mt-3'>
-                  {nav.children.map((child, subIndex) => (
-                    <Link
-                      key={subIndex}
-                      className={`text-align-center deco-none text-uppercase text-bold rela-nav mb-1 ${className}`}
-                      to={child.to}
-                    >
-                      {child.text}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          ) : null}
-          {nav.children && !grouped ? (
-            <>
-              {nav.children.map((child, index) => (
-                <Link
-                  key={index}
-                  className={`text-align-center deco-none text-uppercase text-bold rela-nav ${className}`}
-                  to={child.to}
+      {navs.map((nav, index) => {
+        const isVisible = !nav.rights || hasPermission(nav.rights);
+        return (
+          isVisible && (
+            <div key={index}>
+              {nav.children && grouped ? (
+                <div
+                  className={`d-f fd-c h100p ${className}`}
+                  onMouseLeave={() => {
+                    const timeout = setTimeout(
+                      () => setDashboardOpen(false),
+                      200
+                    );
+                    setHoverTimeout(timeout);
+                  }}
+                  onMouseEnter={() => {
+                    if (hoverTimeout) clearTimeout(hoverTimeout);
+                    setDashboardOpen(true);
+                  }}
                 >
-                  {child.text}
-                </Link>
-              ))}
-            </>
-          ) : null}
-          {!nav.children ? (
-            <Link
-              key={index}
-              className={`text-align-center deco-none text-uppercase text-bold rela-nav ${className}`}
-              to={nav.to}
-            >
-              {nav.text}
-            </Link>
-          ) : null}
-
-          {}
-        </>
-      ))}
+                  <div
+                    className='rela-nav text-uppercase text-bold'
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {nav.text}
+                  </div>
+                  {isDashboardOpen && (
+                    <div className='rela-nav-dropdown bcol-fff br-2 p-1 mt-3'>
+                      {nav.children.map(
+                        (child, subIndex) =>
+                          (!child.rights || hasPermission(child.rights)) && (
+                            <Link
+                              key={subIndex}
+                              className={`text-align-center deco-none text-uppercase text-bold rela-nav mb-1 ${className}`}
+                              to={child.to}
+                            >
+                              {child.text}
+                            </Link>
+                          )
+                      )}
+                    </div>
+                  )}
+                </div>
+              ) : null}
+              {nav.children && !grouped ? (
+                <div className='d-f fd-c'>
+                  {nav.children.map(
+                    (child, subIndex) =>
+                      (!child.rights || hasPermission(child.rights)) && (
+                        <Link
+                          key={subIndex}
+                          className={`text-align-center deco-none text-uppercase text-bold rela-nav ${className}`}
+                          to={child.to}
+                        >
+                          {child.text}
+                        </Link>
+                      )
+                  )}
+                </div>
+              ) : null}
+              {!nav.children ? (
+                <div className='d-f fd-c'>
+                  <Link
+                    className={`text-align-center deco-none text-uppercase text-bold rela-nav  ${className}`}
+                    to={nav.to}
+                  >
+                    {nav.text}
+                  </Link>
+                </div>
+              ) : null}
+            </div>
+          )
+        );
+      })}
     </>
   );
 };
 
 const NavBar = () => {
   let navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(null);
+  const { currentUser, rights } = useContext(UserContext);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-    });
-    return () => unsubscribe();
-  }, []);
 
   return (
     <>
@@ -161,7 +166,10 @@ const NavBar = () => {
         ) : null}
       </nav>
       {currentUser ? (
-        <p>Logged in as {currentUser.displayName}</p>
+        <p>
+          Logged in as {currentUser.displayName} {rights}{' '}
+          {console.log('Rights', rights)}
+        </p>
       ) : (
         <p>Not logged in</p>
       )}
