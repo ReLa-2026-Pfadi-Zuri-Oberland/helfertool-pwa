@@ -1,5 +1,5 @@
 import { Chip, MenuItem, Select } from '@mui/material';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { Navigate, useParams, useSearchParams } from 'react-router-dom';
 
 import DayCard from '../../components/DayCard';
 import EngagementCard from '../../components/EngagementCard';
@@ -45,6 +45,9 @@ const EngagementList = () => {
   let organization = organisations.find((org) => org.id === orgId);
   if (!organization) {
     organization = organisations.length > 0 ? organisations[0] : null;
+    if (organization && organization.id !== orgId) {
+      return <Navigate to={`/${organization.id}/anmelden`} />;
+    }
   }
   if (!organization) {
     return (

@@ -60,7 +60,7 @@ const App = () => {
 
       <div className='pr-2 pl-2'>
         <Routes>
-          <Route path='/' element={<h1>No Org selected</h1>} />
+          <Route path='/' element={<Navigate to='/0/anmelden' />} />
           <Route path='/profile' element={<UserProfile />} />
           <Route path=':orgId/anmelden' element={<EngagementList />} />
           <Route path=':orgId/anmelden/:id' element={<EngagementDetail />} />
