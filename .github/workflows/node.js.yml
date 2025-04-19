@@ -26,7 +26,7 @@ jobs:
     - run: yarn install
     - run: yarn build
     - run: ls dist
-    - name: Sync files
+    - name: Sync dist to FTP server of hostpoint.ch (dev.helfen.rela26.ch)
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         local-dir: ./dist/
