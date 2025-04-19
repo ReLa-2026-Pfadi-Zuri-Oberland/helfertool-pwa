@@ -24,10 +24,10 @@ const Login = () => {
     try {
       // Redirect the user for authentication
 
-      if (isMobile()) {
-        const { user } = await signInWithRedirect(auth, provider);
-        return;
-      }
+      // if (isMobile()) {
+      //   const { user } = await signInWithRedirect(auth, provider);
+      //   return;
+      // }
       // await signInWithRedirect(auth, provider);
       await signInWithPopup(auth, provider);
       addUser();
