@@ -227,8 +227,11 @@ const GenericInput = ({
               );
             }}
           >
-            <MenuItem disabled value=''>
-              <em>Alle {displayName}</em>
+            <MenuItem
+              value=''
+              onClick={handleChange({ e: { target: { value: [] } } })}
+            >
+              Alle {displayName}
             </MenuItem>
             {data.map((item) => (
               <MenuItem key={item.value} value={item.value}>

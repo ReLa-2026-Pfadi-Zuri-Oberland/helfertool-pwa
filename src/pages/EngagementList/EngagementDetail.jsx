@@ -70,7 +70,7 @@ const EngagementDetail = () => {
             shifts.find((shift) => shift.id === engagement.shift)?.startDate
           ).format('DD-MM-YYYY')}
         />
-        <WhiteCard>
+        <WhiteCard className={'mb-3'}>
           <div className='d-f f-js f-ac col-rela-dark-red mb-2'>
             <ArrowBackIcon
               fontSize='medium'

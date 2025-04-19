@@ -183,7 +183,13 @@ const EngagementList = () => {
                 id={`filter-jobType`}
                 fullWidth
                 value={jobTypeFilter}
-                onChange={(e) => setJobTypeFilter(e.target.value)}
+                onChange={(e) => {
+                  if (e.target.value.includes('')) {
+                    setJobTypeFilter([]);
+                    return;
+                  }
+                  setJobTypeFilter(e.target.value);
+                }}
                 error={error}
                 renderValue={(selected) => {
                   if (selected.length === 0) {
@@ -198,7 +204,7 @@ const EngagementList = () => {
                   );
                 }}
               >
-                <MenuItem disabled value=''>
+                <MenuItem value=''>
                   <em>Alle Aufgaben</em>
                 </MenuItem>
                 {Object.keys(engagementsGroupedByJobType).map((item) => (
@@ -215,7 +221,13 @@ const EngagementList = () => {
                 id={`filter-date`}
                 fullWidth
                 value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
+                onChange={(e) => {
+                  if (e.target.value.includes('')) {
+                    setDateFilter([]);
+                    return;
+                  }
+                  setDateFilter(e.target.value);
+                }}
                 error={error}
                 renderValue={(selected) => {
                   if (selected.length === 0) {
@@ -230,7 +242,7 @@ const EngagementList = () => {
                   );
                 }}
               >
-                <MenuItem disabled value=''>
+                <MenuItem value=''>
                   <em>Alle Daten</em>
                 </MenuItem>
                 {Object.keys(engagementsGroupedByDate)
