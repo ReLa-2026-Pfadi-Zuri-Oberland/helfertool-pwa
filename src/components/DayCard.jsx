@@ -1,8 +1,11 @@
 import WhiteCard from './WhiteCard';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import dayjs from 'dayjs';
 import pirateHat from './assets/pirate-hat.png';
 
 const DayCard = ({ day }) => {
+  console.log(day);
+  dayjs.extend(customParseFormat);
   const date = dayjs(day, 'DD.MM.YYYY');
   const monthArray = [
     'Januar',

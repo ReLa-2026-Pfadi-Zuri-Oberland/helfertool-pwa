@@ -14,6 +14,7 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import SubjectIcon from '@mui/icons-material/Subject';
 import WhiteCard from '../../components/WhiteCard';
 import dayjs from 'dayjs';
+import { isMobile } from '../../helpers/isMobile';
 import { useFireBaseJobTypes } from '../../firebase/useFireBaseJobTypes';
 import { useFireBaseLocations } from '../../firebase/useFireBaseLocations';
 import { useFireBaseShifts } from '../../firebase/useFireBaseShifts';
@@ -62,79 +63,80 @@ const EngagementDetail = () => {
   )?.description;
 
   return (
-    <div>
-      <DayCard
-        day={dayjs(
-          shifts.find((shift) => shift.id === engagement.shift)?.startDate
-        ).format('YYYY-MM-DD')}
-      />
-      <WhiteCard>
-        <div className='d-f f-js f-ac col-rela-dark-red mb-2'>
-          <ArrowBackIcon
-            fontSize='medium'
-            className='mr-1 cursor-pointer'
-            onClick={() => {
-              navigate('/' + engagement.organization + '/anmelden');
-            }}
-          />
-          <h2 className='m-0'>{title}</h2>
-        </div>
-
-        <div className='d-f f-jb'>
-          <div className='mb-3'>
-            <div className='d-f f-ac mb-1'>
-              <CalendarTodayIcon className='mr-2' />
-              <h4 className='m-0'>Tag</h4>
-            </div>
-            <div className='mb-2'>
-              {`${weekDaysGerman[dayjs(date).day()]}, ${dayjs(date).format(
-                'DD.MM.YYYY'
-              )}`}
-            </div>
-            <div className='d-f f-ac mb-1'>
-              <ScheduleIcon className='mr-2' />
-              <h4 className='m-0'>Uhrzeit</h4>
-            </div>
-            <div className='mb-2'>{`${dayjs(startDate, 'HH:mm').format(
-              'HH:mm'
-            )} - ${dayjs(endDate, 'HH:mm').format('HH:mm')}`}</div>
-            <div className='d-f f-ac mb-1'>
-              <PlaceIcon className='mr-2' />
-              <h4 className='m-0'>Ort</h4>
-            </div>
-            <div className='mb-1'>{location}</div>
-            <div className='mb-1'>{locationDescription}</div>
-            <div className='mb-2'>
-              Link: &nbsp;
-              <Link
-                to={`http://maps.google.com/?q=${locationDescription
-                  .split(' ')
-                  .join('+')}`}
-                target='_blank'
-              >
-                Google Maps
-              </Link>
-            </div>
-            <div className='d-f f-ac mb-1'>
-              <SubjectIcon className='mr-2' />
-              <h4 className='m-0'>Beschreibung</h4>
-            </div>
-            <div className='mb-2'>{jobTypeDescription}</div>
-            <Button
-              onClick={() => registerForEngagement(engagementId)}
-              disabled={engagement.isRegistered}
-            >
-              ANMELDEN
-            </Button>
-            {console.log(engagement)}
+    <div className={`d-f f-jc`}>
+      <div className={!isMobile() && 'w75p'}>
+        <DayCard
+          day={dayjs(
+            shifts.find((shift) => shift.id === engagement.shift)?.startDate
+          ).format('DD-MM-YYYY')}
+        />
+        <WhiteCard>
+          <div className='d-f f-js f-ac col-rela-dark-red mb-2'>
+            <ArrowBackIcon
+              fontSize='medium'
+              className='mr-1 cursor-pointer'
+              onClick={() => {
+                navigate('/' + engagement.organization + '/anmelden');
+              }}
+            />
+            <h2 className='m-0'>{title}</h2>
           </div>
-          <EngagementGauge
-            currentAmountOfHelpers={parseInt(engagement.helpers.length)}
-            targetNumberOfHelpers={parseInt(engagement.targetNumberOfHelpers)}
-            isRegistered={engagement.isRegistered}
-          />
-        </div>
-      </WhiteCard>
+
+          <div className='d-f f-jb'>
+            <div className=''>
+              <div className='d-f f-ac mb-1'>
+                <CalendarTodayIcon className='mr-2' />
+                <h4 className='m-0'>Tag</h4>
+              </div>
+              <div className='mb-2'>
+                {`${weekDaysGerman[dayjs(date).day()]}, ${dayjs(date).format(
+                  'DD.MM.YYYY'
+                )}`}
+              </div>
+              <div className='d-f f-ac mb-1'>
+                <ScheduleIcon className='mr-2' />
+                <h4 className='m-0'>Uhrzeit</h4>
+              </div>
+              <div className='mb-2'>{`${dayjs(startDate, 'HH:mm').format(
+                'HH:mm'
+              )} - ${dayjs(endDate, 'HH:mm').format('HH:mm')}`}</div>
+              <div className='d-f f-ac mb-1'>
+                <PlaceIcon className='mr-2' />
+                <h4 className='m-0'>Ort</h4>
+              </div>
+              <div className='mb-1'>{location}</div>
+              <div className='mb-1'>{locationDescription}</div>
+              <div className='mb-2'>
+                Link: &nbsp;
+                <Link
+                  to={`http://maps.google.com/?q=${locationDescription
+                    .split(' ')
+                    .join('+')}`}
+                  target='_blank'
+                >
+                  Google Maps
+                </Link>
+              </div>
+            </div>
+            <EngagementGauge
+              currentAmountOfHelpers={parseInt(engagement.helpers.length)}
+              targetNumberOfHelpers={parseInt(engagement.targetNumberOfHelpers)}
+              isRegistered={engagement.isRegistered}
+            />
+          </div>
+          <div className='d-f f-ac mb-1'>
+            <SubjectIcon className='mr-2' />
+            <h4 className='m-0'>Beschreibung</h4>
+          </div>
+          <div className='mb-4'>{jobTypeDescription}</div>
+          <Button
+            onClick={() => registerForEngagement(engagementId)}
+            disabled={engagement.isRegistered}
+          >
+            ANMELDEN
+          </Button>
+        </WhiteCard>
+      </div>
     </div>
   );
 };
