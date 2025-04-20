@@ -6,8 +6,8 @@ import { useFireBaseUsers } from '../firebase/useFireBaseUsers';
 
 // Define rights per role
 const ROLE_RIGHTS = {
-  admin: ['dashboard:view'],
-  user: ['user:read'],
+  admin: ['user:read', 'dashboard:view'],
+  default: ['user:read'],
 };
 
 // Create context
@@ -27,7 +27,12 @@ export const UserProvider = ({ children }) => {
 
       if (user && !loading && !error) {
         // Fetch roles (mocked here)
-        const fetchedRoles = users.find((u) => u.id === user.uid)?.roles || [];
+        const fetchedRoles = [
+          ...new Set([
+            ...(users.find((u) => u.id === user.uid)?.roles || []),
+            'default',
+          ]),
+        ];
         setRoles(fetchedRoles);
 
         // Merge rights from all roles
@@ -51,7 +56,9 @@ export const UserProvider = ({ children }) => {
     return result;
   };
   return (
-    <UserContext.Provider value={{ currentUser, roles, rights, hasPermission }}>
+    <UserContext.Provider
+      value={{ currentUser, roles, rights, hasPermission, loading }}
+    >
       {children}
     </UserContext.Provider>
   );

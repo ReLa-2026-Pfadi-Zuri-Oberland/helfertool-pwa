@@ -2,7 +2,6 @@ import './ReLaCSS.css';
 import './cssClasses.css';
 
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { useContext, useEffect } from 'react';
 
 import DashboardEngagement from './pages/Dashboard/Engagement/DashboardEngagement';
 import DashboardEngagementDetail from './pages/Dashboard/Engagement/DashboardEngagementDetail';
@@ -21,17 +20,14 @@ import EngagementDetail from './pages/EngagementList/EngagementDetail';
 import EngagementList from './pages/EngagementList/EngagementList';
 import Login from './pages/Login/Login';
 import NavBar from './components/NavBar';
-import { UserContext } from './context/UserContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import UserProfile from './pages/UserProfile/UserProfile';
 import { addUser } from './firebase/useFireBaseUsers';
 import { auth } from './firebase/firebase';
 import { getRedirectResult } from 'firebase/auth';
+import { useEffect } from 'react';
 
 // ProtectedRoute component
-const ProtectedRoute = ({ permission, children }) => {
-  const { hasPermission } = useContext(UserContext);
-  return hasPermission(permission) ? children : <Navigate to='/login' />;
-};
 
 const App = () => {
   useEffect(() => {

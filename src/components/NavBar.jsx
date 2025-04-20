@@ -14,7 +14,7 @@ const Menu = ({ className, grouped = true }) => {
 
   const navs = [
     { text: 'Home', to: `0/anmelden` },
-    { text: 'Profile', to: '/profile' },
+    { text: 'Profile', rights: ['user:read'], to: '/profile' },
     { text: 'Login', to: '/login' },
     {
       text: 'Dashboard',
@@ -165,14 +165,14 @@ const NavBar = () => {
           </div>
         ) : null}
       </nav>
-      {/* {currentUser ? (
+      {currentUser ? (
         <p>
           Logged in as {currentUser.displayName} {rights}{' '}
           {console.log('Rights', rights)}
         </p>
       ) : (
         <p>Not logged in</p>
-      )} */}
+      )}
     </>
   );
 };

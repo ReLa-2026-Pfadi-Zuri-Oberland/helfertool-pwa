@@ -33,14 +33,11 @@ const EngagementList = () => {
     organisationsLoading
   )
     return <h3>Loading...</h3>;
-  if (
-    error ||
-    shiftsError ||
-    locationsError ||
-    jobTypesError ||
-    organisationsError
-  )
-    return <h3>Error: {error.message}</h3>;
+  if (error) return <h3>Error: {error.message}</h3>;
+  if (shiftsError) return <h3>Error: {shiftsError.message}</h3>;
+  if (locationsError) return <h3>Error: {locationsError.message}</h3>;
+  if (jobTypesError) return <h3>Error: {jobTypesError.message}</h3>;
+  if (organisationsError) return <h3>Error: {organisationsError.message}</h3>;
 
   let organization = organisations.find((org) => org.id === orgId);
   if (!organization) {

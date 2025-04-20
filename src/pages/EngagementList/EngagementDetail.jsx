@@ -12,9 +12,11 @@ import EngagementGauge from '../../components/EngagementGauge';
 import PlaceIcon from '@mui/icons-material/Place';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import SubjectIcon from '@mui/icons-material/Subject';
+import { UserContext } from '../../context/UserContext';
 import WhiteCard from '../../components/WhiteCard';
 import dayjs from 'dayjs';
 import { isMobile } from '../../helpers/isMobile';
+import { useContext } from 'react';
 import { useFireBaseJobTypes } from '../../firebase/useFireBaseJobTypes';
 import { useFireBaseLocations } from '../../firebase/useFireBaseLocations';
 import { useFireBaseShifts } from '../../firebase/useFireBaseShifts';
@@ -22,6 +24,7 @@ import { useFireBaseShifts } from '../../firebase/useFireBaseShifts';
 const EngagementDetail = () => {
   let navigate = useNavigate();
   let engagementId = useParams().id;
+  const { currentUser } = useContext(UserContext);
 
   const [engagements, loading, error] = useFireBaseEngagements();
   const [shifts, shiftsLoading, shiftsError] = useFireBaseShifts();
@@ -129,12 +132,22 @@ const EngagementDetail = () => {
             <h4 className='m-0'>Beschreibung</h4>
           </div>
           <div className='mb-4'>{jobTypeDescription}</div>
-          <Button
-            onClick={() => registerForEngagement(engagementId)}
-            disabled={engagement.isRegistered}
-          >
-            ANMELDEN
-          </Button>
+          {currentUser && (
+            <Button
+              onClick={() => registerForEngagement(engagementId)}
+              disabled={engagement.isRegistered}
+            >
+              ANMELDEN
+            </Button>
+          )}
+          {!currentUser && (
+            <Button
+              onClick={() => navigate('/login')}
+              disabled={engagement.isRegistered}
+            >
+              LOGIN TO REGISTER
+            </Button>
+          )}
         </WhiteCard>
       </div>
     </div>

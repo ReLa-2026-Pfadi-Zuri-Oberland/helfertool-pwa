@@ -1,0 +1,30 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Common rule logic
+    function isAdmin() {
+      return request.auth != null &&
+             get(/databases/$(database)/documents/Users/$(request.auth.uid)).data.roles.hasAny(["admin"]);
+    }
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    match /{collection}/{docId} {
+
+      // Allow read to everyone (auth and non-auth)
+      allow read: if true;
+
+      // Allow write only for specific collections
+      allow create, update, delete: if isAuthenticated() && isAdmin();
+      
+      // Allow for registration
+      allow update: if isAuthenticated() && collection == "Engagements" &&
+      request.resource.data.diff(resource.data).affectedKeys().hasOnly(["helpers"]);
+
+    }
+  }
+}

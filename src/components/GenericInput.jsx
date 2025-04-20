@@ -94,6 +94,8 @@ const GenericInput = ({
   }, [initialValue, kind, validateValue, value]);
 
   const handleChange = (e) => {
+    console.log(e);
+    console.log(e.target);
     const newValue = e.target.value;
     setValue(newValue);
 
@@ -229,7 +231,7 @@ const GenericInput = ({
           >
             <MenuItem
               value=''
-              onClick={handleChange({ e: { target: { value: [] } } })}
+              onClick={() => handleChange({ target: { value: [] } })}
             >
               Alle {displayName}
             </MenuItem>
