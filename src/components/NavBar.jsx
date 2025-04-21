@@ -8,7 +8,6 @@ import { UserContext } from '../context/UserContext';
 import { isDevView } from '../helpers/isDevView';
 import { isMobile } from '../helpers/isMobile';
 import reLaLogo from './assets/reLaLogo.png';
-import { usePWAInstall } from 'react-use-pwa-install';
 
 const Menu = ({ className, grouped = true }) => {
   const { hasPermission } = useContext(UserContext);
@@ -117,7 +116,6 @@ const NavBar = () => {
   let navigate = useNavigate();
   const { currentUser, rights } = useContext(UserContext);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const install = usePWAInstall();
 
   return (
     <>
@@ -138,11 +136,13 @@ const NavBar = () => {
           className='cursor-pointer'
           onClick={() => navigate('/0/anmelden')}
         />
+
         {isMobile() ? (
           <DehazeIcon onClick={() => setIsMobileMenuOpen(true)} />
         ) : (
           <Menu className={'col-rela-dark-gray'} />
         )}
+
         {isMobileMenuOpen ? (
           <div
             className='position-fixed d-f f-jc f-ac'
@@ -168,7 +168,6 @@ const NavBar = () => {
             </div>
           </div>
         ) : null}
-        {install && <Button onClick={install}>INSTALL APP</Button>}
       </nav>
       {isDevView() && currentUser && (
         <p>
@@ -176,7 +175,7 @@ const NavBar = () => {
           {console.log('Rights', rights)}
         </p>
       )}
-      {isDevView && !currentUser && <p>Not logged in: {rights}</p>}
+      {isDevView() && !currentUser && <p>Not logged in: {rights}</p>}
     </>
   );
 };

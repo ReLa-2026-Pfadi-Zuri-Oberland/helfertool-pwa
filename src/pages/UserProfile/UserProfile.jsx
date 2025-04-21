@@ -6,9 +6,11 @@ import WhiteCard from '../../components/WhiteCard';
 import { auth } from '../../firebase/firebase';
 import littlePirate from './assets/little-pirate.png';
 import { signOut } from 'firebase/auth';
+import { usePWAInstall } from 'react-use-pwa-install';
 
 const UserProfile = () => {
   const [users, loading, error] = useFireBaseUsers();
+  const install = usePWAInstall();
   if (loading) return <h3>Loading...</h3>;
   if (error) return <h3>Error: {error.message}</h3>;
 
@@ -93,7 +95,16 @@ const UserProfile = () => {
             ]}
           />
         </WhiteCard>
-        <Button onClick={handleLogout}>LOGOUT</Button>
+        <div className='d-f'>
+          {install && (
+            <Button className='mr-2' onClick={install}>
+              INSTALL APP
+            </Button>
+          )}
+          <Button variant='secondary' onClick={handleLogout}>
+            LOGOUT
+          </Button>
+        </div>
       </div>
     </>
   );

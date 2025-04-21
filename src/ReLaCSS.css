@@ -54,7 +54,8 @@ h1 {
 
 /* Secondary button - Red text on Light Red */
 .btn-secondary {
-  background-color: var(--primary-color-light);
+  background-color: #fff;
+  border: 1px solid var(--primary-color-darker);
   color: var(--text-red);
 }
 
