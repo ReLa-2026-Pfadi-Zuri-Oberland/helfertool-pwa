@@ -2,7 +2,10 @@ import './ReLaCSS.css';
 import './cssClasses.css';
 
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { getToken, isSupported, onMessage } from 'firebase/messaging';
+import { useEffect, useState } from 'react';
 
+import ControlledSnackbar from './components/ControlledSnackBar';
 import DashboardEngagement from './pages/Dashboard/Engagement/DashboardEngagement';
 import DashboardEngagementDetail from './pages/Dashboard/Engagement/DashboardEngagementDetail';
 import DashboardJobType from './pages/Dashboard/JobType/DashboardJobType';
@@ -21,15 +24,15 @@ import EngagementList from './pages/EngagementList/EngagementList';
 import Login from './pages/Login/Login';
 import NavBar from './components/NavBar';
 import ProtectedRoute from './components/ProtectedRoute';
+import { Snackbar } from '@mui/material';
 import UserProfile from './pages/UserProfile/UserProfile';
 import { addUser } from './firebase/useFireBaseUsers';
 import { auth } from './firebase/firebase';
 import { getRedirectResult } from 'firebase/auth';
-import { useEffect } from 'react';
-
-// ProtectedRoute component
+import { messaging } from './firebase/firebase';
 
 const App = () => {
+  const [messages, setMessages] = useState([]);
   useEffect(() => {
     const fetchUser = async () => {
       await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -50,8 +53,40 @@ const App = () => {
     fetchUser();
   }, []);
 
+  // Background Notifications part START
+  if (!isSupported()) {
+    console.error('Push messaging is not supported in this browser.');
+  }
+  async function requestPermission() {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      const token = await getToken(messaging, {
+        vapidKey:
+          'BGcN5vgj7ODg7OkRypDlAcbVimjJ7flqf_V0jO8r8IkFUsv6d2xZomZ9Qxa-C8E7_4fGHb_iXl3JctwwEOdHDCQ',
+      });
+      console.log('FCM Token:', token);
+    }
+  }
+
+  requestPermission();
+
+  onMessage(messaging, (payload) => {
+    console.log('Foreground Notification:', payload);
+    // setMessages([
+    //   ...messages,
+    //   <ControlledSnackbar
+    //     key={new Date().toISOString()}
+    //     title=''
+    //     body='This Snackbar will be dismissed in 5 seconds'
+    //   />,
+    // ]);
+  });
+
+  // Background Notifications part END
+
   return (
     <>
+      {messages}
       <NavBar />
 
       <div className='pr-2 pl-2'>

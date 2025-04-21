@@ -2,9 +2,11 @@
 // Note that you can only use Firebase Messaging here. Other Firebase libraries
 // are not available in the service worker.
 // Replace 10.13.2 with latest version of the Firebase JS SDK.
-importScripts('https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js');
 importScripts(
-  'https://www.gstatic.com/firebasejs/11.5.0/firebase-messaging.js'
+  'https://www.gstatic.com/firebasejs/11.5.0/firebase-app-compat.js'
+);
+importScripts(
+  'https://www.gstatic.com/firebasejs/11.5.0/firebase-messaging-compat.js'
 );
 
 // Initialize the Firebase app in the service worker by passing in
@@ -29,10 +31,10 @@ messaging.onBackgroundMessage((payload) => {
     payload
   );
   // Customize notification here
-  const notificationTitle = 'Background Message Title';
+  const notificationTitle = payload.notification.title;
   const notificationOptions = {
-    body: 'Background Message body.',
-    icon: '/firebase-logo.png',
+    body: payload.notification.body,
+    icon: '/reLaLogo.png',
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
