@@ -1,9 +1,11 @@
 import { updateUser, useFireBaseUsers } from '../../firebase/useFireBaseUsers';
 
+import Button from '../../components/Button/Button';
 import GenericInput from '../../components/GenericInput';
 import WhiteCard from '../../components/WhiteCard';
 import { auth } from '../../firebase/firebase';
 import littlePirate from './assets/little-pirate.png';
+import { signOut } from 'firebase/auth';
 
 const UserProfile = () => {
   const [users, loading, error] = useFireBaseUsers();
@@ -13,12 +15,17 @@ const UserProfile = () => {
   const userId = auth.currentUser?.uid;
   const user = users.find((user) => user.id === userId);
 
+  const handleLogout = async () => {
+    await signOut(auth);
+  };
+
   if (!user)
     return (
       <WhiteCard>
         <h3>User with id "{userId}" not found</h3>
       </WhiteCard>
     );
+
   return (
     <>
       <div>
@@ -28,7 +35,7 @@ const UserProfile = () => {
           className='ml-3'
           style={{ marginBottom: '-10px' }}
         />
-        <WhiteCard>
+        <WhiteCard className={'mb-2'}>
           <GenericInput
             kind='text'
             displayName='Name'
@@ -86,6 +93,7 @@ const UserProfile = () => {
             ]}
           />
         </WhiteCard>
+        <Button onClick={handleLogout}>LOGOUT</Button>
       </div>
     </>
   );

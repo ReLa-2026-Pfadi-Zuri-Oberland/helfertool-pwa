@@ -1,11 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useContext, useState } from 'react';
 
+import Button from './Button/Button';
 import CloseIcon from '@mui/icons-material/Close';
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import { UserContext } from '../context/UserContext';
+import { isDevView } from '../helpers/isDevView';
 import { isMobile } from '../helpers/isMobile';
 import reLaLogo from './assets/reLaLogo.png';
+import { usePWAInstall } from 'react-use-pwa-install';
 
 const Menu = ({ className, grouped = true }) => {
   const { hasPermission } = useContext(UserContext);
@@ -15,7 +18,7 @@ const Menu = ({ className, grouped = true }) => {
   const navs = [
     { text: 'Home', to: `0/anmelden` },
     { text: 'Profile', rights: ['user:read'], to: '/profile' },
-    { text: 'Login', to: '/login' },
+    { text: 'Login', to: '/login', rights: ['user:login:view'] },
     {
       text: 'Dashboard',
       rights: ['dashboard:view'],
@@ -114,6 +117,7 @@ const NavBar = () => {
   let navigate = useNavigate();
   const { currentUser, rights } = useContext(UserContext);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const install = usePWAInstall();
 
   return (
     <>
@@ -164,15 +168,15 @@ const NavBar = () => {
             </div>
           </div>
         ) : null}
+        {install && <Button onClick={install}>INSTALL APP</Button>}
       </nav>
-      {currentUser ? (
+      {isDevView() && currentUser && (
         <p>
           Logged in as {currentUser.displayName} {rights}{' '}
           {console.log('Rights', rights)}
         </p>
-      ) : (
-        <p>Not logged in</p>
       )}
+      {isDevView && !currentUser && <p>Not logged in: {rights}</p>}
     </>
   );
 };

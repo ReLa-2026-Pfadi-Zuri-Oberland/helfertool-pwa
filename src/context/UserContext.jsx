@@ -8,6 +8,7 @@ import { useFireBaseUsers } from '../firebase/useFireBaseUsers';
 const ROLE_RIGHTS = {
   admin: ['user:read', 'dashboard:view'],
   default: ['user:read'],
+  unknown: ['user:login:view'],
 };
 
 // Create context
@@ -26,23 +27,22 @@ export const UserProvider = ({ children }) => {
       setCurrentUser(user);
 
       if (user && !loading && !error) {
-        // Fetch roles (mocked here)
-        const fetchedRoles = [
-          ...new Set([
-            ...(users.find((u) => u.id === user.uid)?.roles || []),
-            'default',
-          ]),
-        ];
+        const userRoles = users.find((u) => u.id === user.uid)?.roles || [];
+        const fetchedRoles = Array.from(new Set([...userRoles, 'default']));
         setRoles(fetchedRoles);
 
-        // Merge rights from all roles
-        const mergedRights = fetchedRoles.flatMap(
-          (role) => ROLE_RIGHTS[role] || []
+        const mergedRights = Array.from(
+          new Set(fetchedRoles.flatMap((role) => ROLE_RIGHTS[role] || []))
         );
-        setRights([...new Set(mergedRights)]); // remove duplicates
+        setRights(mergedRights);
       } else {
-        setRoles([]);
-        setRights([]);
+        const unknownRoles = ['unknown'];
+        setRoles(unknownRoles);
+
+        const mergedRights = Array.from(
+          new Set(unknownRoles.flatMap((role) => ROLE_RIGHTS[role] || []))
+        );
+        setRights(mergedRights);
       }
     });
 

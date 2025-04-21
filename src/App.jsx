@@ -3,7 +3,7 @@ import './cssClasses.css';
 
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { getToken, isSupported, onMessage } from 'firebase/messaging';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import ControlledSnackbar from './components/ControlledSnackBar';
 import DashboardEngagement from './pages/Dashboard/Engagement/DashboardEngagement';
@@ -25,6 +25,7 @@ import Login from './pages/Login/Login';
 import NavBar from './components/NavBar';
 import ProtectedRoute from './components/ProtectedRoute';
 import { Snackbar } from '@mui/material';
+import { UserContext } from './context/UserContext';
 import UserProfile from './pages/UserProfile/UserProfile';
 import { addUser } from './firebase/useFireBaseUsers';
 import { auth } from './firebase/firebase';
@@ -33,6 +34,9 @@ import { messaging } from './firebase/firebase';
 
 const App = () => {
   const [messages, setMessages] = useState([]);
+
+  const { loading, currentUser } = useContext(UserContext);
+
   useEffect(() => {
     const fetchUser = async () => {
       await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -88,123 +92,131 @@ const App = () => {
     <>
       {messages}
       <NavBar />
+      {!loading && (
+        <div className='pr-2 pl-2'>
+          <Routes>
+            <Route path='/' element={<Navigate to='/0/anmelden' />} />
+            <Route
+              path='/profile'
+              element={currentUser ? <UserProfile /> : <Navigate to='/login' />}
+            />
 
-      <div className='pr-2 pl-2'>
-        <Routes>
-          <Route path='/' element={<Navigate to='/0/anmelden' />} />
-          <Route path='/profile' element={<UserProfile />} />
-          <Route path=':orgId/anmelden' element={<EngagementList />} />
-          <Route path=':orgId/anmelden/:id' element={<EngagementDetail />} />
+            <Route path=':orgId/anmelden' element={<EngagementList />} />
+            <Route path=':orgId/anmelden/:id' element={<EngagementDetail />} />
 
-          <Route
-            path='dashboard/organizations'
-            element={
-              <ProtectedRoute permission='dashboard:view'>
-                <DashboardOrganization />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='dashboard/organization/:id'
-            element={
-              <ProtectedRoute permission='dashboard:view'>
-                <DashboardOrganizationDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='dashboard/locations'
-            element={
-              <ProtectedRoute permission='dashboard:view'>
-                <DashboardLocation />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/dashboard/location/:id'
-            element={
-              <ProtectedRoute permission='dashboard:view'>
-                <DashboardLocationDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='dashboard/shifts'
-            element={
-              <ProtectedRoute permission='dashboard:view'>
-                <DashboardShift />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/dashboard/shift/:id'
-            element={
-              <ProtectedRoute permission='dashboard:view'>
-                <DashboardShiftDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='dashboard/jobTypes'
-            element={
-              <ProtectedRoute permission='dashboard:view'>
-                <DashboardJobType />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/dashboard/jobType/:id'
-            element={
-              <ProtectedRoute permission='dashboard:view'>
-                <DashboardJobTypeDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='dashboard/engagements'
-            element={
-              <ProtectedRoute permission='dashboard:view'>
-                <DashboardEngagement />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/dashboard/engagement/:id'
-            element={
-              <ProtectedRoute permission='dashboard:view'>
-                <DashboardEngagementDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='dashboard/users'
-            element={
-              <ProtectedRoute permission='dashboard:view'>
-                <DashboardUsers />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/dashboard/user/:id'
-            element={
-              <ProtectedRoute permission='dashboard:view'>
-                <DashboardUserDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='dashboard/overview'
-            element={
-              <ProtectedRoute permission='dashboard:view'>
-                <DashboardOverview />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path='dashboard/organizations'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DashboardOrganization />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='dashboard/organization/:id'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DashboardOrganizationDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='dashboard/locations'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DashboardLocation />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/dashboard/location/:id'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DashboardLocationDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='dashboard/shifts'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DashboardShift />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/dashboard/shift/:id'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DashboardShiftDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='dashboard/jobTypes'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DashboardJobType />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/dashboard/jobType/:id'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DashboardJobTypeDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='dashboard/engagements'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DashboardEngagement />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/dashboard/engagement/:id'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DashboardEngagementDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='dashboard/users'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DashboardUsers />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/dashboard/user/:id'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DashboardUserDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='dashboard/overview'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DashboardOverview />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path='/login' element={<Login />} />
-          <Route path='*' element={<h1>404 Not Found</h1>} />
-        </Routes>
-      </div>
+            <Route
+              path='/login'
+              element={!currentUser ? <Login /> : <Navigate to='/profile' />}
+            />
+            <Route path='*' element={<h1>404 Not Found</h1>} />
+          </Routes>
+        </div>
+      )}
     </>
   );
 };
