@@ -72,14 +72,14 @@ const App = () => {
 
   onMessage(messaging, (payload) => {
     console.log('Foreground Notification:', payload);
-    // setMessages([
-    //   ...messages,
-    //   <ControlledSnackbar
-    //     key={new Date().toISOString()}
-    //     title=''
-    //     body='This Snackbar will be dismissed in 5 seconds'
-    //   />,
-    // ]);
+    setMessages([
+      ...messages,
+      <ControlledSnackbar
+        key={new Date().toISOString()}
+        title=''
+        body='This Snackbar will be dismissed in 5 seconds'
+      />,
+    ]);
   });
 
   // Background Notifications part END
