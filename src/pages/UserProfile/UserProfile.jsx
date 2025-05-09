@@ -21,10 +21,14 @@ const UserProfile = () => {
     await signOut(auth);
   };
 
+  console.log('user', user, users);
   if (!user)
     return (
       <WhiteCard>
         <h3>User with id "{userId}" not found</h3>
+        <Button variant='secondary' onClick={handleLogout}>
+          LOGOUT
+        </Button>
       </WhiteCard>
     );
 

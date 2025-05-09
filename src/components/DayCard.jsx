@@ -1,7 +1,7 @@
 import WhiteCard from './WhiteCard';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import dayjs from 'dayjs';
-import pirateHat from './assets/pirate-hat.png';
+import pirateHat from './assets/pirate-hat.svg';
 
 const DayCard = ({ day }) => {
   console.log(day);
@@ -26,7 +26,7 @@ const DayCard = ({ day }) => {
     <WhiteCard thin={true} className={'mb-2'}>
       <div className='position-absolute' style={{ marginTop: '-15px' }}>
         <div className='position-relative'>
-          <img src={pirateHat} alt='pirate hat' />
+          <img style={{ width: '135px' }} src={pirateHat} alt='pirate hat' />
           <h1
             style={{ top: '-5px', left: '55px', transform: 'rotate(-20deg)' }}
             className='position-absolute col-fff'

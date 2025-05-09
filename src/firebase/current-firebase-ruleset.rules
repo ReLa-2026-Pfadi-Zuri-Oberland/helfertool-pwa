@@ -25,6 +25,8 @@ service cloud.firestore {
       allow update: if isAuthenticated() && collection == "Engagements" &&
       request.resource.data.diff(resource.data).affectedKeys().hasOnly(["helpers"]);
 
+      // Allow for user adding
+      allow create: if collection == "Users"
     }
   }
 }
