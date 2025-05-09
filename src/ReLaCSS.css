@@ -20,6 +20,7 @@
 body {
   font-family: 'Lato', sans-serif;
   color: #353333;
+  font-weight: 400; /* For Firefox on macOS */
 }
 
 /* Override h1 to use Inter */

@@ -4,7 +4,7 @@ const WhiteCard = ({ children, className, onClick, thin, style }) => {
       className={`bcol-fff br-1 ${thin ? '' : 'p-2'} ${
         className ? className : ''
       }`}
-      style={style}
+      style={{ ...style }}
       onClick={onClick}
     >
       {children}
