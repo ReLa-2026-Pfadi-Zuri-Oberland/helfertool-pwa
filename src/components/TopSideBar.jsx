@@ -1,6 +1,9 @@
 import {
   Assignment,
   Business,
+  Dashboard,
+  ExpandLess,
+  ExpandMore,
   Group,
   Login,
   Menu,
@@ -9,8 +12,9 @@ import {
   Schedule,
   Work,
 } from '@mui/icons-material';
-import { Grid, ListItemButton, ListItemIcon } from '@mui/material';
-import React, { useContext } from 'react';
+import { Collapse, Grid, ListItemButton, ListItemIcon } from '@mui/material';
+import { useContext, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -24,14 +28,20 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { UserContext } from '../context/UserContext';
 import reLaLogo from './assets/reLaLogo.png';
-import { useNavigate } from 'react-router-dom';
+import { useFireBaseOrganizations } from '../firebase/useFireBaseOrganizations';
 
 const drawerWidth = 240;
 
 const TopSideBar = ({ children }) => {
   const navigate = useNavigate();
   const { hasPermission } = useContext(UserContext);
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [dashboardOpen, setDashboardOpen] = useState(false);
+  const [organisations, organisationsLoading, organisationsError] =
+    useFireBaseOrganizations();
+  let { orgId } = useParams();
+
+  let organization = organisations.find((org) => org.id === orgId);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -52,7 +62,7 @@ const TopSideBar = ({ children }) => {
       </Toolbar>
       <Divider />
       <List>
-        <ListItem disablePadding key='Home'>
+        <ListItem disablePadding key='Helfereinsätze'>
           <ListItemButton
             onClick={() => {
               setMobileOpen(false);
@@ -62,11 +72,11 @@ const TopSideBar = ({ children }) => {
             <ListItemIcon>
               <Menu />
             </ListItemIcon>
-            <ListItemText primary='Home' />
+            <ListItemText primary='Helfereinsätze' />
           </ListItemButton>
         </ListItem>
         {hasPermission(['user:read']) && (
-          <ListItem disablePadding key='Profile'>
+          <ListItem disablePadding key='Profil'>
             <ListItemButton
               onClick={() => {
                 setMobileOpen(false);
@@ -76,7 +86,7 @@ const TopSideBar = ({ children }) => {
               <ListItemIcon>
                 <Person />
               </ListItemIcon>
-              <ListItemText primary='Profile' />
+              <ListItemText primary='Profil' />
             </ListItemButton>
           </ListItem>
         )}
@@ -97,59 +107,68 @@ const TopSideBar = ({ children }) => {
         )}
         {hasPermission(['dashboard:view']) && (
           <>
-            <Divider />
-            {[
-              {
-                text: 'Organizations',
-                to: 'dashboard/organizations',
-                icon: <Business />,
-              },
-              {
-                text: 'Locations',
-                to: 'dashboard/locations',
-                icon: <Place />,
-              },
-              {
-                text: 'JobTypes',
-                to: 'dashboard/jobTypes',
-                icon: <Work />,
-              },
-              {
-                text: 'Shifts',
-                to: 'dashboard/shifts',
-                icon: <Schedule />,
-              },
-              {
-                text: 'Users',
-                to: 'dashboard/users',
-                icon: <Group />,
-              },
-              {
-                text: 'Engagements',
-                to: 'dashboard/engagements',
-                icon: <Assignment />,
-              },
-            ].map(({ text, to, icon }) => (
-              <ListItem disablePadding key={text}>
-                <ListItemButton
-                  onClick={() => {
-                    setMobileOpen(false);
-                    navigate(`/${to}`);
-                  }}
-                >
-                  <ListItemIcon>{icon}</ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
+            <ListItemButton onClick={() => setDashboardOpen(!dashboardOpen)}>
+              <ListItemIcon>
+                <Dashboard />
+              </ListItemIcon>
+              <ListItemText primary='Dashboard' />
+              {dashboardOpen ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse in={dashboardOpen} timeout='auto' unmountOnExit>
+              {[
+                {
+                  text: 'Organizations',
+                  to: 'dashboard/organizations',
+                  icon: <Business />,
+                },
+                {
+                  text: 'Locations',
+                  to: 'dashboard/locations',
+                  icon: <Place />,
+                },
+                {
+                  text: 'JobTypes',
+                  to: 'dashboard/jobTypes',
+                  icon: <Work />,
+                },
+                {
+                  text: 'Shifts',
+                  to: 'dashboard/shifts',
+                  icon: <Schedule />,
+                },
+                {
+                  text: 'Users',
+                  to: 'dashboard/users',
+                  icon: <Group />,
+                },
+                {
+                  text: 'Engagements',
+                  to: 'dashboard/engagements',
+                  icon: <Assignment />,
+                },
+              ].map(({ text, to, icon }) => (
+                <ListItem disablePadding key={text} sx={{ pl: 4 }}>
+                  <ListItemButton
+                    onClick={() => {
+                      setMobileOpen(false);
+                      navigate(`/${to}`);
+                    }}
+                  >
+                    <ListItemIcon>{icon}</ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </Collapse>
           </>
         )}
+        <Divider />
       </List>
     </div>
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box>
       <AppBar
         position='fixed'
         sx={{
@@ -215,13 +234,14 @@ const TopSideBar = ({ children }) => {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
+        ml={{ sm: `${drawerWidth}px` }}
       >
         <Toolbar />
         <Grid container columns={16}>
           <Grid
             item
-            offset={{ xs: 0, sm: 0, md: 1, lg: 3 }}
-            size={{ xs: 16, sm: 16, md: 14, lg: 10 }}
+            offset={{ xs: 1, sm: 1, md: 1, lg: 2 }}
+            size={{ xs: 14, sm: 14, md: 14, lg: 12 }}
             className='pt-3'
           >
             {children}

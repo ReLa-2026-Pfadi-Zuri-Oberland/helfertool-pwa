@@ -33,84 +33,78 @@ const UserProfile = () => {
     );
 
   return (
-    <>
-      <div>
-        <img
-          src={littlePirate}
-          alt='little pirate'
-          className='ml-3'
-          style={{ marginBottom: '-10px' }}
+    <div>
+      <img
+        src={littlePirate}
+        alt='little pirate'
+        className='ml-3'
+        style={{ marginBottom: '-10px' }}
+      />
+      <WhiteCard className={'mb-2'}>
+        <GenericInput
+          kind='text'
+          displayName='Name'
+          updateFunction={(newValue) => updateUser(user.id, { name: newValue })}
+          initialValue={user.name}
         />
-        <WhiteCard className={'mb-2'}>
-          <GenericInput
-            kind='text'
-            displayName='Name'
-            updateFunction={(newValue) =>
-              updateUser(user.id, { name: newValue })
-            }
-            initialValue={user.name}
-          />
-          <GenericInput
-            kind='email'
-            readOnly={true}
-            displayName='Email'
-            updateFunction={(newValue) =>
-              updateUser(user.id, { email: newValue })
-            }
-            initialValue={user.email}
-          />
-          <GenericInput
-            kind='phone'
-            displayName='Telefon'
-            updateFunction={(newValue) =>
-              updateUser(user.id, { contactPhone: newValue })
-            }
-            initialValue={user.contactPhone}
-          />
-          <GenericInput
-            kind='text'
-            displayName='Strasse'
-            updateFunction={(newValue) =>
-              updateUser(user.id, { street: newValue })
-            }
-            initialValue={user.street}
-          />
-          <GenericInput
-            kind='text'
-            displayName='Stadt'
-            updateFunction={(newValue) =>
-              updateUser(user.id, { city: newValue })
-            }
-            initialValue={user.city}
-          />
-          <GenericInput
-            kind='select'
-            displayName='T-Shirt Grösse'
-            updateFunction={(newValue) =>
-              updateUser(user.id, { tShirtSize: newValue })
-            }
-            initialValue={user.tShirtSize}
-            data={[
-              { value: 'XS', label: 'XS' },
-              { value: 'S', label: 'S' },
-              { value: 'M', label: 'M' },
-              { value: 'L', label: 'L' },
-              { value: 'XL', label: 'XL' },
-            ]}
-          />
-        </WhiteCard>
-        <div className='d-f'>
-          {install && (
-            <Button className='mr-2' onClick={install}>
-              INSTALL APP
-            </Button>
-          )}
-          <Button variant='secondary' onClick={handleLogout}>
-            LOGOUT
+        <GenericInput
+          kind='email'
+          readOnly={true}
+          displayName='Email'
+          updateFunction={(newValue) =>
+            updateUser(user.id, { email: newValue })
+          }
+          initialValue={user.email}
+        />
+        <GenericInput
+          kind='phone'
+          displayName='Telefon'
+          updateFunction={(newValue) =>
+            updateUser(user.id, { contactPhone: newValue })
+          }
+          initialValue={user.contactPhone}
+        />
+        <GenericInput
+          kind='text'
+          displayName='Strasse'
+          updateFunction={(newValue) =>
+            updateUser(user.id, { street: newValue })
+          }
+          initialValue={user.street}
+        />
+        <GenericInput
+          kind='text'
+          displayName='Stadt'
+          updateFunction={(newValue) => updateUser(user.id, { city: newValue })}
+          initialValue={user.city}
+        />
+        <GenericInput
+          kind='select'
+          displayName='T-Shirt Grösse'
+          updateFunction={(newValue) =>
+            updateUser(user.id, { tShirtSize: newValue })
+          }
+          initialValue={user.tShirtSize}
+          data={[
+            { value: 'XS', label: 'XS' },
+            { value: 'S', label: 'S' },
+            { value: 'M', label: 'M' },
+            { value: 'L', label: 'L' },
+            { value: 'XL', label: 'XL' },
+          ]}
+        />
+      </WhiteCard>
+      <div className='d-f'>
+        {install && (
+          <Button className='mr-2' onClick={install}>
+            INSTALL APP
           </Button>
-        </div>
+        )}
+        <Button variant='secondary' onClick={handleLogout}>
+          LOGOUT
+        </Button>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -35,8 +35,7 @@ const DayCard = ({ day }) => {
           </h1>
         </div>
       </div>
-      <div className='d-f f-ac'>
-        <div className='w50p'></div>
+      <div className='d-f f-ac f-jc'>
         <h1 className='m-1'>{monthArray[date.month()]}</h1>
       </div>
     </WhiteCard>
