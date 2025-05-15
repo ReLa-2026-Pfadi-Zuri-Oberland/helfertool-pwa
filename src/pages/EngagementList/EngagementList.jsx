@@ -1,11 +1,9 @@
-import { Chip, MenuItem, Select } from '@mui/material';
-import { Navigate, useParams, useSearchParams } from 'react-router-dom';
+import { Chip, Grid, MenuItem, Select } from '@mui/material';
+import { Navigate, useParams } from 'react-router-dom';
 
 import DayCard from '../../components/DayCard';
 import EngagementCard from '../../components/EngagementCard';
-import WhiteCard from '../../components/WhiteCard';
 import { filterDates } from '../../helpers/filterDates';
-import { isMobile } from '../../helpers/isMobile';
 import { useFireBaseEngagements } from '../../firebase/useFireBaseEngagements';
 import { useFireBaseJobTypes } from '../../firebase/useFireBaseJobTypes';
 import { useFireBaseLocations } from '../../firebase/useFireBaseLocations';
@@ -134,166 +132,125 @@ const EngagementList = () => {
   }, {});
 
   return (
-    <div className='d-f mt-2'>
-      {!isMobile() && (
-        <div className='w25p'>
-          <WhiteCard
-            className={'h100p mr-2'}
-            style={{ background: 'rgba(255, 255, 255, 0.54)' }}
-          >
-            <div className='d-f f-ac mb-1'>
-              <h4 className='m-0'>Organisation</h4>
-            </div>
-            <div className='mb-2'>{organization.name}</div>
-            <div className='d-f f-ac mb-1'>
-              <h4 className='m-0'>Website</h4>
-            </div>
-            <div className='mb-2'>{organization.website}</div>
-            <div className='d-f f-ac mb-1'>
-              <h4 className='m-0'>Email</h4>
-            </div>
-            <div className='mb-2'>{organization.contactEmail}</div>
-            <div className='d-f f-ac mb-1'>
-              <h4 className='m-0'>KONTAKT</h4>
-            </div>
-            <div className='mb-2'>
-              {organization.contactName}
-              <br></br>
-              {organization.street}
-              <br></br>
-              {`${organization.city} - ${organization.country}`}
-              <br></br>
-              {organization.contactPhone}
-            </div>
-          </WhiteCard>
-        </div>
-      )}
-      <div className={`d-f f-jc ${isMobile() ? 'w100p' : 'w75p'}`}>
-        <div className={!isMobile() && 'w75p'}>
-          <div className='ml-2 mr-2'>
-            <h1 className='col-rela-dark-red m-0'>Offene Helfereinsätze</h1>
-            <h4>Du möchtest mit dabei sein, wir freuen uns auf dich</h4>
-            <div className='d-f f-ac mb-2'>
-              <Select
-                multiple
-                displayEmpty
-                id={`filter-jobType`}
-                fullWidth
-                value={jobTypeFilter}
-                onChange={(e) => {
-                  if (e.target.value.includes('')) {
-                    setJobTypeFilter([]);
-                    return;
-                  }
-                  setJobTypeFilter(e.target.value);
-                }}
-                error={error}
-                renderValue={(selected) => {
-                  if (selected.length === 0) {
-                    return <em>Alle Aufgaben</em>;
-                  }
-                  return (
-                    <div className='d-f' style={{ gap: '0.5rem' }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </div>
-                  );
-                }}
-              >
-                <MenuItem value=''>
-                  <em>Alle Aufgaben</em>
-                </MenuItem>
-                {Object.keys(engagementsGroupedByJobType).map((item) => (
-                  <MenuItem key={item} value={item}>
-                    {item}
-                  </MenuItem>
+    <div>
+      <h1 className='col-rela-dark-red m-0'>Offene Helfereinsätze</h1>
+      <h4>Du möchtest mit dabei sein, wir freuen uns auf dich</h4>
+      <div className='d-f f-ac mb-2'>
+        <Select
+          multiple
+          displayEmpty
+          id={`filter-jobType`}
+          fullWidth
+          value={jobTypeFilter}
+          onChange={(e) => {
+            if (e.target.value.includes('')) {
+              setJobTypeFilter([]);
+              return;
+            }
+            setJobTypeFilter(e.target.value);
+          }}
+          error={error}
+          renderValue={(selected) => {
+            if (selected.length === 0) {
+              return <em>Alle Aufgaben</em>;
+            }
+            return (
+              <div className='d-f' style={{ gap: '0.5rem' }}>
+                {selected.map((value) => (
+                  <Chip key={value} label={value} />
                 ))}
-              </Select>
-            </div>
-            <div className='d-f f-ac mb-3'>
-              <Select
-                multiple
-                displayEmpty
-                id={`filter-date`}
-                fullWidth
-                value={dateFilter}
-                onChange={(e) => {
-                  if (e.target.value.includes('')) {
-                    setDateFilter([]);
-                    return;
-                  }
-                  setDateFilter(e.target.value);
-                }}
-                error={error}
-                renderValue={(selected) => {
-                  if (selected.length === 0) {
-                    return <em>Alle Daten</em>;
-                  }
-                  return (
-                    <div className='d-f' style={{ gap: '0.5rem' }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </div>
-                  );
-                }}
-              >
-                <MenuItem value=''>
-                  <em>Alle Daten</em>
-                </MenuItem>
-                {Object.keys(engagementsGroupedByDate)
-                  .sort(filterDates)
-                  .map((item) => (
-                    <MenuItem key={item} value={item}>
-                      {item}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </div>
-          </div>
-          {/* render keyss of grouped engagements */}
-          {Object.keys(engagementsGrouped).map((date) => (
-            <div key={date}>
-              <DayCard day={date} />
-
-              {engagementsGrouped[date].map((engagement, index) => (
-                <EngagementCard
-                  key={index}
-                  id={engagement.id}
-                  orgId={engagement.organization}
-                  title={
-                    jobTypes.find(
-                      (jobType) => jobType.id === engagement.jobType
-                    )?.name
-                  }
-                  location={
-                    locations.find(
-                      (location) => location.id === engagement.location
-                    )?.name
-                  }
-                  start={
-                    shifts.find((shift) => shift.id === engagement.shift)
-                      ?.startDate
-                  }
-                  end={
-                    shifts.find((shift) => shift.id === engagement.shift)
-                      ?.endDate
-                  }
-                  currentAmountOfHelpers={engagement.helpers?.length || 0}
-                  targetNumberOfHelpers={engagement.targetNumberOfHelpers}
-                  isRegistered={engagement.isRegistered}
-                />
-              ))}
-              <div className='mb-3' />
-            </div>
+              </div>
+            );
+          }}
+        >
+          <MenuItem value=''>
+            <em>Alle Aufgaben</em>
+          </MenuItem>
+          {Object.keys(engagementsGroupedByJobType).map((item) => (
+            <MenuItem key={item} value={item}>
+              {item}
+            </MenuItem>
           ))}
-          <h4 className='mr-2 ml-2 mt-3 mb-3'>
-            Du hast alle Einsätze endeckt. Such dir einen aus. Bei Fragen melde
-            dich bei: info@rela26.ch
-          </h4>
-        </div>
+        </Select>
       </div>
+      <div className='d-f f-ac mb-3'>
+        <Select
+          multiple
+          displayEmpty
+          id={`filter-date`}
+          fullWidth
+          value={dateFilter}
+          onChange={(e) => {
+            if (e.target.value.includes('')) {
+              setDateFilter([]);
+              return;
+            }
+            setDateFilter(e.target.value);
+          }}
+          error={error}
+          renderValue={(selected) => {
+            if (selected.length === 0) {
+              return <em>Alle Daten</em>;
+            }
+            return (
+              <div className='d-f' style={{ gap: '0.5rem' }}>
+                {selected.map((value) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </div>
+            );
+          }}
+        >
+          <MenuItem value=''>
+            <em>Alle Daten</em>
+          </MenuItem>
+          {Object.keys(engagementsGroupedByDate)
+            .sort(filterDates)
+            .map((item) => (
+              <MenuItem key={item} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+        </Select>
+      </div>
+
+      {/* render keyss of grouped engagements */}
+      {Object.keys(engagementsGrouped).map((date) => (
+        <div key={date}>
+          <DayCard day={date} />
+
+          {engagementsGrouped[date].map((engagement, index) => (
+            <EngagementCard
+              key={index}
+              id={engagement.id}
+              orgId={engagement.organization}
+              title={
+                jobTypes.find((jobType) => jobType.id === engagement.jobType)
+                  ?.name
+              }
+              location={
+                locations.find(
+                  (location) => location.id === engagement.location
+                )?.name
+              }
+              start={
+                shifts.find((shift) => shift.id === engagement.shift)?.startDate
+              }
+              end={
+                shifts.find((shift) => shift.id === engagement.shift)?.endDate
+              }
+              currentAmountOfHelpers={engagement.helpers?.length || 0}
+              targetNumberOfHelpers={engagement.targetNumberOfHelpers}
+              isRegistered={engagement.isRegistered}
+            />
+          ))}
+          <div className='mb-3' />
+        </div>
+      ))}
+      <h4 className='mr-2 ml-2 mt-3 mb-3'>
+        Du hast alle Einsätze endeckt. Such dir einen aus. Bei Fragen melde dich
+        bei: info@rela26.ch
+      </h4>
     </div>
   );
 };
