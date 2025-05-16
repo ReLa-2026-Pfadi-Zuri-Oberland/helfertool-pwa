@@ -102,11 +102,11 @@ const App = () => {
               element={currentUser ? <UserProfile /> : <Navigate to='/login' />}
             />
 
-            <Route path=':orgId/anmelden' element={<EngagementList />} />
-            <Route path=':orgId/anmelden/:id' element={<EngagementDetail />} />
+            <Route path='/:orgId/anmelden' element={<EngagementList />} />
+            <Route path='/:orgId/anmelden/:id' element={<EngagementDetail />} />
 
             <Route
-              path='dashboard/organizations'
+              path='/dashboard/organizations'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardOrganization />
@@ -114,7 +114,7 @@ const App = () => {
               }
             />
             <Route
-              path='dashboard/organization/:id'
+              path='/dashboard/organization/:id'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardOrganizationDetail />
@@ -122,7 +122,7 @@ const App = () => {
               }
             />
             <Route
-              path='dashboard/locations'
+              path='/dashboard/locations'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardLocation />
@@ -138,7 +138,7 @@ const App = () => {
               }
             />
             <Route
-              path='dashboard/shifts'
+              path='/dashboard/shifts'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardShift />
@@ -154,7 +154,7 @@ const App = () => {
               }
             />
             <Route
-              path='dashboard/jobTypes'
+              path='/dashboard/jobTypes'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardJobType />
@@ -170,7 +170,7 @@ const App = () => {
               }
             />
             <Route
-              path='dashboard/engagements'
+              path='/dashboard/engagements'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardEngagement />
@@ -186,7 +186,7 @@ const App = () => {
               }
             />
             <Route
-              path='dashboard/users'
+              path='/dashboard/users'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardUsers />
@@ -202,7 +202,7 @@ const App = () => {
               }
             />
             <Route
-              path='dashboard/overview'
+              path='/dashboard/overview'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardOverview />

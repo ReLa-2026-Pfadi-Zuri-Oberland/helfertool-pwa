@@ -1,10 +1,13 @@
 import {
   Assignment,
   Business,
+  CorporateFare,
   Dashboard,
+  Email,
   ExpandLess,
   ExpandMore,
   Group,
+  Language,
   Login,
   Menu,
   Person,
@@ -12,9 +15,15 @@ import {
   Schedule,
   Work,
 } from '@mui/icons-material';
-import { Collapse, Grid, ListItemButton, ListItemIcon } from '@mui/material';
+import {
+  Avatar,
+  Collapse,
+  Grid,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemIcon,
+} from '@mui/material';
 import { useContext, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -28,7 +37,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { UserContext } from '../context/UserContext';
 import reLaLogo from './assets/reLaLogo.png';
-import { useFireBaseOrganizations } from '../firebase/useFireBaseOrganizations';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -37,134 +46,159 @@ const TopSideBar = ({ children }) => {
   const { hasPermission } = useContext(UserContext);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dashboardOpen, setDashboardOpen] = useState(false);
-  const [organisations, organisationsLoading, organisationsError] =
-    useFireBaseOrganizations();
-  let { orgId } = useParams();
-
-  let organization = organisations.find((org) => org.id === orgId);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
   const drawer = (
-    <div>
-      <Toolbar>
-        <img
-          src={reLaLogo}
-          style={{ maxHeight: '50px' }}
-          className='cursor-pointer'
-          onClick={() => {
-            setMobileOpen(false);
-            navigate('/0/anmelden');
-          }}
-        />
-      </Toolbar>
-      <Divider />
-      <List>
-        <ListItem disablePadding key='Helfereinsätze'>
-          <ListItemButton
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <div>
+        <Toolbar>
+          <img
+            src={reLaLogo}
+            style={{ maxHeight: '50px' }}
+            className='cursor-pointer'
             onClick={() => {
               setMobileOpen(false);
-              navigate('0/anmelden');
+              navigate('/0/anmelden');
             }}
-          >
-            <ListItemIcon>
-              <Menu />
-            </ListItemIcon>
-            <ListItemText primary='Helfereinsätze' />
-          </ListItemButton>
-        </ListItem>
-        {hasPermission(['user:read']) && (
-          <ListItem disablePadding key='Profil'>
-            <ListItemButton
-              onClick={() => {
-                setMobileOpen(false);
-                navigate('/profile');
-              }}
-            >
-              <ListItemIcon>
-                <Person />
-              </ListItemIcon>
-              <ListItemText primary='Profil' />
-            </ListItemButton>
-          </ListItem>
-        )}
-        {hasPermission(['user:login:view']) && (
-          <ListItem disablePadding key='Login'>
-            <ListItemButton
-              onClick={() => {
-                setMobileOpen(false);
-                navigate('/login');
-              }}
-            >
-              <ListItemIcon>
-                <Login />
-              </ListItemIcon>
-              <ListItemText primary='Login' />
-            </ListItemButton>
-          </ListItem>
-        )}
-        {hasPermission(['dashboard:view']) && (
-          <>
-            <ListItemButton onClick={() => setDashboardOpen(!dashboardOpen)}>
-              <ListItemIcon>
-                <Dashboard />
-              </ListItemIcon>
-              <ListItemText primary='Dashboard' />
-              {dashboardOpen ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={dashboardOpen} timeout='auto' unmountOnExit>
-              {[
-                {
-                  text: 'Organizations',
-                  to: 'dashboard/organizations',
-                  icon: <Business />,
-                },
-                {
-                  text: 'Locations',
-                  to: 'dashboard/locations',
-                  icon: <Place />,
-                },
-                {
-                  text: 'JobTypes',
-                  to: 'dashboard/jobTypes',
-                  icon: <Work />,
-                },
-                {
-                  text: 'Shifts',
-                  to: 'dashboard/shifts',
-                  icon: <Schedule />,
-                },
-                {
-                  text: 'Users',
-                  to: 'dashboard/users',
-                  icon: <Group />,
-                },
-                {
-                  text: 'Engagements',
-                  to: 'dashboard/engagements',
-                  icon: <Assignment />,
-                },
-              ].map(({ text, to, icon }) => (
-                <ListItem disablePadding key={text} sx={{ pl: 4 }}>
-                  <ListItemButton
-                    onClick={() => {
-                      setMobileOpen(false);
-                      navigate(`/${to}`);
-                    }}
-                  >
-                    <ListItemIcon>{icon}</ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </Collapse>
-          </>
-        )}
+          />
+        </Toolbar>
         <Divider />
-      </List>
-    </div>
+        <List>
+          <ListItem disablePadding key='Helfereinsätze'>
+            <ListItemButton
+              onClick={() => {
+                setMobileOpen(false);
+                navigate('0/anmelden');
+              }}
+            >
+              <ListItemIcon>
+                <Menu />
+              </ListItemIcon>
+              <ListItemText primary='Helfereinsätze' />
+            </ListItemButton>
+          </ListItem>
+          {hasPermission(['user:read']) && (
+            <ListItem disablePadding key='Profil'>
+              <ListItemButton
+                onClick={() => {
+                  setMobileOpen(false);
+                  navigate('/profile');
+                }}
+              >
+                <ListItemIcon>
+                  <Person />
+                </ListItemIcon>
+                <ListItemText primary='Profil' />
+              </ListItemButton>
+            </ListItem>
+          )}
+          {hasPermission(['user:login:view']) && (
+            <ListItem disablePadding key='Login'>
+              <ListItemButton
+                onClick={() => {
+                  setMobileOpen(false);
+                  navigate('/login');
+                }}
+              >
+                <ListItemIcon>
+                  <Login />
+                </ListItemIcon>
+                <ListItemText primary='Login' />
+              </ListItemButton>
+            </ListItem>
+          )}
+          {hasPermission(['dashboard:view']) && (
+            <>
+              <ListItemButton onClick={() => setDashboardOpen(!dashboardOpen)}>
+                <ListItemIcon>
+                  <Dashboard />
+                </ListItemIcon>
+                <ListItemText primary='Dashboard' />
+                {dashboardOpen ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={dashboardOpen} timeout='auto' unmountOnExit>
+                {[
+                  {
+                    text: 'Organizations',
+                    to: 'dashboard/organizations',
+                    icon: <Business />,
+                  },
+                  {
+                    text: 'Locations',
+                    to: 'dashboard/locations',
+                    icon: <Place />,
+                  },
+                  {
+                    text: 'JobTypes',
+                    to: 'dashboard/jobTypes',
+                    icon: <Work />,
+                  },
+                  {
+                    text: 'Shifts',
+                    to: 'dashboard/shifts',
+                    icon: <Schedule />,
+                  },
+                  {
+                    text: 'Users',
+                    to: 'dashboard/users',
+                    icon: <Group />,
+                  },
+                  {
+                    text: 'Engagements',
+                    to: 'dashboard/engagements',
+                    icon: <Assignment />,
+                  },
+                ].map(({ text, to, icon }) => (
+                  <ListItem disablePadding key={text} sx={{ pl: 4 }}>
+                    <ListItemButton
+                      onClick={() => {
+                        setMobileOpen(false);
+                        navigate(`/${to}`);
+                      }}
+                    >
+                      <ListItemIcon>{icon}</ListItemIcon>
+                      <ListItemText primary={text} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </Collapse>
+            </>
+          )}
+        </List>
+      </div>
+      <Box sx={{ mt: 'auto' }}>
+        <Divider />
+        <List>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar>
+                <CorporateFare />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary='Organisation' secondary={'ReLa26'} />
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar>
+                <Language />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary='Website' secondary='www.rela26.ch' />
+          </ListItem>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar>
+                <Email />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary='Kontakt-Email' secondary='info@rela26.ch' />
+          </ListItem>
+        </List>
+      </Box>
+    </Box>
   );
 
   return (
