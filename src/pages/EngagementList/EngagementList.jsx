@@ -137,7 +137,7 @@ const EngagementList = () => {
       <WhiteCard className={'mb-3'}>
         <h1 className='col-rela-dark-red m-0'>Offene Helfereinsätze</h1>
         <h4>Du möchtest mit dabei sein, wir freuen uns auf dich</h4>
-        <Grid columns={16} container>
+        <Grid columns={16} container spacing={2}>
           <Grid item size={{ xs: 16, sm: 16, md: 8, lg: 8 }}>
             <Select
               multiple
@@ -223,32 +223,38 @@ const EngagementList = () => {
       {Object.keys(engagementsGrouped).map((date) => (
         <div key={date}>
           <DayCard day={date} />
-
-          {engagementsGrouped[date].map((engagement, index) => (
-            <EngagementCard
-              key={index}
-              id={engagement.id}
-              orgId={engagement.organization}
-              title={
-                jobTypes.find((jobType) => jobType.id === engagement.jobType)
-                  ?.name
-              }
-              location={
-                locations.find(
-                  (location) => location.id === engagement.location
-                )?.name
-              }
-              start={
-                shifts.find((shift) => shift.id === engagement.shift)?.startDate
-              }
-              end={
-                shifts.find((shift) => shift.id === engagement.shift)?.endDate
-              }
-              currentAmountOfHelpers={engagement.helpers?.length || 0}
-              targetNumberOfHelpers={engagement.targetNumberOfHelpers}
-              isRegistered={engagement.isRegistered}
-            />
-          ))}
+          <Grid container spacing={2} columns={16}>
+            {engagementsGrouped[date].map((engagement, index) => (
+              <Grid item size={{ xs: 16, sm: 16, md: 16, lg: 8 }} key={index}>
+                <EngagementCard
+                  key={index}
+                  id={engagement.id}
+                  orgId={engagement.organization}
+                  title={
+                    jobTypes.find(
+                      (jobType) => jobType.id === engagement.jobType
+                    )?.name
+                  }
+                  location={
+                    locations.find(
+                      (location) => location.id === engagement.location
+                    )?.name
+                  }
+                  start={
+                    shifts.find((shift) => shift.id === engagement.shift)
+                      ?.startDate
+                  }
+                  end={
+                    shifts.find((shift) => shift.id === engagement.shift)
+                      ?.endDate
+                  }
+                  currentAmountOfHelpers={engagement.helpers?.length || 0}
+                  targetNumberOfHelpers={engagement.targetNumberOfHelpers}
+                  isRegistered={engagement.isRegistered}
+                />
+              </Grid>
+            ))}
+          </Grid>
           <div className='mb-3' />
         </div>
       ))}
