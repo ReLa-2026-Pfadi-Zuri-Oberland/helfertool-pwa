@@ -3,22 +3,22 @@ import {
   updateLocation,
   useFireBaseLocations,
 } from '../../../firebase/useFireBaseLocations';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Button from '../../../components/Button/Button';
 import DomainIcon from '@mui/icons-material/Domain';
 import GenericInput from '../../../components/GenericInput';
 import WhiteCard from '../../../components/WhiteCard';
-import { useNavigate } from 'react-router-dom';
 
 const DashboardLocationDetail = () => {
   let navigate = useNavigate();
+  const { locationId } = useParams();
   const [locations, loading, error] = useFireBaseLocations();
   if (loading) return <h3>Loading...</h3>;
   if (error) return <h3>Error: {error.message}</h3>;
 
   // Filter for location with id from URL
-  const locationId = window.location.pathname.split('/').pop();
   const location = locations.find((loc) => loc.id === locationId);
 
   if (!location)

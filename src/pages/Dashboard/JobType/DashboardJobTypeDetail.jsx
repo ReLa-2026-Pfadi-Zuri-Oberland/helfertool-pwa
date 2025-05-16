@@ -3,21 +3,21 @@ import {
   updateJobType,
   useFireBaseJobTypes,
 } from '../../../firebase/useFireBaseJobTypes';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Button from '../../../components/Button/Button';
 import GenericInput from '../../../components/GenericInput';
 import WhiteCard from '../../../components/WhiteCard';
 import WorkIcon from '@mui/icons-material/Work';
-import { useNavigate } from 'react-router-dom';
 
 const DashboardJobTypeDetail = () => {
   let navigate = useNavigate();
+  const { jobTypeId } = useParams();
   const [jobTypes, loading, error] = useFireBaseJobTypes();
   if (loading) return <h3>Loading...</h3>;
   if (error) return <h3>Error: {error.message}</h3>;
   // Filter for job type with id from url
-  const jobTypeId = window.location.pathname.split('/').pop();
   const jobType = jobTypes.find((job) => job.id === jobTypeId);
   if (!jobType)
     return (

@@ -3,22 +3,22 @@ import {
   updateUser,
   useFireBaseUsers,
 } from '../../../firebase/useFireBaseUsers';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Button from '../../../components/Button/Button';
 import GenericInput from '../../../components/GenericInput';
 import PersonIcon from '@mui/icons-material/Person';
 import WhiteCard from '../../../components/WhiteCard';
-import { useNavigate } from 'react-router-dom';
 
 const DashboardUserDetail = () => {
   let navigate = useNavigate();
+  const { userId } = useParams();
   const [users, loading, error] = useFireBaseUsers();
   if (loading) return <h3>Loading...</h3>;
   if (error) return <h3>Error: {error.message}</h3>;
 
   // Filter for user with id from URL
-  const userId = window.location.pathname.split('/').pop();
   const user = users.find((usr) => usr.id === userId);
 
   if (!user)

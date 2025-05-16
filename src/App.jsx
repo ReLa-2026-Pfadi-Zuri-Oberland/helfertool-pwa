@@ -114,7 +114,7 @@ const App = () => {
               }
             />
             <Route
-              path='/dashboard/organization/:id'
+              path='/dashboard/organization/:organizationId'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardOrganizationDetail />
@@ -130,7 +130,7 @@ const App = () => {
               }
             />
             <Route
-              path='/dashboard/location/:id'
+              path='/dashboard/location/:locationId'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardLocationDetail />
@@ -146,7 +146,7 @@ const App = () => {
               }
             />
             <Route
-              path='/dashboard/shift/:id'
+              path='/dashboard/shift/:shiftId'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardShiftDetail />
@@ -162,7 +162,7 @@ const App = () => {
               }
             />
             <Route
-              path='/dashboard/jobType/:id'
+              path='/dashboard/jobType/:jobTypeId'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardJobTypeDetail />
@@ -178,7 +178,7 @@ const App = () => {
               }
             />
             <Route
-              path='/dashboard/engagement/:id'
+              path='/dashboard/engagement/:engagementId'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardEngagementDetail />
@@ -194,7 +194,7 @@ const App = () => {
               }
             />
             <Route
-              path='/dashboard/user/:id'
+              path='/dashboard/user/:userId'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardUserDetail />

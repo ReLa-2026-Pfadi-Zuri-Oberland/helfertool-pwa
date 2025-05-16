@@ -3,22 +3,22 @@ import {
   updateOrganization,
   useFireBaseOrganizations,
 } from '../../../firebase/useFireBaseOrganizations';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Button from '../../../components/Button/Button';
 import DomainIcon from '@mui/icons-material/Domain';
 import GenericInput from '../../../components/GenericInput';
 import WhiteCard from '../../../components/WhiteCard';
-import { useNavigate } from 'react-router-dom';
 
 const DashboardOrganizationDetail = () => {
   let navigate = useNavigate();
+  const { organizationId } = useParams();
   const [organizations, loading, error] = useFireBaseOrganizations();
   if (loading) return <h3>Loading...</h3>;
   if (error) return <h3>Error: {error.message}</h3>;
 
   // Filter for organization with id from URL
-  const organizationId = window.location.pathname.split('/').pop();
   const organization = organizations.find((org) => org.id === organizationId);
 
   if (!organization)

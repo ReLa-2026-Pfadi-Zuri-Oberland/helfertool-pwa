@@ -3,6 +3,7 @@ import {
   updateEngagement,
   useFireBaseEngagements,
 } from '../../../firebase/useFireBaseEngagements';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Button from '../../../components/Button/Button';
@@ -13,10 +14,10 @@ import { useFireBaseJobTypes } from '../../../firebase/useFireBaseJobTypes';
 import { useFireBaseLocations } from '../../../firebase/useFireBaseLocations';
 import { useFireBaseShifts } from '../../../firebase/useFireBaseShifts';
 import { useFireBaseUsers } from '../../../firebase/useFireBaseUsers';
-import { useNavigate } from 'react-router-dom';
 
 const DashboardEngagementDetail = () => {
   let navigate = useNavigate();
+  const { engagementId } = useParams();
   const [engagements, loading, error] = useFireBaseEngagements();
   const [jobTypes, jobTypesLoading, jobTypesError] = useFireBaseJobTypes();
   const [locations, locationsLoading, locationsError] = useFireBaseLocations();
@@ -33,7 +34,6 @@ const DashboardEngagementDetail = () => {
   if (error || jobTypesError || locationsError || shiftsError || usersError)
     return <h3>Error: {error.message}</h3>;
   // Filter for engagement with id from url
-  const engagementId = window.location.pathname.split('/').pop();
   const engagement = engagements.find((eng) => eng.id === engagementId);
   if (!engagement)
     return (

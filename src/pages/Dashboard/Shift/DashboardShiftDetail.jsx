@@ -3,21 +3,21 @@ import {
   updateShift,
   useFireBaseShifts,
 } from '../../../firebase/useFireBaseShifts';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Button from '../../../components/Button/Button';
 import EventIcon from '@mui/icons-material/Event';
 import GenericInput from '../../../components/GenericInput';
 import WhiteCard from '../../../components/WhiteCard';
-import { useNavigate } from 'react-router-dom';
 
 const DashboardShiftDetail = () => {
   let navigate = useNavigate();
+  const { shiftId } = useParams();
   const [shifts, loading, error] = useFireBaseShifts();
   if (loading) return <h3>Loading...</h3>;
   if (error) return <h3>Error: {error.message}</h3>;
   // Filter for shift with id from url
-  const shiftId = window.location.pathname.split('/').pop();
   const shift = shifts.find((s) => s.id === shiftId);
   if (!shift)
     return (
