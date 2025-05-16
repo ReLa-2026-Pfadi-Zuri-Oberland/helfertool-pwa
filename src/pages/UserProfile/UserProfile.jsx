@@ -107,7 +107,7 @@ const UserProfile = () => {
             variant='primary'
             onClick={() => navigate('/0/anmelden')}
           >
-            HELFEREINSATZ
+            HELFENDENEINSATZ
           </Button>
         </Grid>
         {install && (
