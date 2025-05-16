@@ -1,16 +1,20 @@
+import { Logout, Menu, Smartphone } from '@mui/icons-material';
 import { updateUser, useFireBaseUsers } from '../../firebase/useFireBaseUsers';
 
 import Button from '../../components/Button/Button';
 import GenericInput from '../../components/GenericInput';
+import { Grid } from '@mui/material';
 import WhiteCard from '../../components/WhiteCard';
 import { auth } from '../../firebase/firebase';
 import littlePirate from './assets/little-pirate.png';
 import { signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 import { usePWAInstall } from 'react-use-pwa-install';
 
 const UserProfile = () => {
   const [users, loading, error] = useFireBaseUsers();
   const install = usePWAInstall();
+  const navigate = useNavigate();
   if (loading) return <h3>Loading...</h3>;
   if (error) return <h3>Error: {error.message}</h3>;
 
@@ -79,6 +83,7 @@ const UserProfile = () => {
           initialValue={user.city}
         />
         <GenericInput
+          className={'m-0'}
           kind='select'
           displayName='T-Shirt Grösse'
           updateFunction={(newValue) =>
@@ -94,16 +99,39 @@ const UserProfile = () => {
           ]}
         />
       </WhiteCard>
-      <div className='d-f'>
-        {install && (
-          <Button className='mr-2' onClick={install}>
-            INSTALL APP
+      <Grid container columns={16} spacing={2}>
+        <Grid item size={{ xs: 8, sm: 8, md: 4, lg: 4 }}>
+          <Button
+            icon={<Menu />}
+            className={'w100p'}
+            variant='primary'
+            onClick={() => navigate('/0/anmelden')}
+          >
+            HELFEREINSATZ
           </Button>
+        </Grid>
+        {install && (
+          <Grid item size={{ xs: 8, sm: 8, md: 4, lg: 4 }}>
+            <Button icon={<Smartphone />} className={'w100p'} onClick={install}>
+              INSTALL APP
+            </Button>
+          </Grid>
         )}
-        <Button variant='secondary' onClick={handleLogout}>
-          LOGOUT
-        </Button>
-      </div>
+        <Grid
+          item
+          size={{ xs: 16, sm: 16, md: 4, lg: 4 }}
+          offset={{ md: 4, lg: 4 }}
+        >
+          <Button
+            icon={<Logout />}
+            className={'w100p'}
+            variant='secondary'
+            onClick={handleLogout}
+          >
+            LOGOUT
+          </Button>
+        </Grid>
+      </Grid>
     </div>
   );
 };

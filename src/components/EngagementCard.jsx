@@ -25,7 +25,7 @@ const EngagementCard = ({
   const startTime = dayjs(start).format('HH:mm');
   const endTime = dayjs(end).format('HH:mm');
   return (
-    <WhiteCard className={'mb-1'}>
+    <WhiteCard className={'mb-1 b1-s rela-border-col'}>
       <div className='d-f f-jb'>
         <div>
           <h2 className='mt-1 mb-1'>{title}</h2>

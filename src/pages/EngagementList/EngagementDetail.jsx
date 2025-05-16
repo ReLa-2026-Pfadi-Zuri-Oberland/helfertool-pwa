@@ -15,7 +15,6 @@ import SubjectIcon from '@mui/icons-material/Subject';
 import { UserContext } from '../../context/UserContext';
 import WhiteCard from '../../components/WhiteCard';
 import dayjs from 'dayjs';
-import { isMobile } from '../../helpers/isMobile';
 import { useContext } from 'react';
 import { useFireBaseJobTypes } from '../../firebase/useFireBaseJobTypes';
 import { useFireBaseLocations } from '../../firebase/useFireBaseLocations';
@@ -66,13 +65,13 @@ const EngagementDetail = () => {
   )?.description;
 
   return (
-    <div className={`d-f f-jc`}>
+    <div className={`d-f f-jc fd-c`}>
       <DayCard
         day={dayjs(
           shifts.find((shift) => shift.id === engagement.shift)?.startDate
         ).format('DD-MM-YYYY')}
       />
-      <WhiteCard className={'mb-3'}>
+      <WhiteCard className={'mb-3 b1-s rela-border-col'}>
         <div className='d-f f-js f-ac col-rela-dark-red mb-2'>
           <ArrowBackIcon
             fontSize='medium'

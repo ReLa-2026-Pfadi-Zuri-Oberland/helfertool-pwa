@@ -23,7 +23,7 @@ const DayCard = ({ day }) => {
   ];
 
   return (
-    <WhiteCard thin={true} className={'mb-2'}>
+    <WhiteCard thin={true} className={'mb-2 b-1 b1-s rela-border-col'}>
       <div className='position-absolute' style={{ marginTop: '-15px' }}>
         <div className='position-relative'>
           <img style={{ width: '135px' }} src={pirateHat} alt='pirate hat' />

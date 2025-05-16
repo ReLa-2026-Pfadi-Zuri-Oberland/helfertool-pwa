@@ -3,6 +3,7 @@ import { Navigate, useParams } from 'react-router-dom';
 
 import DayCard from '../../components/DayCard';
 import EngagementCard from '../../components/EngagementCard';
+import WhiteCard from '../../components/WhiteCard';
 import { filterDates } from '../../helpers/filterDates';
 import { useFireBaseEngagements } from '../../firebase/useFireBaseEngagements';
 import { useFireBaseJobTypes } from '../../firebase/useFireBaseJobTypes';
@@ -133,86 +134,90 @@ const EngagementList = () => {
 
   return (
     <div>
-      <h1 className='col-rela-dark-red m-0'>Offene Helfereinsätze</h1>
-      <h4>Du möchtest mit dabei sein, wir freuen uns auf dich</h4>
-      <div className='d-f f-ac mb-2'>
-        <Select
-          multiple
-          displayEmpty
-          id={`filter-jobType`}
-          fullWidth
-          value={jobTypeFilter}
-          onChange={(e) => {
-            if (e.target.value.includes('')) {
-              setJobTypeFilter([]);
-              return;
-            }
-            setJobTypeFilter(e.target.value);
-          }}
-          error={error}
-          renderValue={(selected) => {
-            if (selected.length === 0) {
-              return <em>Alle Aufgaben</em>;
-            }
-            return (
-              <div className='d-f' style={{ gap: '0.5rem' }}>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </div>
-            );
-          }}
-        >
-          <MenuItem value=''>
-            <em>Alle Aufgaben</em>
-          </MenuItem>
-          {Object.keys(engagementsGroupedByJobType).map((item) => (
-            <MenuItem key={item} value={item}>
-              {item}
-            </MenuItem>
-          ))}
-        </Select>
-      </div>
-      <div className='d-f f-ac mb-3'>
-        <Select
-          multiple
-          displayEmpty
-          id={`filter-date`}
-          fullWidth
-          value={dateFilter}
-          onChange={(e) => {
-            if (e.target.value.includes('')) {
-              setDateFilter([]);
-              return;
-            }
-            setDateFilter(e.target.value);
-          }}
-          error={error}
-          renderValue={(selected) => {
-            if (selected.length === 0) {
-              return <em>Alle Daten</em>;
-            }
-            return (
-              <div className='d-f' style={{ gap: '0.5rem' }}>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </div>
-            );
-          }}
-        >
-          <MenuItem value=''>
-            <em>Alle Daten</em>
-          </MenuItem>
-          {Object.keys(engagementsGroupedByDate)
-            .sort(filterDates)
-            .map((item) => (
-              <MenuItem key={item} value={item}>
-                {item}
+      <WhiteCard className={'mb-3'}>
+        <h1 className='col-rela-dark-red m-0'>Offene Helfereinsätze</h1>
+        <h4>Du möchtest mit dabei sein, wir freuen uns auf dich</h4>
+        <Grid columns={16} container>
+          <Grid item size={{ xs: 16, sm: 16, md: 8, lg: 8 }}>
+            <Select
+              multiple
+              displayEmpty
+              id={`filter-jobType`}
+              fullWidth
+              value={jobTypeFilter}
+              onChange={(e) => {
+                if (e.target.value.includes('')) {
+                  setJobTypeFilter([]);
+                  return;
+                }
+                setJobTypeFilter(e.target.value);
+              }}
+              error={error}
+              renderValue={(selected) => {
+                if (selected.length === 0) {
+                  return <em>Alle Aufgaben</em>;
+                }
+                return (
+                  <div className='d-f' style={{ gap: '0.5rem' }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </div>
+                );
+              }}
+            >
+              <MenuItem value=''>
+                <em>Alle Aufgaben</em>
               </MenuItem>
-            ))}
-        </Select>
-      </div>
+              {Object.keys(engagementsGroupedByJobType).map((item) => (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </Select>
+          </Grid>
+          <Grid item size={{ xs: 16, sm: 16, md: 8, lg: 8 }}>
+            <Select
+              multiple
+              displayEmpty
+              id={`filter-date`}
+              fullWidth
+              value={dateFilter}
+              onChange={(e) => {
+                if (e.target.value.includes('')) {
+                  setDateFilter([]);
+                  return;
+                }
+                setDateFilter(e.target.value);
+              }}
+              error={error}
+              renderValue={(selected) => {
+                if (selected.length === 0) {
+                  return <em>Alle Daten</em>;
+                }
+                return (
+                  <div className='d-f' style={{ gap: '0.5rem' }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </div>
+                );
+              }}
+            >
+              <MenuItem value=''>
+                <em>Alle Daten</em>
+              </MenuItem>
+              {Object.keys(engagementsGroupedByDate)
+                .sort(filterDates)
+                .map((item) => (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                ))}
+            </Select>
+          </Grid>
+        </Grid>
+      </WhiteCard>
 
       {/* render keyss of grouped engagements */}
       {Object.keys(engagementsGrouped).map((date) => (
