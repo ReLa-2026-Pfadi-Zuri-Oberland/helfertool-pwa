@@ -3,11 +3,13 @@ import {
   registerForEngagement,
   useFireBaseEngagements,
 } from '../../firebase/useFireBaseEngagements';
+import { useContext, useState } from 'react';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Button from '../../components/Button/Button';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import DayCard from '../../components/DayCard';
+import { Dialog } from '@mui/material';
 import EngagementGauge from '../../components/EngagementGauge';
 import PlaceIcon from '@mui/icons-material/Place';
 import ScheduleIcon from '@mui/icons-material/Schedule';
@@ -15,7 +17,6 @@ import SubjectIcon from '@mui/icons-material/Subject';
 import { UserContext } from '../../context/UserContext';
 import WhiteCard from '../../components/WhiteCard';
 import dayjs from 'dayjs';
-import { useContext } from 'react';
 import { useFireBaseJobTypes } from '../../firebase/useFireBaseJobTypes';
 import { useFireBaseLocations } from '../../firebase/useFireBaseLocations';
 import { useFireBaseShifts } from '../../firebase/useFireBaseShifts';
@@ -24,6 +25,7 @@ const EngagementDetail = () => {
   let navigate = useNavigate();
   let engagementId = useParams().id;
   const { currentUser } = useContext(UserContext);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const [engagements, loading, error] = useFireBaseEngagements();
   const [shifts, shiftsLoading, shiftsError] = useFireBaseShifts();
@@ -130,14 +132,51 @@ const EngagementDetail = () => {
           <h4 className='m-0'>Beschreibung</h4>
         </div>
         <div className='mb-4'>{jobTypeDescription}</div>
+        <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+          <div style={{ padding: 24 }}>
+            <h3>Möchtest du dich definitiv für diesen Einsatz anmelden?</h3>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 16,
+                marginTop: 24,
+              }}
+            >
+              <Button onClick={() => setDialogOpen(false)}>Nein</Button>
+              <Button
+                onClick={() => {
+                  registerForEngagement(engagementId);
+                  setDialogOpen(false);
+                }}
+              >
+                Ja
+              </Button>
+            </div>
+          </div>
+        </Dialog>
         {currentUser && (
-          <Button
-            onClick={() => registerForEngagement(engagementId)}
-            disabled={engagement.isRegistered}
-          >
-            ANMELDEN
-          </Button>
+          <>
+            <Button
+              onClick={() => setDialogOpen(true)}
+              disabled={engagement.isRegistered}
+            >
+              ANMELDEN
+            </Button>
+            {engagement.isRegistered && (
+              <div className='d-f f-js f-ac mt-1'>
+                <h5 className='m-0 col-rela-dark-red'>
+                  Du hast dich bereits für diesen Einsatz registriert. Die
+                  zuständige Ressortleitung wird sich kurz vor dem Lager mit den
+                  Details bei dir melden.<br></br>
+                  Falls du nicht mehr teilnehmen kannst, melde dich bitte unter
+                  info@rela26.ch.
+                </h5>
+              </div>
+            )}
+          </>
         )}
+
         {!currentUser && (
           <Button
             onClick={() => navigate('/login')}
