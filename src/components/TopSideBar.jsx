@@ -67,7 +67,7 @@ const TopSideBar = ({ children }) => {
         </Toolbar>
         <Divider />
         <List>
-          <ListItem disablePadding key='Helfereinsätze'>
+          <ListItem disablePadding key='Helfendeneinsätze'>
             <ListItemButton
               onClick={() => {
                 setMobileOpen(false);
@@ -77,7 +77,7 @@ const TopSideBar = ({ children }) => {
               <ListItemIcon>
                 <Menu />
               </ListItemIcon>
-              <ListItemText primary='Helfereinsätze' />
+              <ListItemText primary='Helfendeneinsätze' />
             </ListItemButton>
           </ListItem>
           {hasPermission(['user:read']) && (
@@ -221,7 +221,7 @@ const TopSideBar = ({ children }) => {
             <Menu />
           </IconButton>
           <Typography variant='h6' noWrap component='div' color='black'>
-            Helfertool
+            Helfendentool
           </Typography>
         </Toolbar>
       </AppBar>
