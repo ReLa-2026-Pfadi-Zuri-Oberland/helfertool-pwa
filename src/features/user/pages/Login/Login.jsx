@@ -7,7 +7,7 @@ import {
 } from 'firebase/auth';
 
 import { Grid } from '@mui/material';
-import Logo from './assets/logo.jpg';
+import Logo from '../../assets/logo.jpg';
 import WhiteCard from '../../../../components/ui/WhiteCard';
 import { addUser } from '../../../../hooks/useFireBaseUsers';
 import { auth } from '../../../../lib/firebase';

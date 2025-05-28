@@ -20,13 +20,12 @@ const addUser = async (userInformation) => {
     const user = auth.currentUser;
 
     const newUser = {
-      name: userInformation?.name || user?.displayName || 'New User',
-      email: userInformation?.email || user?.email || 'test@test.ch',
+      name: userInformation?.name || user?.displayName || '',
+      email: userInformation?.email || user?.email || '',
       tShirtSize: '',
-      contactPhone:
-        userInformation?.contactPhone || user?.phoneNumber || '079 123 45 67',
-      street: 'Teststrasse 1',
-      city: 'Zürich',
+      contactPhone: userInformation?.contactPhone || user?.phoneNumber || '',
+      street: '',
+      city: '',
       roles: [],
     };
 

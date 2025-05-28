@@ -63,7 +63,10 @@ const GenericInput = ({
       } else if (kind === 'email') {
         return validator.isEmail(value);
       } else if (kind === 'phone') {
-        return validator.isMobilePhone(value.replace('+41', '0'), 'any');
+        return validator.isMobilePhone(
+          value.replace('+41', '0').replace(' ', ''),
+          'any'
+        );
       } else if (kind === 'select') {
         return data.some((item) => item.value === value) && value !== '';
       } else if (kind === 'multi-select') {

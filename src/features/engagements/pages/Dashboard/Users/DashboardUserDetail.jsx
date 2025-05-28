@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Button from '../../../../../components/ui/Button';
-import GenericInput from '../../../components/GenericInput';
+import GenericInput from '../../../../../components/ui/GenericInput';
 import PersonIcon from '@mui/icons-material/Person';
 import WhiteCard from '../../../../../components/ui/WhiteCard';
 

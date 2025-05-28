@@ -3,10 +3,10 @@ import { useContext, useState } from 'react';
 
 import CloseIcon from '@mui/icons-material/Close';
 import DehazeIcon from '@mui/icons-material/Dehaze';
-import { UserContext } from '../../../stores/UserContext';
-import { config } from '../../../config/config';
-import { isMobile } from '../../../utils/isMobile';
-import reLaLogo from '../../../assets/reLaLogo.png';
+import { UserContext } from '../../stores/UserContext';
+import { config } from '../../config/config';
+import { isMobile } from '../../utils/isMobile';
+import reLaLogo from '../../assets/reLaLogo.png';
 
 const Menu = ({ className, grouped = true }) => {
   const { hasPermission } = useContext(UserContext);

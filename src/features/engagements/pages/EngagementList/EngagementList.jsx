@@ -135,7 +135,7 @@ const EngagementList = () => {
   return (
     <div>
       <WhiteCard className={'mb-3'}>
-        <h1 className='col-rela-dark-red m-0'>Offene Helfereinsätze</h1>
+        <h1 className='col-rela-dark-red m-0'>Offene Helfendeneinsätze</h1>
         <h4>Du möchtest mit dabei sein, wir freuen uns auf dich</h4>
         <Grid columns={16} container spacing={2}>
           <Grid item size={{ xs: 16, sm: 16, md: 8, lg: 8 }}>

@@ -15,11 +15,11 @@ import DashboardUserDetail from '../features/engagements/pages/Dashboard/Users/D
 import DashboardUsers from '../features/engagements/pages/Dashboard/Users/DashboardUsers';
 import EngagementDetail from '../features/engagements/pages/EngagementList/EngagementDetail';
 import EngagementList from '../features/engagements/pages/EngagementList/EngagementList';
-import Login from '../features/engagements/pages/Login/Login';
+import Login from '../features/user/pages/Login/Login';
 import ProtectedRoute from '../components/ui/ProtectedRoute';
 import TopSideBar from '../components/layout/TopSideBarLayout';
 import { UserContext } from '../stores/UserContext';
-import UserProfile from '../features/engagements/pages/UserProfile/UserProfile';
+import UserProfile from '../features/user/pages/UserProfile/UserProfile';
 import { useContext } from 'react';
 
 const Router = () => {

@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Button from '../../../../../components/ui/Button';
 import DomainIcon from '@mui/icons-material/Domain';
-import GenericInput from '../../../components/GenericInput';
+import GenericInput from '../../../../../components/ui/GenericInput';
 import WhiteCard from '../../../../../components/ui/WhiteCard';
 
 const DashboardOrganizationDetail = () => {

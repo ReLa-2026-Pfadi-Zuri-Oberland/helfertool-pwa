@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Button from '../../../../../components/ui/Button';
 import EventIcon from '@mui/icons-material/Event';
-import GenericInput from '../../../components/GenericInput';
+import GenericInput from '../../../../../components/ui/GenericInput';
 import WhiteCard from '../../../../../components/ui/WhiteCard';
 
 const DashboardShiftDetail = () => {

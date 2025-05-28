@@ -5,11 +5,11 @@ import {
 } from '../../../../hooks/useFireBaseUsers';
 
 import Button from '../../../../components/ui/Button';
-import GenericInput from '../../components/GenericInput';
+import GenericInput from '../../../../components/ui/GenericInput';
 import { Grid } from '@mui/material';
 import WhiteCard from '../../../../components/ui/WhiteCard';
 import { auth } from '../../../../lib/firebase';
-import littlePirate from './assets/little-pirate.png';
+import littlePirate from '../../assets/little-pirate.png';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { usePWAInstall } from 'react-use-pwa-install';
