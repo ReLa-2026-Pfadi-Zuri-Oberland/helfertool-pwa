@@ -1,3 +1,6 @@
+import '../styles/cssClasses.css';
+import '../styles/reLaCSS.css';
+
 import AppProvider from './provider.jsx';
 import { HashRouter } from 'react-router-dom';
 import Router from './router.jsx'; // changed to lowercase

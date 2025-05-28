@@ -61,7 +61,7 @@ const Router = () => {
   return (
     <>
       <TopSideBar>
-        {loading && (
+        {!loading && (
           <Routes>
             <Route path='/' element={<Navigate to='/0/anmelden' />} />
             <Route
