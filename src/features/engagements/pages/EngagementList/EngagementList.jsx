@@ -4,6 +4,7 @@ import { Navigate, useParams } from 'react-router-dom';
 import DayCard from '../../components/DayCard';
 import EngagementCard from '../../components/EngagementCard';
 import WhiteCard from '../../../../components/ui/WhiteCard';
+import dayjs from '../../../../utils/dayjs';
 import { filterDates } from '../../utils/filterDates';
 import { useFireBaseEngagements } from '../../hooks/useFireBaseEngagements';
 import { useFireBaseJobTypes } from '../../hooks/useFireBaseJobTypes';
@@ -80,14 +81,9 @@ const EngagementList = () => {
 
   let engagementsGrouped = engagementsFiltered.reduce((acc, engagement) => {
     const shift = shifts.find((s) => s.id === engagement.shift);
-    console.log(shift);
-
     if (shift) {
-      const date = new Date(shift.startDate).toLocaleDateString('de-DE', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      });
+      // Parse UTC date and convert to local, then format as 'DD.MM.YYYY'
+      const date = dayjs(shift.startDate).local().format('DD.MM.YYYY');
       if (!acc[date]) {
         acc[date] = [];
       }
@@ -95,7 +91,6 @@ const EngagementList = () => {
     }
     return acc;
   }, {});
-  console.log(engagementsGrouped);
 
   /* Group ENGAGEMENTS BY JOB TYPE to get List for Select */
 
@@ -119,11 +114,8 @@ const EngagementList = () => {
   let engagementsGroupedByDate = engagementsOfOrg.reduce((acc, engagement) => {
     const shift = shifts.find((s) => s.id === engagement.shift);
     if (shift) {
-      const date = new Date(shift.startDate).toLocaleDateString('de-DE', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      });
+      // Use dayjs to parse and format the date as local
+      const date = dayjs(shift.startDate).local().format('DD.MM.YYYY');
       if (!acc[date]) {
         acc[date] = [];
       }
@@ -222,7 +214,7 @@ const EngagementList = () => {
       {/* render keyss of grouped engagements */}
       {Object.keys(engagementsGrouped).map((date) => (
         <div key={date}>
-          <DayCard day={date} />
+          <DayCard dayUTC={dayjs(date, 'DD.MM.YYYY').utc().toISOString()} />
           <Grid container spacing={2} columns={16}>
             {engagementsGrouped[date].map((engagement, index) => (
               <Grid item size={{ xs: 16, sm: 16, md: 16, lg: 8 }} key={index}>

@@ -1,13 +1,10 @@
 import { Box } from '@mui/material';
 import WhiteCard from '../../../components/ui/WhiteCard';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-import dayjs from 'dayjs';
+import dayjs from '../../../utils/dayjs';
 import pirateHat from '../assets/pirate-hat.svg';
 
-const DayCard = ({ day }) => {
-  console.log(day);
-  dayjs.extend(customParseFormat);
-  const date = dayjs(day, 'DD.MM.YYYY');
+const DayCard = ({ dayUTC }) => {
+  const localDate = dayjs(dayUTC).local();
   const monthArray = [
     'Januar',
     'Februar',
@@ -36,7 +33,7 @@ const DayCard = ({ day }) => {
             style={{ top: '-5px', left: '55px', transform: 'rotate(-20deg)' }}
             className='position-absolute col-fff'
           >
-            {date.date()}
+            {localDate.date()}
           </h1>
         </div>
       </div>
@@ -65,13 +62,13 @@ const DayCard = ({ day }) => {
               style={{ top: '-5px', left: '60px', transform: 'rotate(20deg)' }}
               className='position-absolute col-fff'
             >
-              {date.date()}
+              {localDate.date()}
             </h1>
           </div>
         </div>
       </Box>
       <div className='d-f f-ac f-jc'>
-        <h1 className='m-1'>{monthArray[date.month()]}</h1>
+        <h1 className='m-1'>{monthArray[localDate.month()]}</h1>
       </div>
     </WhiteCard>
   );

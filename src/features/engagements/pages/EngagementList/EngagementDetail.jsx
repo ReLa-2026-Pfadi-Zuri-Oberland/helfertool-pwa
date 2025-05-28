@@ -16,7 +16,7 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import SubjectIcon from '@mui/icons-material/Subject';
 import { UserContext } from '../../../../stores/UserContext';
 import WhiteCard from '../../../../components/ui/WhiteCard';
-import dayjs from 'dayjs';
+import dayjs from '../../../../utils/dayjs';
 import { useFireBaseJobTypes } from '../../hooks/useFireBaseJobTypes';
 import { useFireBaseLocations } from '../../hooks/useFireBaseLocations';
 import { useFireBaseShifts } from '../../hooks/useFireBaseShifts';
@@ -50,9 +50,10 @@ const EngagementDetail = () => {
   const locationDescription = locations.find(
     (l) => l.id === engagement.location
   )?.description;
-  const date = shifts.find((s) => s.id === engagement.shift)?.startDate;
-  const startDate = shifts.find((s) => s.id === engagement.shift)?.startDate;
-  const endDate = shifts.find((s) => s.id === engagement.shift)?.endDate;
+  const startDateUTC = shifts.find((s) => s.id === engagement.shift)?.startDate;
+  const localStartDate = dayjs(startDateUTC).local();
+  const endDateUTC = shifts.find((s) => s.id === engagement.shift)?.endDate;
+  const localEndDate = dayjs(endDateUTC).local();
   const weekDaysGerman = [
     'Sonntag',
     'Montag',
@@ -69,9 +70,9 @@ const EngagementDetail = () => {
   return (
     <div className={`d-f f-jc fd-c`}>
       <DayCard
-        day={dayjs(
+        dayUTC={
           shifts.find((shift) => shift.id === engagement.shift)?.startDate
-        ).format('DD-MM-YYYY')}
+        }
       />
       <WhiteCard className={'mb-3 b1-s rela-border-col'}>
         <div className='d-f f-js f-ac col-rela-dark-red mb-2'>
@@ -92,17 +93,17 @@ const EngagementDetail = () => {
               <h4 className='m-0'>Tag</h4>
             </div>
             <div className='mb-2'>
-              {`${weekDaysGerman[dayjs(date).day()]}, ${dayjs(date).format(
-                'DD.MM.YYYY'
-              )}`}
+              {`${
+                weekDaysGerman[localStartDate.day()]
+              }, ${localStartDate.format('DD.MM.YYYY')}`}
             </div>
             <div className='d-f f-ac mb-1'>
               <ScheduleIcon className='mr-2' />
               <h4 className='m-0'>Uhrzeit</h4>
             </div>
-            <div className='mb-2'>{`${dayjs(startDate, 'HH:mm').format(
+            <div className='mb-2'>{`${localStartDate.format(
               'HH:mm'
-            )} - ${dayjs(endDate, 'HH:mm').format('HH:mm')}`}</div>
+            )} - ${localEndDate.format('HH:mm')}`}</div>
             <div className='d-f f-ac mb-1'>
               <PlaceIcon className='mr-2' />
               <h4 className='m-0'>Ort</h4>

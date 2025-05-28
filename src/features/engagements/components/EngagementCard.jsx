@@ -19,9 +19,9 @@ const EngagementCard = ({
   orgId,
 }) => {
   let navigate = useNavigate();
-  const date = dayjs(start).format('DD.MM.YYYY');
-  const startTime = dayjs(start).format('HH:mm');
-  const endTime = dayjs(end).format('HH:mm');
+  const date = dayjs(start).local().format('DD.MM.YYYY');
+  const localStartTime = dayjs(start).local().format('HH:mm');
+  const localEndTime = dayjs(end).local().format('HH:mm');
   return (
     <WhiteCard className={'mb-1 b1-s rela-border-col'}>
       <div className='d-f f-jb'>
@@ -33,7 +33,7 @@ const EngagementCard = ({
           </div>
           <div className='d-f f-ac'>
             <ScheduleIcon className='mr-1' />
-            <h4 className='m-1'>{`${startTime} - ${endTime}`}</h4>
+            <h4 className='m-1'>{`${localStartTime} - ${localEndTime}`}</h4>
           </div>
           <div className='d-f f-ac mb-2'>
             <CalendarTodayIcon className='mr-1' />

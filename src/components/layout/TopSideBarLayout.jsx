@@ -172,7 +172,13 @@ const TopSideBar = ({ children }) => {
       <Box sx={{ mt: 'auto' }}>
         <Divider />
         <List>
-          <ListItem>
+          <ListItem
+            className='cursor-pointer'
+            onClick={() => {
+              setMobileOpen(false);
+              window.open('https://www.rela26.ch', '_blank');
+            }}
+          >
             <ListItemAvatar>
               <Avatar>
                 <CorporateFare />
@@ -180,7 +186,13 @@ const TopSideBar = ({ children }) => {
             </ListItemAvatar>
             <ListItemText primary='Organisation' secondary={'ReLa26'} />
           </ListItem>
-          <ListItem>
+          <ListItem
+            className='cursor-pointer'
+            onClick={() => {
+              setMobileOpen(false);
+              window.open('https://www.rela26.ch', '_blank');
+            }}
+          >
             <ListItemAvatar>
               <Avatar>
                 <Language />
@@ -188,7 +200,13 @@ const TopSideBar = ({ children }) => {
             </ListItemAvatar>
             <ListItemText primary='Website' secondary='www.rela26.ch' />
           </ListItem>
-          <ListItem>
+          <ListItem
+            className='cursor-pointer'
+            onClick={() => {
+              setMobileOpen(false);
+              window.location.href = 'mailto:info@rela26.ch';
+            }}
+          >
             <ListItemAvatar>
               <Avatar>
                 <Email />
