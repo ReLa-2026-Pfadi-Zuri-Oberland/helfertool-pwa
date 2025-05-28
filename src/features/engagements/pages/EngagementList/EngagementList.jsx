@@ -250,7 +250,7 @@ const EngagementList = () => {
           <div className='mb-3' />
         </div>
       ))}
-      <h4 className='mr-2 ml-2 mt-3 mb-3'>
+      <h4 className='mr-2 ml-2 mt-3 mb-3 text-align-center'>
         Du hast alle Einsätze endeckt. Such dir einen aus. Bei Fragen melde dich
         bei: info@rela26.ch
       </h4>
