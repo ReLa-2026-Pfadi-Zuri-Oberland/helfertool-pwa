@@ -2,9 +2,11 @@
 // Note that you can only use Firebase Messaging here. Other Firebase libraries
 // are not available in the service worker.
 // Replace 10.13.2 with latest version of the Firebase JS SDK.
+// eslint-disable-next-line no-undef
 importScripts(
   'https://www.gstatic.com/firebasejs/11.5.0/firebase-app-compat.js'
 );
+// eslint-disable-next-line no-undef
 importScripts(
   'https://www.gstatic.com/firebasejs/11.5.0/firebase-messaging-compat.js'
 );
@@ -12,6 +14,7 @@ importScripts(
 // Initialize the Firebase app in the service worker by passing in
 // your app's Firebase config object.
 // https://firebase.google.com/docs/web/setup#config-object
+// eslint-disable-next-line no-undef
 firebase.initializeApp({
   apiKey: 'AIzaSyBGCtxcCDpEPrT1FzsxobctGaRvGCa-cbA',
   authDomain: 'rela-test.firebaseapp.com',
@@ -23,6 +26,7 @@ firebase.initializeApp({
 
 // Retrieve an instance of Firebase Messaging so that it can handle background
 // messages.
+// eslint-disable-next-line no-unused-vars, no-undef
 const messaging = firebase.messaging();
 
 //Enable for having a message with logo
