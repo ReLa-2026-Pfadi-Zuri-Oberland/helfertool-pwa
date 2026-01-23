@@ -13,7 +13,7 @@ import { useFireBaseJobTypes } from '../../../hooks/useFireBaseJobTypes';
 import { useFireBaseLocations } from '../../../hooks/useFireBaseLocations';
 import { useFireBaseShifts } from '../../../hooks/useFireBaseShifts';
 import { useFireBaseUsers } from '../../../../../hooks/useFireBaseUsers';
-
+import Button from '../../../../../components/ui/Button';
 const DashboardEngagementDetail = () => {
   let navigate = useNavigate();
   const { engagementId } = useParams();
@@ -43,19 +43,19 @@ const DashboardEngagementDetail = () => {
 
   if (engagement.jobType) {
     engagement.jobTypeData = jobTypes.find(
-      (jobType) => jobType.id === engagement.jobType
+      (jobType) => jobType.id === engagement.jobType,
     );
   }
 
   if (engagement.location) {
     engagement.locationData = locations.find(
-      (location) => location.id === engagement.location
+      (location) => location.id === engagement.location,
     );
   }
 
   if (engagement.shift) {
     engagement.shiftData = shifts.find(
-      (shift) => shift.id === engagement.shift
+      (shift) => shift.id === engagement.shift,
     );
   }
 

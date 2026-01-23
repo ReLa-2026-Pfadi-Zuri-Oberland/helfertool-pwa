@@ -1,7 +1,7 @@
 import { CircularProgress } from '@mui/material';
 import { UserContext } from '../../stores/UserContext';
 import { useContext } from 'react';
-
+import { Navigate } from 'react-router-dom';
 const ProtectedRoute = ({ permission, children }) => {
   const { hasPermission, loading } = useContext(UserContext);
   if (loading)

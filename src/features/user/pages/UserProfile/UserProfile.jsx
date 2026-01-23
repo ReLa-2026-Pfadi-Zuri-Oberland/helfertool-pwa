@@ -1,4 +1,4 @@
-import { Logout, Menu, Smartphone } from '@mui/icons-material';
+import { Logout, Menu } from '@mui/icons-material';
 import {
   updateUser,
   useFireBaseUsers,
@@ -12,11 +12,9 @@ import { auth } from '../../../../lib/firebase';
 import littlePirate from '../../assets/little-pirate.png';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { usePWAInstall } from 'react-use-pwa-install';
 
 const UserProfile = () => {
   const [users, loading, error] = useFireBaseUsers();
-  const install = usePWAInstall();
   const navigate = useNavigate();
   if (loading) return <h3>Loading...</h3>;
   if (error) return <h3>Error: {error.message}</h3>;
@@ -103,27 +101,20 @@ const UserProfile = () => {
         />
       </WhiteCard>
       <Grid container columns={16} spacing={2}>
-        <Grid item size={{ xs: 8, sm: 8, md: 4, lg: 4 }}>
+        <Grid item size={{ xs: 16, sm: 16, md: 4, lg: 4 }}>
           <Button
             icon={<Menu />}
             className={'w100p'}
             variant='primary'
             onClick={() => navigate('/0/anmelden')}
           >
-            HELFENDENEINSATZ
+            LISTE EINSÄTZE
           </Button>
         </Grid>
-        {install && (
-          <Grid item size={{ xs: 8, sm: 8, md: 4, lg: 4 }}>
-            <Button icon={<Smartphone />} className={'w100p'} onClick={install}>
-              INSTALL APP
-            </Button>
-          </Grid>
-        )}
         <Grid
           item
           size={{ xs: 16, sm: 16, md: 4, lg: 4 }}
-          offset={{ md: 4, lg: 4 }}
+          offset={{ md: 8, lg: 8 }}
         >
           <Button
             icon={<Logout />}
