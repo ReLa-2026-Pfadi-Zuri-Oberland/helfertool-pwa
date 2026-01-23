@@ -55,7 +55,7 @@ const EngagementList = () => {
   }
 
   let engagementsOfOrg = engagements.filter(
-    (engagement) => engagement.organization === orgId
+    (engagement) => engagement.organization === orgId,
   );
 
   /* FILTER ENGAGEMENTS BY JOB TYPE */
@@ -106,7 +106,7 @@ const EngagementList = () => {
       }
       return acc;
     },
-    {}
+    {},
   );
 
   /* Group ENGAGEMENTS BY Date to get List for Select */
@@ -211,45 +211,47 @@ const EngagementList = () => {
         </Grid>
       </WhiteCard>
 
-      {/* render keyss of grouped engagements */}
-      {Object.keys(engagementsGrouped).map((date) => (
-        <div key={date}>
-          <DayCard dayUTC={dayjs(date, 'DD.MM.YYYY').utc().toISOString()} />
-          <Grid container spacing={2} columns={16}>
-            {engagementsGrouped[date].map((engagement, index) => (
-              <Grid item size={{ xs: 16, sm: 16, md: 16, lg: 8 }} key={index}>
-                <EngagementCard
-                  key={index}
-                  id={engagement.id}
-                  orgId={engagement.organization}
-                  title={
-                    jobTypes.find(
-                      (jobType) => jobType.id === engagement.jobType
-                    )?.name
-                  }
-                  location={
-                    locations.find(
-                      (location) => location.id === engagement.location
-                    )?.name
-                  }
-                  start={
-                    shifts.find((shift) => shift.id === engagement.shift)
-                      ?.startDate
-                  }
-                  end={
-                    shifts.find((shift) => shift.id === engagement.shift)
-                      ?.endDate
-                  }
-                  currentAmountOfHelpers={engagement.helpers?.length || 0}
-                  targetNumberOfHelpers={engagement.targetNumberOfHelpers}
-                  isRegistered={engagement.isRegistered}
-                />
-              </Grid>
-            ))}
-          </Grid>
-          <div className='mb-3' />
-        </div>
-      ))}
+      {/* render keys of grouped engagements */}
+      {Object.keys(engagementsGrouped)
+        .sort(filterDates)
+        .map((date) => (
+          <div key={date}>
+            <DayCard dayUTC={dayjs(date, 'DD.MM.YYYY').utc().toISOString()} />
+            <Grid container spacing={2} columns={16}>
+              {engagementsGrouped[date].map((engagement, index) => (
+                <Grid item size={{ xs: 16, sm: 16, md: 16, lg: 8 }} key={index}>
+                  <EngagementCard
+                    key={index}
+                    id={engagement.id}
+                    orgId={engagement.organization}
+                    title={
+                      jobTypes.find(
+                        (jobType) => jobType.id === engagement.jobType,
+                      )?.name
+                    }
+                    location={
+                      locations.find(
+                        (location) => location.id === engagement.location,
+                      )?.name
+                    }
+                    start={
+                      shifts.find((shift) => shift.id === engagement.shift)
+                        ?.startDate
+                    }
+                    end={
+                      shifts.find((shift) => shift.id === engagement.shift)
+                        ?.endDate
+                    }
+                    currentAmountOfHelpers={engagement.helpers?.length || 0}
+                    targetNumberOfHelpers={engagement.targetNumberOfHelpers}
+                    isRegistered={engagement.isRegistered}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+            <div className='mb-3' />
+          </div>
+        ))}
       <h4 className='mr-2 ml-2 mt-3 mb-3 text-align-center'>
         Du hast alle Einsätze endeckt. Such dir einen aus. Bei Fragen melde dich
         bei: info@rela26.ch

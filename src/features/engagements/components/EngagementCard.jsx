@@ -39,10 +39,7 @@ const EngagementCard = ({
             <CalendarTodayIcon className='mr-1' />
             <h4 className='m-1'>{date}</h4>
           </div>
-          <Button
-            size='S'
-            onClick={() => navigate('/' + orgId + '/anmelden/' + id)}
-          >
+          <Button size='S' onClick={() => navigate('/0/anmelden/' + id)}>
             MEHR ERFAHREN
           </Button>
         </div>

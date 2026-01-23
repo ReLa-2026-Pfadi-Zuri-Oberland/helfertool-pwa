@@ -48,7 +48,7 @@ const EngagementDetail = () => {
   const title = jobTypes.find((j) => j.id === engagement.jobType)?.name;
   const location = locations.find((l) => l.id === engagement.location)?.name;
   const locationDescription = locations.find(
-    (l) => l.id === engagement.location
+    (l) => l.id === engagement.location,
   )?.description;
   const startDateUTC = shifts.find((s) => s.id === engagement.shift)?.startDate;
   const localStartDate = dayjs(startDateUTC).local();
@@ -64,7 +64,7 @@ const EngagementDetail = () => {
     'Samstag',
   ];
   const jobTypeDescription = jobTypes.find(
-    (j) => j.id === engagement.jobType
+    (j) => j.id === engagement.jobType,
   )?.description;
 
   return (
@@ -82,7 +82,8 @@ const EngagementDetail = () => {
             onClick={() => {
               navigate('/' + engagement.organization + '/anmelden');
             }}
-          />
+          />{' '}
+          {console.log('Engagement', engagement)}
           <h2 className='m-0'>{title}</h2>
         </div>
 
@@ -102,7 +103,7 @@ const EngagementDetail = () => {
               <h4 className='m-0'>Uhrzeit</h4>
             </div>
             <div className='mb-2'>{`${localStartDate.format(
-              'HH:mm'
+              'HH:mm',
             )} - ${localEndDate.format('HH:mm')}`}</div>
             <div className='d-f f-ac mb-1'>
               <PlaceIcon className='mr-2' />

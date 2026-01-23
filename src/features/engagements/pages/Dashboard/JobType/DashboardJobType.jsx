@@ -101,7 +101,7 @@ const DashboardJobType = () => {
         <Button
           color='primary'
           className={'mt-2'}
-          startIcon={<AddIcon />}
+          icon={<AddIcon />}
           onClick={handleAddJobType}
           style={{ alignSelf: 'flex-start' }}
         >

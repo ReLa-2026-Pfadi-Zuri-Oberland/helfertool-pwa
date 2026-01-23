@@ -4,11 +4,11 @@
 // Replace 10.13.2 with latest version of the Firebase JS SDK.
 // eslint-disable-next-line no-undef
 importScripts(
-  'https://www.gstatic.com/firebasejs/11.5.0/firebase-app-compat.js'
+  'https://www.gstatic.com/firebasejs/11.5.0/firebase-app-compat.js',
 );
 // eslint-disable-next-line no-undef
 importScripts(
-  'https://www.gstatic.com/firebasejs/11.5.0/firebase-messaging-compat.js'
+  'https://www.gstatic.com/firebasejs/11.5.0/firebase-messaging-compat.js',
 );
 
 // Initialize the Firebase app in the service worker by passing in
@@ -16,12 +16,12 @@ importScripts(
 // https://firebase.google.com/docs/web/setup#config-object
 // eslint-disable-next-line no-undef
 firebase.initializeApp({
-  apiKey: 'AIzaSyBGCtxcCDpEPrT1FzsxobctGaRvGCa-cbA',
-  authDomain: 'rela-test.firebaseapp.com',
-  projectId: 'rela-test',
-  storageBucket: 'rela-test.firebasestorage.app',
-  messagingSenderId: '549182367379',
-  appId: '1:549182367379:web:2ac11a2d9bb13f42848f66',
+  apiKey: 'AIzaSyCwy-FV4dcszTnmMdARKGrCVUIAfN1phqQ',
+  authDomain: 'helfendentool-rela26.firebaseapp.com',
+  projectId: 'helfendentool-rela26',
+  storageBucket: 'helfendentool-rela26.firebasestorage.app',
+  messagingSenderId: '576502766595',
+  appId: '1:576502766595:web:7823335135438baa8a4236',
 });
 
 // Retrieve an instance of Firebase Messaging so that it can handle background

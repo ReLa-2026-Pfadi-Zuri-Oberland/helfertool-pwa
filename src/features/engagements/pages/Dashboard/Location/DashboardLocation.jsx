@@ -101,7 +101,7 @@ const DashboardLocation = () => {
         <Button
           color='primary'
           className={'mt-2'}
-          startIcon={<AddIcon />}
+          icon={<AddIcon />}
           onClick={handleAddLocation}
           style={{ alignSelf: 'flex-start' }}
         >

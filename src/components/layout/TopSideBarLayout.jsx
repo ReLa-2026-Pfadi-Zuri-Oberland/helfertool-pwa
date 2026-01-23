@@ -1,5 +1,6 @@
 import {
   Assignment,
+  BarChart,
   Business,
   CorporateFare,
   Dashboard,
@@ -150,6 +151,11 @@ const TopSideBar = ({ children }) => {
                     text: 'Engagements',
                     to: 'dashboard/engagements',
                     icon: <Assignment />,
+                  },
+                  {
+                    text: 'Statistics',
+                    to: 'dashboard/statistics',
+                    icon: <BarChart />,
                   },
                 ].map(({ text, to, icon }) => (
                   <ListItem disablePadding key={text} sx={{ pl: 4 }}>

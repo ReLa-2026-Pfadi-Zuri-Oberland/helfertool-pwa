@@ -3,14 +3,12 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import DashboardEngagement from '../features/engagements/pages/Dashboard/Engagement/DashboardEngagement';
 import DashboardEngagementDetail from '../features/engagements/pages/Dashboard/Engagement/DashboardEngagementDetail';
 import DashboardJobType from '../features/engagements/pages/Dashboard/JobType/DashboardJobType';
-import DashboardJobTypeDetail from '../features/engagements/pages/Dashboard/JobType/DashboardJobTypeDetail';
 import DashboardLocation from '../features/engagements/pages/Dashboard/Location/DashboardLocation';
-import DashboardLocationDetail from '../features/engagements/pages/Dashboard/Location/DashboardLocationDetail';
 import DashboardOrganization from '../features/engagements/pages/Dashboard/Organization/DashboardOrganization';
 import DashboardOrganizationDetail from '../features/engagements/pages/Dashboard/Organization/DashboardOrganizationDetail';
 import DashboardOverview from '../features/engagements/pages/Dashboard/Overview/DashboardOverview';
 import DashboardShift from '../features/engagements/pages/Dashboard/Shift/DashboardShift';
-import DashboardShiftDetail from '../features/engagements/pages/Dashboard/Shift/DashboardShiftDetail';
+import DashboardStatistics from '../features/engagements/pages/Dashboard/Statistics/DashboardStatistics';
 import DashboardUserDetail from '../features/engagements/pages/Dashboard/Users/DashboardUserDetail';
 import DashboardUsers from '../features/engagements/pages/Dashboard/Users/DashboardUsers';
 import EngagementDetail from '../features/engagements/pages/EngagementList/EngagementDetail';
@@ -97,14 +95,6 @@ const Router = () => {
               }
             />
             <Route
-              path='/dashboard/location/:locationId'
-              element={
-                <ProtectedRoute permission='dashboard:view'>
-                  <DashboardLocationDetail />
-                </ProtectedRoute>
-              }
-            />
-            <Route
               path='/dashboard/shifts'
               element={
                 <ProtectedRoute permission='dashboard:view'>
@@ -113,26 +103,10 @@ const Router = () => {
               }
             />
             <Route
-              path='/dashboard/shift/:shiftId'
-              element={
-                <ProtectedRoute permission='dashboard:view'>
-                  <DashboardShiftDetail />
-                </ProtectedRoute>
-              }
-            />
-            <Route
               path='/dashboard/jobTypes'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardJobType />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/dashboard/jobType/:jobTypeId'
-              element={
-                <ProtectedRoute permission='dashboard:view'>
-                  <DashboardJobTypeDetail />
                 </ProtectedRoute>
               }
             />
@@ -173,6 +147,14 @@ const Router = () => {
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardOverview />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/dashboard/statistics'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DashboardStatistics />
                 </ProtectedRoute>
               }
             />

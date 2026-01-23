@@ -27,6 +27,7 @@ const Menu = ({ className, grouped = true }) => {
         { text: 'Shifts', to: 'dashboard/shifts' },
         { text: 'Users', to: 'dashboard/users' },
         { text: 'Engagements', to: 'dashboard/engagements' },
+        { text: 'Statistics', to: 'dashboard/statistics' },
       ],
     },
   ];
@@ -44,7 +45,7 @@ const Menu = ({ className, grouped = true }) => {
                   onMouseLeave={() => {
                     const timeout = setTimeout(
                       () => setDashboardOpen(false),
-                      200
+                      200,
                     );
                     setHoverTimeout(timeout);
                   }}
@@ -71,7 +72,7 @@ const Menu = ({ className, grouped = true }) => {
                             >
                               {child.text}
                             </Link>
-                          )
+                          ),
                       )}
                     </div>
                   )}
@@ -89,7 +90,7 @@ const Menu = ({ className, grouped = true }) => {
                         >
                           {child.text}
                         </Link>
-                      )
+                      ),
                   )}
                 </div>
               ) : null}

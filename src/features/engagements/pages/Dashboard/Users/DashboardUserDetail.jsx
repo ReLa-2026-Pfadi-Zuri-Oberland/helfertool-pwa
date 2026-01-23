@@ -89,6 +89,18 @@ const DashboardUserDetail = () => {
           { value: 'M', label: 'M' },
           { value: 'L', label: 'L' },
           { value: 'XL', label: 'XL' },
+          { value: 'XXL', label: 'XXL' },
+          { value: 'XXXL', label: 'XXXL' },
+        ]}
+      />
+      <GenericInput
+        kind='multi-select'
+        displayName='Rollen'
+        updateFunction={(newValue) => updateUser(user.id, { roles: newValue })}
+        initialValue={user.roles || []}
+        data={[
+          { value: 'admin', label: 'Admin' },
+          { value: 'default', label: 'Default' },
         ]}
       />
       <Button

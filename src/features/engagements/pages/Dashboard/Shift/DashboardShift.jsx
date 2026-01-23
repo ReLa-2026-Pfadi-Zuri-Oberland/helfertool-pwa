@@ -145,7 +145,7 @@ const DashboardShift = () => {
         <Button
           color='primary'
           className={'mt-2'}
-          startIcon={<AddIcon />}
+          icon={<AddIcon />}
           onClick={handleAddShift}
           style={{ alignSelf: 'flex-start' }}
         >

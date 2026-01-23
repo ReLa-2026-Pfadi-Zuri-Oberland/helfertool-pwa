@@ -1,52 +1,122 @@
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import React from 'react';
 import {
-  addUser,
+  removeUser,
   useFireBaseUsers,
 } from '../../../../../hooks/useFireBaseUsers';
 
-import Button from '../../../../../components/ui/Button';
-import DashbaordTitleCard from '../../../components/DashboardTitleCard';
-import DashboardDetailCard from '../../../components/DashboardDetailCard';
-import PersonIcon from '@mui/icons-material/Person';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router';
 
 const DashboardUsers = () => {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const [users, loading, error] = useFireBaseUsers();
-  if (loading) return <h3>Loading...</h3>;
-  if (error) return <h3>Error: {error.message}</h3>;
+
+  const handleEditClick = (id) => {
+    navigate('/dashboard/user/' + id);
+  };
+
+  const columns = [
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 120,
+      type: 'actions',
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<EditIcon />}
+          label='Edit'
+          onClick={() => handleEditClick(params.id)}
+          showInMenu={false}
+        />,
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label='Delete'
+          onClick={() => removeUser(params.id)}
+          showInMenu={false}
+        />,
+      ],
+    },
+    {
+      field: 'name',
+      headerName: 'Name',
+      flex: 1,
+      minWidth: 150,
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+      flex: 1,
+      minWidth: 200,
+    },
+    {
+      field: 'contactPhone',
+      headerName: 'Phone',
+      flex: 1,
+      minWidth: 130,
+    },
+    {
+      field: 'tShirtSize',
+      headerName: 'T-Shirt Size',
+      width: 120,
+    },
+    {
+      field: 'street',
+      headerName: 'Street',
+      flex: 1,
+      minWidth: 150,
+    },
+    {
+      field: 'city',
+      headerName: 'City',
+      flex: 1,
+      minWidth: 120,
+    },
+    {
+      field: 'roles',
+      headerName: 'Roles',
+      width: 100,
+      valueGetter: (params) => params.row?.roles?.length || 0,
+    },
+  ];
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error loading users</div>;
+
   return (
-    <>
-      <DashbaordTitleCard
-        title='Benutzer'
-        icon={<PersonIcon fontSize='large' className='mr-2' />}
-      />
-
-      {users.map((user, index) => (
-        <DashboardDetailCard
-          key={index}
-          title={user.name}
-          icon={<PersonIcon fontSize='large' className='mr-2' />}
-          details={['TEMP Details']}
-          onNavigate={() => {
-            navigate('/dashboard/user/' + user.id);
-          }}
+    <div
+      style={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '16px',
+      }}
+    >
+      <div style={{ height: 600, width: '100%' }}>
+        <DataGrid
+          rows={users}
+          columns={columns}
+          pageSize={5}
+          disableSelectionOnClick
         />
-      ))}
-
-      <Button
-        size='L'
-        disabled
-        variant='primary'
-        onClick={async () => {
-          const newUserId = await addUser();
-          if (newUserId) {
-            navigate('/dashboard/user/' + newUserId);
-          }
-        }}
-      >
-        NEUE BENUTZER KÖNNEN SICH NUR SELBST REGISTRIEREN
-      </Button>
-    </>
+        <div
+          style={{
+            marginTop: '16px',
+            padding: '12px',
+            backgroundColor: '#f5f5f5',
+            borderRadius: '4px',
+            color: '#666',
+          }}
+        >
+          Note: New users can only register themselves through the registration
+          process.
+        </div>
+      </div>
+    </div>
   );
 };
+
 export default DashboardUsers;
+
+// Made with Bob

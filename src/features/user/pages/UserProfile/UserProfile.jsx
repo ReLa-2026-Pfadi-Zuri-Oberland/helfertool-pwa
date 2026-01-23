@@ -12,6 +12,7 @@ import { auth } from '../../../../lib/firebase';
 import littlePirate from '../../assets/little-pirate.png';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import MyUpcomingEngagements from '../../components/MyUpcomingEngagements';
 
 const UserProfile = () => {
   const [users, loading, error] = useFireBaseUsers();
@@ -100,6 +101,7 @@ const UserProfile = () => {
           ]}
         />
       </WhiteCard>
+      <MyUpcomingEngagements />
       <Grid container columns={16} spacing={2}>
         <Grid item size={{ xs: 16, sm: 16, md: 4, lg: 4 }}>
           <Button

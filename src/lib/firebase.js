@@ -5,12 +5,12 @@ import { getFirestore } from 'firebase/firestore';
 import { getMessaging } from 'firebase/messaging';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBGCtxcCDpEPrT1FzsxobctGaRvGCa-cbA',
-  authDomain: 'rela-test.firebaseapp.com',
-  projectId: 'rela-test',
-  storageBucket: 'rela-test.firebasestorage.app',
-  messagingSenderId: '549182367379',
-  appId: '1:549182367379:web:2ac11a2d9bb13f42848f66',
+  apiKey: 'AIzaSyCwy-FV4dcszTnmMdARKGrCVUIAfN1phqQ',
+  authDomain: 'helfendentool-rela26.firebaseapp.com',
+  projectId: 'helfendentool-rela26',
+  storageBucket: 'helfendentool-rela26.firebasestorage.app',
+  messagingSenderId: '576502766595',
+  appId: '1:576502766595:web:7823335135438baa8a4236',
 };
 
 // Ensure Firebase is initialized only once

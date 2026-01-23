@@ -13,6 +13,7 @@ import { useFireBaseJobTypes } from '../../../hooks/useFireBaseJobTypes';
 import { useFireBaseLocations } from '../../../hooks/useFireBaseLocations';
 import { useFireBaseShifts } from '../../../hooks/useFireBaseShifts';
 import { useFireBaseUsers } from '../../../../../hooks/useFireBaseUsers';
+import { useFireBaseOrganizations } from '../../../hooks/useFireBaseOrganizations';
 import Button from '../../../../../components/ui/Button';
 const DashboardEngagementDetail = () => {
   let navigate = useNavigate();
@@ -22,15 +23,25 @@ const DashboardEngagementDetail = () => {
   const [locations, locationsLoading, locationsError] = useFireBaseLocations();
   const [shifts, shiftsLoading, shiftsError] = useFireBaseShifts();
   const [users, usersLoading, usersError] = useFireBaseUsers();
+  const [organizations, organizationsLoading, organizationsError] =
+    useFireBaseOrganizations();
   if (
     loading ||
     jobTypesLoading ||
     locationsLoading ||
     shiftsLoading ||
-    usersLoading
+    usersLoading ||
+    organizationsLoading
   )
     return <h3>Loading...</h3>;
-  if (error || jobTypesError || locationsError || shiftsError || usersError)
+  if (
+    error ||
+    jobTypesError ||
+    locationsError ||
+    shiftsError ||
+    usersError ||
+    organizationsError
+  )
     return <h3>Error: {error.message}</h3>;
   // Filter for engagement with id from url
   const engagement = engagements.find((eng) => eng.id === engagementId);
@@ -56,6 +67,12 @@ const DashboardEngagementDetail = () => {
   if (engagement.shift) {
     engagement.shiftData = shifts.find(
       (shift) => shift.id === engagement.shift,
+    );
+  }
+
+  if (engagement.organization) {
+    engagement.organizationData = organizations.find(
+      (org) => org.id === engagement.organization,
     );
   }
 
@@ -109,6 +126,18 @@ const DashboardEngagementDetail = () => {
           label: shift.name,
         }))}
         initialValue={engagement.shiftData?.id || ''}
+      />
+      <GenericInput
+        kind='select'
+        displayName='Organization'
+        updateFunction={(newValue) =>
+          updateEngagement(engagement.id, { organization: newValue })
+        }
+        data={organizations.map((org) => ({
+          value: org.id,
+          label: org.name,
+        }))}
+        initialValue={engagement.organizationData?.id || ''}
       />
       <GenericInput
         kind='text'
