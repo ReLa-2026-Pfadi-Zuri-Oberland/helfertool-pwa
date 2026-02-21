@@ -94,6 +94,14 @@ const DashboardUserDetail = () => {
         ]}
       />
       <GenericInput
+        kind='text'
+        displayName='Essgewohnheiten, Allergien oder sonstige wichtige Informationen'
+        updateFunction={(newValue) =>
+          updateUser(user.id, { dietaryInfo: newValue })
+        }
+        initialValue={user.dietaryInfo}
+      />
+      <GenericInput
         kind='multi-select'
         displayName='Rollen'
         updateFunction={(newValue) => updateUser(user.id, { roles: newValue })}

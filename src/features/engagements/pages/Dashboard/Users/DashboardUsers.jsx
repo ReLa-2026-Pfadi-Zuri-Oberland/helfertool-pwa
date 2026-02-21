@@ -62,6 +62,12 @@ const DashboardUsers = () => {
       width: 120,
     },
     {
+      field: 'dietaryInfo',
+      headerName: 'Essgewohnheiten/Allergien',
+      flex: 1,
+      minWidth: 200,
+    },
+    {
       field: 'street',
       headerName: 'Street',
       flex: 1,

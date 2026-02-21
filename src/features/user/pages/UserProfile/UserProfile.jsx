@@ -85,7 +85,6 @@ const UserProfile = () => {
           initialValue={user.city}
         />
         <GenericInput
-          className={'m-0'}
           kind='select'
           displayName='T-Shirt Grösse'
           updateFunction={(newValue) =>
@@ -99,6 +98,15 @@ const UserProfile = () => {
             { value: 'L', label: 'L' },
             { value: 'XL', label: 'XL' },
           ]}
+        />
+        <GenericInput
+          className={'m-0'}
+          kind='text'
+          displayName='Essgewohnheiten, Allergien oder sonstige wichtige Informationen'
+          updateFunction={(newValue) =>
+            updateUser(user.id, { dietaryInfo: newValue })
+          }
+          initialValue={user.dietaryInfo}
         />
       </WhiteCard>
       <MyUpcomingEngagements />
