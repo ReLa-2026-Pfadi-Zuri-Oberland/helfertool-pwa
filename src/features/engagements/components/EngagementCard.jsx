@@ -19,9 +19,16 @@ const EngagementCard = ({
   orgId,
 }) => {
   let navigate = useNavigate();
-  const date = dayjs(start).local().format('DD.MM.YYYY');
-  const localStartTime = dayjs(start).local().format('HH:mm');
-  const localEndTime = dayjs(end).local().format('HH:mm');
+  const localStartDate = dayjs(start).local();
+  const localEndDate = dayjs(end).local();
+  const startDateFormatted = localStartDate.format('DD.MM.YYYY');
+  const endDateFormatted = localEndDate.format('DD.MM.YYYY');
+  const date =
+    startDateFormatted === endDateFormatted
+      ? startDateFormatted
+      : `${startDateFormatted} - ${endDateFormatted}`;
+  const localStartTime = localStartDate.format('HH:mm');
+  const localEndTime = localEndDate.format('HH:mm');
   return (
     <WhiteCard className={'mb-1 b1-s rela-border-col'}>
       <div className='d-f f-jb'>

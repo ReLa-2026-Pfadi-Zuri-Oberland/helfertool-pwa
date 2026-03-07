@@ -94,9 +94,10 @@ const EngagementDetail = () => {
               <h4 className='m-0'>Tag</h4>
             </div>
             <div className='mb-2'>
-              {`${
-                weekDaysGerman[localStartDate.day()]
-              }, ${localStartDate.format('DD.MM.YYYY')}`}
+              {localStartDate.format('DD.MM.YYYY') ===
+              localEndDate.format('DD.MM.YYYY')
+                ? `${weekDaysGerman[localStartDate.day()]}, ${localStartDate.format('DD.MM.YYYY')}`
+                : `${weekDaysGerman[localStartDate.day()]}, ${localStartDate.format('DD.MM.YYYY')} - ${weekDaysGerman[localEndDate.day()]}, ${localEndDate.format('DD.MM.YYYY')}`}
             </div>
             <div className='d-f f-ac mb-1'>
               <ScheduleIcon className='mr-2' />

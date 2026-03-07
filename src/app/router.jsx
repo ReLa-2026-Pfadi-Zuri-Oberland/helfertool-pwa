@@ -11,6 +11,7 @@ import DashboardShift from '../features/engagements/pages/Dashboard/Shift/Dashbo
 import DashboardStatistics from '../features/engagements/pages/Dashboard/Statistics/DashboardStatistics';
 import DashboardUserDetail from '../features/engagements/pages/Dashboard/Users/DashboardUserDetail';
 import DashboardUsers from '../features/engagements/pages/Dashboard/Users/DashboardUsers';
+import DocumentManager from '../features/admin/pages/DocumentManager/DocumentManager';
 import EngagementDetail from '../features/engagements/pages/EngagementList/EngagementDetail';
 import EngagementList from '../features/engagements/pages/EngagementList/EngagementList';
 import Login from '../features/user/pages/Login/Login';
@@ -155,6 +156,14 @@ const Router = () => {
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardStatistics />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/dashboard/documents'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DocumentManager />
                 </ProtectedRoute>
               }
             />
