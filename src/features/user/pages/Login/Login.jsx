@@ -4,28 +4,139 @@ import {
   GoogleAuthProvider,
   getRedirectResult,
   signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  updateProfile,
 } from 'firebase/auth';
 
-import { Grid } from '@mui/material';
+import { Grid, TextField, Alert, Divider } from '@mui/material';
 import Logo from '../../assets/logo.jpg';
 import WhiteCard from '../../../../components/ui/WhiteCard';
 import { addUser } from '../../../../hooks/useFireBaseUsers';
 import { auth } from '../../../../lib/firebase';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const provider = new GoogleAuthProvider();
 
 const Login = () => {
   const user = auth.currentUser;
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [isResetPassword, setIsResetPassword] = useState(false);
 
-  const handleLogin = async () => {
-    console.log('Starting login...');
+  const handleGoogleLogin = async () => {
+    console.log('Starting Google login...');
+    setError('');
+    setSuccess('');
 
     try {
       await signInWithPopup(auth, provider);
       addUser();
     } catch (error) {
       console.error('Login Error: ', error);
+      setError(error.message);
+    }
+  };
+
+  const handleEmailPasswordLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (!email || !password) {
+      setError('Bitte E-Mail und Passwort eingeben');
+      return;
+    }
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      addUser();
+      setSuccess('Erfolgreich eingeloggt!');
+    } catch (error) {
+      console.error('Login Error: ', error);
+      if (error.code === 'auth/user-not-found') {
+        setError('Benutzer nicht gefunden');
+      } else if (error.code === 'auth/wrong-password') {
+        setError('Falsches Passwort');
+      } else if (error.code === 'auth/invalid-email') {
+        setError('Ungültige E-Mail-Adresse');
+      } else if (error.code === 'auth/invalid-credential') {
+        setError('Ungültige Anmeldedaten');
+      } else {
+        setError(error.message);
+      }
+    }
+  };
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (!email || !password || !displayName) {
+      setError('Bitte alle Felder ausfüllen');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Passwort muss mindestens 6 Zeichen lang sein');
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      await updateProfile(userCredential.user, {
+        displayName: displayName,
+      });
+      addUser();
+      setSuccess('Konto erfolgreich erstellt!');
+      setIsSignUp(false);
+    } catch (error) {
+      console.error('Sign Up Error: ', error);
+      if (error.code === 'auth/email-already-in-use') {
+        setError('E-Mail-Adresse wird bereits verwendet');
+      } else if (error.code === 'auth/invalid-email') {
+        setError('Ungültige E-Mail-Adresse');
+      } else if (error.code === 'auth/weak-password') {
+        setError('Passwort ist zu schwach');
+      } else {
+        setError(error.message);
+      }
+    }
+  };
+
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (!email) {
+      setError('Bitte E-Mail-Adresse eingeben');
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setSuccess('Passwort-Reset-E-Mail wurde gesendet!');
+      setIsResetPassword(false);
+    } catch (error) {
+      console.error('Password Reset Error: ', error);
+      if (error.code === 'auth/user-not-found') {
+        setError('Benutzer nicht gefunden');
+      } else if (error.code === 'auth/invalid-email') {
+        setError('Ungültige E-Mail-Adresse');
+      } else {
+        setError(error.message);
+      }
     }
   };
 
@@ -68,8 +179,19 @@ const Login = () => {
             uns riesig auf dich und können es kaum erwarten, diese besondere
             Zeit gemeinsam mit dir zu erleben!
           </h5>
+          {error && (
+            <Alert severity='error' sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+          {success && (
+            <Alert severity='success' sx={{ mb: 2 }}>
+              {success}
+            </Alert>
+          )}
+
           <div className='d-f f-jc'>
-            <button onClick={handleLogin} className='gsi-material-button'>
+            <button onClick={handleGoogleLogin} className='gsi-material-button'>
               <div className='gsi-material-button-state'></div>
               <div className='gsi-material-button-content-wrapper'>
                 <div className='gsi-material-button-icon'>
@@ -105,6 +227,194 @@ const Login = () => {
               </div>
             </button>
           </div>
+
+          <Divider sx={{ my: 3 }}>ODER</Divider>
+
+          {isResetPassword ? (
+            <>
+              <h3 className='text-align-center mb-3'>Passwort zurücksetzen</h3>
+              <form onSubmit={handlePasswordReset}>
+                <TextField
+                  fullWidth
+                  label='E-Mail'
+                  type='email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  margin='normal'
+                  required
+                />
+                <button
+                  type='submit'
+                  className='gsi-material-button'
+                  style={{ width: '100%', marginTop: '16px' }}
+                >
+                  <div className='gsi-material-button-state'></div>
+                  <div className='gsi-material-button-content-wrapper'>
+                    <span className='gsi-material-button-contents'>
+                      Reset-E-Mail senden
+                    </span>
+                  </div>
+                </button>
+                <div className='text-align-center mt-3'>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      setIsResetPassword(false);
+                      setError('');
+                      setSuccess('');
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#1976d2',
+                      cursor: 'pointer',
+                      textDecoration: 'underline',
+                    }}
+                  >
+                    Zurück zum Login
+                  </button>
+                </div>
+              </form>
+            </>
+          ) : isSignUp ? (
+            <>
+              <h3 className='text-align-center mb-3'>Konto erstellen</h3>
+              <form onSubmit={handleSignUp}>
+                <TextField
+                  fullWidth
+                  label='Name'
+                  type='text'
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  margin='normal'
+                  required
+                />
+                <TextField
+                  fullWidth
+                  label='E-Mail'
+                  type='email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  margin='normal'
+                  required
+                />
+                <TextField
+                  fullWidth
+                  label='Passwort'
+                  type='password'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  margin='normal'
+                  required
+                  helperText='Mindestens 6 Zeichen'
+                />
+                <button
+                  type='submit'
+                  className='gsi-material-button'
+                  style={{ width: '100%', marginTop: '16px' }}
+                >
+                  <div className='gsi-material-button-state'></div>
+                  <div className='gsi-material-button-content-wrapper'>
+                    <span className='gsi-material-button-contents'>
+                      Konto erstellen
+                    </span>
+                  </div>
+                </button>
+                <div className='text-align-center mt-3'>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      setIsSignUp(false);
+                      setError('');
+                      setSuccess('');
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#1976d2',
+                      cursor: 'pointer',
+                      textDecoration: 'underline',
+                    }}
+                  >
+                    Bereits ein Konto? Einloggen
+                  </button>
+                </div>
+              </form>
+            </>
+          ) : (
+            <>
+              <h3 className='text-align-center mb-3'>Mit E-Mail einloggen</h3>
+              <form onSubmit={handleEmailPasswordLogin}>
+                <TextField
+                  fullWidth
+                  label='E-Mail'
+                  type='email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  margin='normal'
+                  required
+                />
+                <TextField
+                  fullWidth
+                  label='Passwort'
+                  type='password'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  margin='normal'
+                  required
+                />
+                <button
+                  type='submit'
+                  className='gsi-material-button'
+                  style={{ width: '100%', marginTop: '16px' }}
+                >
+                  <div className='gsi-material-button-state'></div>
+                  <div className='gsi-material-button-content-wrapper'>
+                    <span className='gsi-material-button-contents'>
+                      Einloggen
+                    </span>
+                  </div>
+                </button>
+                <div className='text-align-center mt-3'>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      setIsResetPassword(true);
+                      setError('');
+                      setSuccess('');
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#1976d2',
+                      cursor: 'pointer',
+                      textDecoration: 'underline',
+                      marginRight: '16px',
+                    }}
+                  >
+                    Passwort vergessen?
+                  </button>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      setIsSignUp(true);
+                      setError('');
+                      setSuccess('');
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#1976d2',
+                      cursor: 'pointer',
+                      textDecoration: 'underline',
+                    }}
+                  >
+                    Konto erstellen
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
         </WhiteCard>
       </Grid>
     </Grid>
