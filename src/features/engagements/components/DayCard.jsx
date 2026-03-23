@@ -5,6 +5,8 @@ import pirateHat from '../assets/pirate-hat.svg';
 
 const DayCard = ({ dayUTC }) => {
   const localDate = dayjs(dayUTC).local();
+  const dateNumber = localDate.date();
+  const isSingleDigit = dateNumber < 10;
   const monthArray = [
     'Januar',
     'Februar',
@@ -30,10 +32,14 @@ const DayCard = ({ dayUTC }) => {
         <div className='position-relative'>
           <img style={{ width: '135px' }} src={pirateHat} alt='pirate hat' />
           <h1
-            style={{ top: '-5px', left: '55px', transform: 'rotate(-20deg)' }}
+            style={{
+              top: '-5px',
+              left: isSingleDigit ? '55px' : '46px',
+              transform: 'rotate(-20deg)',
+            }}
             className='position-absolute col-fff'
           >
-            {localDate.date()}
+            {dateNumber}
           </h1>
         </div>
       </div>
@@ -59,10 +65,14 @@ const DayCard = ({ dayUTC }) => {
               alt='pirate hat'
             />
             <h1
-              style={{ top: '-5px', left: '60px', transform: 'rotate(20deg)' }}
+              style={{
+                top: '-5px',
+                left: isSingleDigit ? '64px' : '52px',
+                transform: 'rotate(20deg)',
+              }}
               className='position-absolute col-fff'
             >
-              {localDate.date()}
+              {dateNumber}
             </h1>
           </div>
         </div>
