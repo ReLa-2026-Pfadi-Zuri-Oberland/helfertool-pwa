@@ -122,23 +122,39 @@ const NavBar = () => {
       <nav
         style={{
           gap: '1rem',
-          background: 'rgba(255, 255, 255, 0.54)',
-          // position: 'fixed',
-          // top: 0,
-          // left: 0,
-          // zIndex: 1000,
+          background: '#ffffff',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          borderRadius: '16px',
         }}
-        className='bcol-fff pt-1 pb-1 pl-2 pr-2 m-2 br-2 d-f f-jb f-ac'
+        className='pt-1 pb-1 pl-2 pr-2 m-2 d-f f-jb f-ac fade-in'
       >
         <img
           src={reLaLogo}
-          style={{ maxHeight: '70px' }}
+          style={{
+            maxHeight: '70px',
+            transition: 'transform 0.3s ease',
+          }}
           className='cursor-pointer'
           onClick={() => navigate('/engagements')}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.transform = 'scale(1.05)')
+          }
+          onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
         />
 
         {isMobile() ? (
-          <DehazeIcon onClick={() => setIsMobileMenuOpen(true)} />
+          <DehazeIcon
+            onClick={() => setIsMobileMenuOpen(true)}
+            style={{
+              fontSize: '32px',
+              cursor: 'pointer',
+              transition: 'transform 0.2s ease',
+            }}
+            onMouseDown={(e) =>
+              (e.currentTarget.style.transform = 'scale(0.9)')
+            }
+            onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+          />
         ) : (
           <Menu className={'col-rela-dark-gray'} />
         )}
@@ -148,22 +164,37 @@ const NavBar = () => {
             className='position-fixed d-f f-jc f-ac'
             style={{
               zIndex: 9999,
-              backgroundColor: 'rgba(85, 85, 85, 0.9)',
+              background:
+                'linear-gradient(135deg, rgba(106, 12, 0, 0.95) 0%, rgba(183, 28, 28, 0.95) 100%)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
               top: 0,
               left: 0,
               height: '100vh',
               width: '100vw',
-              transition: 'opacity 3s ease',
+              animation: 'fadeIn 0.3s ease-out',
             }}
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <CloseIcon
               className='position-fixed col-fff'
               fontSize='large'
-              style={{ top: 10, right: 20 }}
+              style={{
+                top: 20,
+                right: 20,
+                cursor: 'pointer',
+                transition: 'transform 0.2s ease',
+                padding: '8px',
+                borderRadius: '50%',
+                background: 'rgba(255, 255, 255, 0.1)',
+              }}
               onClick={() => setIsMobileMenuOpen(false)}
+              onMouseDown={(e) =>
+                (e.currentTarget.style.transform = 'scale(0.9)')
+              }
+              onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
             />
-            <div className='d-f fd-c'>
+            <div className='d-f fd-c' style={{ gap: '1.5rem' }}>
               <Menu grouped={false} className={'col-fff'} />
             </div>
           </div>

@@ -139,6 +139,20 @@ const EngagementList = () => {
       <WhiteCard className={'mb-3'}>
         <h1 className='col-rela-dark-red m-0'>Offene Helfendeneinsätze</h1>
         <h4>Du möchtest mit dabei sein, wir freuen uns auf dich</h4>
+        <div
+          className='bcol-rela-light-red p-2 br-2 mt-2 mb-2 b2-s'
+          style={{
+            borderColor: '#353333',
+          }}
+        >
+          <h3 className='col-rela-dark-gray m-0 mb-1'>
+            Helfendenessen am 9. August 2026
+          </h3>
+          <p className='col-rela-dark-gray m-0'>
+            Merkt euch das Datum vor! Als Dankeschön für euren Einsatz laden wir
+            alle Helfenden zum gemeinsamen Helfendenessen ein.
+          </p>
+        </div>
         <Grid columns={16} container spacing={2}>
           <Grid item size={{ xs: 16, sm: 16, md: 8, lg: 8 }}>
             <Select
@@ -171,11 +185,13 @@ const EngagementList = () => {
               <MenuItem value=''>
                 <em>Alle Aufgaben</em>
               </MenuItem>
-              {Object.keys(engagementsGroupedByJobType).map((item) => (
-                <MenuItem key={item} value={item}>
-                  {item}
-                </MenuItem>
-              ))}
+              {Object.keys(engagementsGroupedByJobType)
+                .sort((a, b) => a.localeCompare(b, 'de'))
+                .map((item) => (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                ))}
             </Select>
           </Grid>
           <Grid item size={{ xs: 16, sm: 16, md: 8, lg: 8 }}>

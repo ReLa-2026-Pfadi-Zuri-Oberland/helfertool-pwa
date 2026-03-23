@@ -828,4 +828,244 @@
   .on-desktop {
     display: block;
   }
+
+  /* Mobile-optimized spacing utilities */
+  @media screen and (max-width: 42rem) {
+    .mobile-p-1 {
+      padding: 0.5rem !important;
+    }
+
+    .mobile-p-2 {
+      padding: 1rem !important;
+    }
+
+    .mobile-m-1 {
+      margin: 0.5rem !important;
+    }
+
+    .mobile-m-2 {
+      margin: 1rem !important;
+    }
+
+    .mobile-mb-2 {
+      margin-bottom: 1rem !important;
+    }
+
+    .mobile-mt-2 {
+      margin-top: 1rem !important;
+    }
+  }
+
+  /* Touch-friendly interactive elements */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Smooth transitions for all interactive elements */
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Remove tap highlight on mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Improved focus states for accessibility */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible {
+    outline: 2px solid #6a0c00;
+    outline-offset: 2px;
+  }
+
+  /* Smooth scroll for anchor links */
+  a[href^='#'] {
+    scroll-behavior: smooth;
+  }
+
+  /* Loading skeleton animation */
+  @keyframes shimmer {
+    0% {
+      background-position: -468px 0;
+    }
+    100% {
+      background-position: 468px 0;
+    }
+  }
+
+  .skeleton {
+    animation: shimmer 1.2s ease-in-out infinite;
+    background: linear-gradient(
+      to right,
+      #f0f0f0 0%,
+      #e0e0e0 20%,
+      #f0f0f0 40%,
+      #f0f0f0 100%
+    );
+    background-size: 800px 104px;
+    border-radius: 4px;
+  }
+
+  /* Stagger animation for lists */
+  .stagger-item {
+    animation: fadeIn 0.6s ease-out backwards;
+  }
+
+  .stagger-item:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .stagger-item:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .stagger-item:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .stagger-item:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+  .stagger-item:nth-child(5) {
+    animation-delay: 0.5s;
+  }
+  .stagger-item:nth-child(n + 6) {
+    animation-delay: 0.6s;
+  }
+
+  /* Bounce animation for attention */
+  @keyframes bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .bounce {
+    animation: bounce 1s ease-in-out infinite;
+  }
+
+  /* Slide in from bottom animation */
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .slide-in-up {
+    animation: slideInUp 0.5s ease-out;
+  }
+
+  /* Scale on hover for cards */
+  .scale-hover {
+    transition: transform 0.3s ease;
+  }
+
+  .scale-hover:hover {
+    transform: scale(1.02);
+  }
+
+  /* Gradient text utility */
+  .gradient-text {
+    background: linear-gradient(135deg, #6a0c00 0%, #b71c1c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glass effect utility */
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  /* Shadow utilities */
+  .shadow-sm {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .shadow-md {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .shadow-lg {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .shadow-xl {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Hover shadow transition */
+  .hover-shadow {
+    transition: box-shadow 0.3s ease;
+  }
+
+  .hover-shadow:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+}
+
+/* Doodle Background Animations */
+@keyframes float-gentle {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes rotate-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Z-index layering */
+.z-background {
+  z-index: 0;
+}
+
+.z-content {
+  position: relative;
+  z-index: 1;
+}
+
+.z-nav {
+  z-index: 1100;
+}
+
+.z-modal {
+  z-index: 1300;
+}
+
+/* Ensure all main content is above background */
+main,
+.MuiDrawer-root,
+.MuiAppBar-root,
+.MuiPaper-root {
+  position: relative;
+  z-index: 1;
 }

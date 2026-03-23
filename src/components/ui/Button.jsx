@@ -5,6 +5,7 @@ const Button = ({
   disabled = false,
   children,
   className,
+  style,
   ...props
 }) => {
   return (
@@ -13,6 +14,12 @@ const Button = ({
         icon ? 'f-jb' : 'f-jc'
       } btn btn-${size} btn-${variant} ${disabled && 'disabled'} ${className}`}
       disabled={disabled}
+      style={{
+        minHeight: '44px',
+        touchAction: 'manipulation',
+        WebkitTapHighlightColor: 'transparent',
+        ...style,
+      }}
       {...props}
     >
       {icon && <>{icon}</>}

@@ -1,5 +1,6 @@
 /* Import Lato and Inter from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter&family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap');
+
 :root {
   --primary-color: #f5bfbe;
   --primary-color-darker: #6a0c00;
@@ -9,23 +10,61 @@
   --text-red: #d32f2f;
   --background-color-disabled: #ccc;
   --border-radius: 10px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 24px;
   --font-size: 16px;
   --font-family: 'Lato', sans-serif;
   --transition-duration: 0.3s;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   --padding-vertical: 10px;
   --padding-horizontal: 10px;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.15);
 }
 
 /* Base font for all text */
 body {
   font-family: 'Lato', sans-serif;
   color: #353333;
-  font-weight: 400; /* For Firefox on macOS */
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-/* Override h1 to use Inter */
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better touch targets for mobile */
+@media (max-width: 768px) {
+  button,
+  a,
+  input,
+  select {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Override h1 to use Inter with bolder weight */
 h1 {
   font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+h2,
+h3 {
+  font-weight: 600;
+}
+
+h4 {
+  font-weight: 500;
 }
 
 /* Base button styling */
@@ -33,36 +72,73 @@ h1 {
   font-size: 0.97em;
   font-size: var(--font-size);
   font-family: var(--font-family);
-
+  font-weight: 600;
+  letter-spacing: 0.5px;
   padding: var(--padding-vertical) var(--padding-horizontal);
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;
-  transition: background-color var(--transition-duration),
-    transform var(--transition-duration);
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.6s,
+    height 0.6s;
+}
+
+.btn:active::before {
+  width: 300px;
+  height: 300px;
 }
 
 /* Primary button - White text on Red */
 .btn-primary {
   background-color: var(--primary-color-darker);
   color: var(--text-white);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-primary:hover {
   background-color: #b71c1c;
-  /* Darker red */
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Secondary button - Red text on Light Red */
 .btn-secondary {
   background-color: #fff;
-  border: 1px solid var(--primary-color-darker);
+  border: 2px solid var(--primary-color-darker);
   color: var(--text-red);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-secondary:hover {
   background-color: #e8a7a6;
-  /* Slightly darker light red */
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
 .disabled {
@@ -76,10 +152,12 @@ h1 {
 
 .rela-nav:hover {
   border-top: var(--primary-color-darker) solid 3px;
+  transform: translateY(-2px);
 }
+
 .rela-nav {
   border-top: solid 3px transparent;
-  transition: border-color 0.3s ease-in-out; /* Optional: Add a smooth transition */
+  transition: var(--transition-smooth);
 }
 .rela-nav-dropdown {
   position: absolute;
@@ -87,9 +165,133 @@ h1 {
   flex-direction: column;
   z-index: 1000;
   right: 1rem;
-  /* temp for testing spacing issues */
+  box-shadow: var(--shadow-lg);
+  animation: slideDown 0.3s ease-out;
 }
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 body {
   margin: 0;
-  background-color: #fde8e7;
+  background: linear-gradient(135deg, #e8d5c4 0%, #d4c4b0 50%, #c9b89a 100%);
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Parchment texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.02) 2px,
+      rgba(0, 0, 0, 0.02) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.02) 2px,
+      rgba(0, 0, 0, 0.02) 4px
+    );
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.3;
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: var(--transition-smooth);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Glassmorphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Pulse animation for important elements */
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+  :root {
+    --font-size: 14px;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+  }
 }

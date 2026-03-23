@@ -30,40 +30,122 @@ const EngagementCard = ({
   const localStartTime = localStartDate.format('HH:mm');
   const localEndTime = localEndDate.format('HH:mm');
   return (
-    <WhiteCard className={'mb-1 b1-s rela-border-col'}>
-      <div className='d-f f-jb'>
-        <div>
-          <h2 className='mt-1 mb-1'>{title}</h2>
-          <div className='d-f f-ac'>
-            <PlaceIcon className='mr-1' />
-            <h4 className='m-1'>{location}</h4>
+    <WhiteCard
+      className={'mb-1 b1-s rela-border-col card-hover fade-in'}
+      style={{
+        cursor: 'pointer',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      }}
+      onClick={() =>
+        navigate('/engagements/' + id, {
+          state: {
+            from: routerLocation.pathname + routerLocation.search,
+          },
+        })
+      }
+    >
+      <div
+        className='d-f f-jb'
+        style={{
+          flexDirection: window.innerWidth < 768 ? 'column' : 'row',
+          gap: '1rem',
+        }}
+      >
+        <div style={{ flex: 1 }}>
+          <h2
+            className='mt-1 mb-1'
+            style={{
+              background: 'linear-gradient(135deg, #6a0c00 0%, #b71c1c 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            {title}
+          </h2>
+          <div
+            className='d-f f-ac mb-1'
+            style={{
+              padding: '0.5rem',
+              background: 'rgba(245, 191, 190, 0.1)',
+              borderRadius: '8px',
+              transition: 'background 0.3s ease',
+            }}
+          >
+            <PlaceIcon
+              className='mr-1'
+              style={{
+                color: '#6a0c00',
+                fontSize: '20px',
+              }}
+            />
+            <h4 className='m-0'>{location}</h4>
           </div>
-          <div className='d-f f-ac'>
-            <ScheduleIcon className='mr-1' />
-            <h4 className='m-1'>{`${localStartTime} - ${localEndTime}`}</h4>
+          <div
+            className='d-f f-ac mb-1'
+            style={{
+              padding: '0.5rem',
+              background: 'rgba(245, 191, 190, 0.1)',
+              borderRadius: '8px',
+            }}
+          >
+            <ScheduleIcon
+              className='mr-1'
+              style={{
+                color: '#6a0c00',
+                fontSize: '20px',
+              }}
+            />
+            <h4 className='m-0'>{`${localStartTime} - ${localEndTime}`}</h4>
           </div>
-          <div className='d-f f-ac mb-2'>
-            <CalendarTodayIcon className='mr-1' />
-            <h4 className='m-1'>{date}</h4>
+          <div
+            className='d-f f-ac mb-2'
+            style={{
+              padding: '0.5rem',
+              background: 'rgba(245, 191, 190, 0.1)',
+              borderRadius: '8px',
+            }}
+          >
+            <CalendarTodayIcon
+              className='mr-1'
+              style={{
+                color: '#6a0c00',
+                fontSize: '20px',
+              }}
+            />
+            <h4 className='m-0'>{date}</h4>
           </div>
           <Button
             size='S'
-            onClick={() =>
+            onClick={(e) => {
+              e.stopPropagation();
               navigate('/engagements/' + id, {
                 state: {
                   from: routerLocation.pathname + routerLocation.search,
                 },
-              })
-            }
+              });
+            }}
+            style={{
+              width: window.innerWidth < 768 ? '100%' : 'auto',
+            }}
           >
             MEHR ERFAHREN
           </Button>
         </div>
-        <EngagementGauge
-          currentAmountOfHelpers={parseInt(currentAmountOfHelpers)}
-          targetNumberOfHelpers={parseInt(targetNumberOfHelpers)}
-          isRegistered={isRegistered}
-        />
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minWidth: window.innerWidth < 768 ? '100%' : '120px',
+          }}
+        >
+          <EngagementGauge
+            currentAmountOfHelpers={parseInt(currentAmountOfHelpers)}
+            targetNumberOfHelpers={parseInt(targetNumberOfHelpers)}
+            isRegistered={isRegistered}
+          />
+        </div>
       </div>
     </WhiteCard>
   );

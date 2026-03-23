@@ -39,6 +39,7 @@ import Typography from '@mui/material/Typography';
 import { UserContext } from '../../stores/UserContext';
 import reLaLogo from '../../assets/reLaLogo.png';
 import { useNavigate } from 'react-router-dom';
+import DoodleBackground from '../ui/DoodleBackground';
 
 const drawerWidth = 240;
 
@@ -227,6 +228,7 @@ const TopSideBar = ({ children }) => {
 
   return (
     <Box>
+      <DoodleBackground />
       <AppBar
         position='fixed'
         sx={{
