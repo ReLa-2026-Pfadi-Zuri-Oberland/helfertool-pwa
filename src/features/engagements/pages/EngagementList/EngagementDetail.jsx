@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   registerForEngagement,
   useFireBaseEngagements,
@@ -23,6 +23,7 @@ import { useFireBaseShifts } from '../../hooks/useFireBaseShifts';
 
 const EngagementDetail = () => {
   let navigate = useNavigate();
+  let routerLocation = useLocation();
   let engagementId = useParams().id;
   const { currentUser } = useContext(UserContext);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -80,7 +81,12 @@ const EngagementDetail = () => {
             fontSize='medium'
             className='mr-1 cursor-pointer'
             onClick={() => {
-              navigate('/' + engagement.organization + '/anmelden');
+              // Preserve search params from the state or go back
+              if (routerLocation.state?.from) {
+                navigate(routerLocation.state.from);
+              } else {
+                navigate(-1);
+              }
             }}
           />{' '}
           {console.log('Engagement', engagement)}

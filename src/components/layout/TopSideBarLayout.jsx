@@ -62,7 +62,7 @@ const TopSideBar = ({ children }) => {
             className='cursor-pointer'
             onClick={() => {
               setMobileOpen(false);
-              navigate('/0/anmelden');
+              navigate('/engagements');
             }}
           />
         </Toolbar>
@@ -72,7 +72,7 @@ const TopSideBar = ({ children }) => {
             <ListItemButton
               onClick={() => {
                 setMobileOpen(false);
-                navigate('0/anmelden');
+                navigate('/engagements');
               }}
             >
               <ListItemIcon>

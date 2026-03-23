@@ -89,7 +89,7 @@ const MyUpcomingEngagements = () => {
           <div
             key={engagement.id}
             className='cursor-pointer'
-            onClick={() => navigate('/0/anmelden/' + engagement.id)}
+            onClick={() => navigate('/engagements/' + engagement.id)}
             style={{
               padding: '12px',
               marginBottom:

@@ -62,14 +62,14 @@ const Router = () => {
       <TopSideBar>
         {!loading && (
           <Routes>
-            <Route path='/' element={<Navigate to='/0/anmelden' />} />
+            <Route path='/' element={<Navigate to='/engagements' />} />
             <Route
               path='/profile'
               element={currentUser ? <UserProfile /> : <Navigate to='/login' />}
             />
 
-            <Route path='/:orgId/anmelden' element={<EngagementList />} />
-            <Route path='/:orgId/anmelden/:id' element={<EngagementDetail />} />
+            <Route path='/engagements' element={<EngagementList />} />
+            <Route path='/engagements/:id' element={<EngagementDetail />} />
 
             <Route
               path='/dashboard/organizations'

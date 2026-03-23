@@ -14,7 +14,7 @@ const Menu = ({ className, grouped = true }) => {
   const [hoverTimeout, setHoverTimeout] = useState(null);
 
   const navs = [
-    { text: 'Home', to: `0/anmelden` },
+    { text: 'Home', to: `/engagements` },
     { text: 'Profile', rights: ['user:read'], to: '/profile' },
     { text: 'Login', to: '/login', rights: ['user:login:view'] },
     {
@@ -134,7 +134,7 @@ const NavBar = () => {
           src={reLaLogo}
           style={{ maxHeight: '70px' }}
           className='cursor-pointer'
-          onClick={() => navigate('/0/anmelden')}
+          onClick={() => navigate('/engagements')}
         />
 
         {isMobile() ? (

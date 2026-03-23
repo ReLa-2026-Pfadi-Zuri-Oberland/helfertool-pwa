@@ -1,5 +1,5 @@
 import { Chip, Grid, MenuItem, Select } from '@mui/material';
-import { Navigate, useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import DayCard from '../../components/DayCard';
 import EngagementCard from '../../components/EngagementCard';
@@ -11,19 +11,38 @@ import { useFireBaseJobTypes } from '../../hooks/useFireBaseJobTypes';
 import { useFireBaseLocations } from '../../hooks/useFireBaseLocations';
 import { useFireBaseOrganizations } from '../../hooks/useFireBaseOrganizations';
 import { useFireBaseShifts } from '../../hooks/useFireBaseShifts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const EngagementList = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [engagements, loading, error] = useFireBaseEngagements();
   const [shifts, shiftsLoading, shiftsError] = useFireBaseShifts();
   const [locations, locationsLoading, locationsError] = useFireBaseLocations();
   const [jobTypes, jobTypesLoading, jobTypesError] = useFireBaseJobTypes();
   const [organisations, organisationsLoading, organisationsError] =
     useFireBaseOrganizations();
-  let { orgId } = useParams();
 
-  const [jobTypeFilter, setJobTypeFilter] = useState([]);
-  const [dateFilter, setDateFilter] = useState([]);
+  // Initialize filters from URL params
+  const [jobTypeFilter, setJobTypeFilter] = useState(() => {
+    const param = searchParams.get('jobTypes');
+    return param ? param.split(',') : [];
+  });
+  const [dateFilter, setDateFilter] = useState(() => {
+    const param = searchParams.get('dates');
+    return param ? param.split(',') : [];
+  });
+
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (jobTypeFilter.length > 0) {
+      params.set('jobTypes', jobTypeFilter.join(','));
+    }
+    if (dateFilter.length > 0) {
+      params.set('dates', dateFilter.join(','));
+    }
+    setSearchParams(params, { replace: true });
+  }, [jobTypeFilter, dateFilter, setSearchParams]);
 
   if (
     loading ||
@@ -39,24 +58,15 @@ const EngagementList = () => {
   if (jobTypesError) return <h3>Error: {jobTypesError.message}</h3>;
   if (organisationsError) return <h3>Error: {organisationsError.message}</h3>;
 
-  let organization = organisations.find((org) => org.id === orgId);
-  if (!organization) {
-    organization = organisations.length > 0 ? organisations[0] : null;
-    if (organization && organization.id !== orgId) {
-      return <Navigate to={`/${organization.id}/anmelden`} />;
-    }
-  }
-  if (!organization) {
-    return (
-      <div>
-        <h3>Organisation mit id "{orgId}" nicht gefunden</h3>
-      </div>
-    );
-  }
+  // Use first organization if available
+  const organization = organisations.length > 0 ? organisations[0] : null;
 
-  let engagementsOfOrg = engagements.filter(
-    (engagement) => engagement.organization === orgId,
-  );
+  // Filter engagements by the first organization
+  let engagementsOfOrg = organization
+    ? engagements.filter(
+        (engagement) => engagement.organization === organization.id,
+      )
+    : engagements;
 
   /* FILTER ENGAGEMENTS BY JOB TYPE */
 
@@ -223,7 +233,6 @@ const EngagementList = () => {
                   <EngagementCard
                     key={index}
                     id={engagement.id}
-                    orgId={engagement.organization}
                     title={
                       jobTypes.find(
                         (jobType) => jobType.id === engagement.jobType,

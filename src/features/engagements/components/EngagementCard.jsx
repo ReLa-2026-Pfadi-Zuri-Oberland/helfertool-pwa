@@ -5,7 +5,7 @@ import PlaceIcon from '@mui/icons-material/Place';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import WhiteCard from '../../../components/ui/WhiteCard';
 import dayjs from 'dayjs';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const EngagementCard = ({
   id,
@@ -16,9 +16,9 @@ const EngagementCard = ({
   currentAmountOfHelpers,
   targetNumberOfHelpers,
   isRegistered,
-  orgId,
 }) => {
   let navigate = useNavigate();
+  let routerLocation = useLocation();
   const localStartDate = dayjs(start).local();
   const localEndDate = dayjs(end).local();
   const startDateFormatted = localStartDate.format('DD.MM.YYYY');
@@ -46,7 +46,16 @@ const EngagementCard = ({
             <CalendarTodayIcon className='mr-1' />
             <h4 className='m-1'>{date}</h4>
           </div>
-          <Button size='S' onClick={() => navigate('/0/anmelden/' + id)}>
+          <Button
+            size='S'
+            onClick={() =>
+              navigate('/engagements/' + id, {
+                state: {
+                  from: routerLocation.pathname + routerLocation.search,
+                },
+              })
+            }
+          >
             MEHR ERFAHREN
           </Button>
         </div>
