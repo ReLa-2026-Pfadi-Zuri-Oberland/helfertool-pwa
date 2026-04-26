@@ -1,6 +1,4 @@
 import {
-  Assignment,
-  BarChart,
   Business,
   CorporateFare,
   Dashboard,
@@ -12,8 +10,6 @@ import {
   Login,
   Menu,
   Person,
-  Place,
-  Schedule,
   Work,
 } from '@mui/icons-material';
 import {
@@ -124,24 +120,9 @@ const TopSideBar = ({ children }) => {
               <Collapse in={dashboardOpen} timeout='auto' unmountOnExit>
                 {[
                   {
-                    text: 'Organizations',
+                    text: 'Verwaltung',
                     to: 'dashboard/organizations',
                     icon: <Business />,
-                  },
-                  {
-                    text: 'Locations',
-                    to: 'dashboard/locations',
-                    icon: <Place />,
-                  },
-                  {
-                    text: 'JobTypes',
-                    to: 'dashboard/jobTypes',
-                    icon: <Work />,
-                  },
-                  {
-                    text: 'Shifts',
-                    to: 'dashboard/shifts',
-                    icon: <Schedule />,
                   },
                   {
                     text: 'Users',
@@ -149,14 +130,9 @@ const TopSideBar = ({ children }) => {
                     icon: <Group />,
                   },
                   {
-                    text: 'Engagements',
+                    text: 'Einsatzplanung',
                     to: 'dashboard/engagements',
-                    icon: <Assignment />,
-                  },
-                  {
-                    text: 'Statistics',
-                    to: 'dashboard/statistics',
-                    icon: <BarChart />,
+                    icon: <Work />,
                   },
                 ].map(({ text, to, icon }) => (
                   <ListItem disablePadding key={text} sx={{ pl: 4 }}>

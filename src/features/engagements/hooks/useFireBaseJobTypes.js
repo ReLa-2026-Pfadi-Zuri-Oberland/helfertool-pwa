@@ -14,10 +14,17 @@ const useFireBaseJobTypes = () => useFirebase('JobTypes');
 const updateJobType = async (jobTypeId, options) => {
   try {
     const jobTypeRef = doc(db, 'JobTypes', jobTypeId);
-
-    await updateDoc(jobTypeRef, options);
+    const data =
+      options && typeof options === 'object'
+        ? Object.fromEntries(
+            Object.entries(options).filter(
+              ([key, v]) => key !== 'id' && v !== undefined
+            )
+          )
+        : {};
+    await updateDoc(jobTypeRef, data);
   } catch (error) {
-    console.error('Error updating user:', error);
+    console.error('Error updating job type:', error);
   }
 };
 
@@ -25,16 +32,15 @@ const addJobType = async (jobType) => {
   try {
     const jobTypesCollection = collection(db, 'JobTypes');
     const newJobType = {
-      name: jobType?.name || 'New Job Type',
-      description: jobType?.description || 'New Job Type Description',
+      name: jobType?.name || 'Neuer Jobtyp',
+      description: jobType?.description ?? '',
     };
 
     const docRef = await addDoc(jobTypesCollection, newJobType);
-    if (docRef.id) {
-      return docRef.id;
-    }
+    return docRef.id;
   } catch (error) {
     console.error('Error adding job type:', error);
+    return undefined;
   }
 };
 

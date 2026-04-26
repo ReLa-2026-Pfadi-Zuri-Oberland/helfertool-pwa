@@ -13,12 +13,13 @@ import useFirebase from '../../../hooks/useFirebase';
 const useFireBaseEngagements = () => {
   const [engagements, loading, error] = useFirebase('Engagements');
   let engagementsTransformed = engagements.map((engagement) => {
-    /* Use already registered */
+    const helpers = Array.isArray(engagement.helpers) ? engagement.helpers : [];
     const userId = auth.currentUser?.uid;
-    const isRegistered = engagement.helpers.includes(userId);
+    const isRegistered = userId ? helpers.includes(userId) : false;
 
     return {
       ...engagement,
+      helpers,
       isRegistered,
     };
   });

@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap');
 
 :root {
+  --page-background: #dfded0;
   --primary-color: #f5bfbe;
   --primary-color-darker: #6a0c00;
   --text-color-light: #777777;
@@ -38,6 +39,12 @@ body {
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  background-color: var(--page-background);
+}
+
+#root {
+  min-height: 100vh;
+  background-color: var(--page-background);
 }
 
 /* Better touch targets for mobile */
@@ -182,7 +189,7 @@ h4 {
 
 body {
   margin: 0;
-  background: #dfded0;
+  background: var(--page-background);
   min-height: 100vh;
   position: relative;
 }

@@ -139,12 +139,7 @@ const EngagementList = () => {
       <WhiteCard className={'mb-3'}>
         <h1 className='col-rela-dark-red m-0'>Offene Helfendeneinsätze</h1>
         <h4>Du möchtest mit dabei sein, wir freuen uns auf dich</h4>
-        <div
-          className='bcol-rela-light-red p-2 br-2 mt-2 mb-2 b2-s'
-          style={{
-            borderColor: '#353333',
-          }}
-        >
+        <div className='bcol-rela-light-red p-2 br-2 mt-2 mb-2'>
           <h3 className='col-rela-dark-gray m-0 mb-1'>
             Helfendenessen am 9. August 2026
           </h3>
