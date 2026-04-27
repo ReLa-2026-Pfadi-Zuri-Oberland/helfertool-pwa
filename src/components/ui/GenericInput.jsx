@@ -1,6 +1,7 @@
 import {
   Chip,
   FormControl,
+  FormHelperText,
   InputLabel,
   MenuItem,
   Select,
@@ -197,6 +198,7 @@ const GenericInput = ({
               </MenuItem>
             ))}
           </Select>
+          {error && <FormHelperText error>Bitte auswählen</FormHelperText>}
         </FormControl>
       )}
 

@@ -1,14 +1,10 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
 
 import DashboardEngagement from '../features/engagements/pages/Dashboard/Engagement/DashboardEngagement';
 import DashboardEngagementDetail from '../features/engagements/pages/Dashboard/Engagement/DashboardEngagementDetail';
-import DashboardJobType from '../features/engagements/pages/Dashboard/JobType/DashboardJobType';
-import DashboardLocation from '../features/engagements/pages/Dashboard/Location/DashboardLocation';
 import DashboardOrganization from '../features/engagements/pages/Dashboard/Organization/DashboardOrganization';
 import DashboardOrganizationDetail from '../features/engagements/pages/Dashboard/Organization/DashboardOrganizationDetail';
 import DashboardOverview from '../features/engagements/pages/Dashboard/Overview/DashboardOverview';
-import DashboardShift from '../features/engagements/pages/Dashboard/Shift/DashboardShift';
-import DashboardStatistics from '../features/engagements/pages/Dashboard/Statistics/DashboardStatistics';
 import DashboardUserDetail from '../features/engagements/pages/Dashboard/Users/DashboardUserDetail';
 import DashboardUsers from '../features/engagements/pages/Dashboard/Users/DashboardUsers';
 import DocumentManager from '../features/admin/pages/DocumentManager/DocumentManager';
@@ -20,6 +16,19 @@ import TopSideBar from '../components/layout/TopSideBarLayout';
 import { UserContext } from '../stores/UserContext';
 import UserProfile from '../features/user/pages/UserProfile/UserProfile';
 import { useContext } from 'react';
+
+/** /dashboard/engagements → /dashboard/engagements/:section, ?tab= aus alten Links berücksichtigen */
+const DashboardEinsatzplanungIndex = () => {
+  const [searchParams] = useSearchParams();
+  const t = searchParams.get('tab');
+  const section =
+    t === 'einsaetze' || t === 'einsätze' || t === '1'
+      ? 'einsaetze'
+      : t === 'jobtypen' || t === '2'
+        ? 'jobtypen'
+        : 'schichten';
+  return <Navigate to={`/dashboard/engagements/${section}`} replace />;
+};
 
 const Router = () => {
   //   const [messages, setMessages] = useState([]);
@@ -91,7 +100,7 @@ const Router = () => {
               path='/dashboard/locations'
               element={
                 <ProtectedRoute permission='dashboard:view'>
-                  <DashboardLocation />
+                  <Navigate to='/dashboard/organizations' replace />
                 </ProtectedRoute>
               }
             />
@@ -99,7 +108,7 @@ const Router = () => {
               path='/dashboard/shifts'
               element={
                 <ProtectedRoute permission='dashboard:view'>
-                  <DashboardShift />
+                  <Navigate to='/dashboard/engagements' replace />
                 </ProtectedRoute>
               }
             />
@@ -107,12 +116,20 @@ const Router = () => {
               path='/dashboard/jobTypes'
               element={
                 <ProtectedRoute permission='dashboard:view'>
-                  <DashboardJobType />
+                  <Navigate to='/dashboard/engagements' replace />
                 </ProtectedRoute>
               }
             />
             <Route
               path='/dashboard/engagements'
+              element={
+                <ProtectedRoute permission='dashboard:view'>
+                  <DashboardEinsatzplanungIndex />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/dashboard/engagements/:section'
               element={
                 <ProtectedRoute permission='dashboard:view'>
                   <DashboardEngagement />
@@ -155,7 +172,7 @@ const Router = () => {
               path='/dashboard/statistics'
               element={
                 <ProtectedRoute permission='dashboard:view'>
-                  <DashboardStatistics />
+                  <Navigate to='/dashboard/users' replace />
                 </ProtectedRoute>
               }
             />

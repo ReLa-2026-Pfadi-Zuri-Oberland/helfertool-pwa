@@ -83,7 +83,7 @@ const DashboardEngagementDetail = () => {
           fontSize='large'
           className='mr-2 cursor-pointer'
           onClick={() => {
-            navigate('/dashboard/engagements');
+            navigate('/dashboard/engagements/einsaetze');
           }}
         />
         <EventIcon fontSize='large' className='mr-2' />
@@ -163,7 +163,7 @@ const DashboardEngagementDetail = () => {
       <Button
         onClick={() => {
           removeEngagement(engagement.id);
-          navigate('/dashboard/engagements');
+          navigate('/dashboard/engagements/einsaetze');
         }}
       >
         DELETE ENGAGEMENT

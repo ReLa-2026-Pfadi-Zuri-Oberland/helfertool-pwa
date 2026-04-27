@@ -86,7 +86,7 @@ const UserProfile = () => {
         />
         <GenericInput
           kind='select'
-          displayName='T-Shirt Grösse'
+          displayName='T-Shirt Grösse *'
           updateFunction={(newValue) =>
             updateUser(user.id, { tShirtSize: newValue })
           }
@@ -97,6 +97,7 @@ const UserProfile = () => {
             { value: 'M', label: 'M' },
             { value: 'L', label: 'L' },
             { value: 'XL', label: 'XL' },
+            { value: '2XL', label: '2XL' },
           ]}
         />
         <GenericInput
