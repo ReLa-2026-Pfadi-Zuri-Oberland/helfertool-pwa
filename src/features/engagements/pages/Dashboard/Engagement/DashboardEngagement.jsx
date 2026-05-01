@@ -8,7 +8,9 @@ import {
   Button,
   Chip,
   FormControl,
+  IconButton,
   InputLabel,
+  LinearProgress,
   MenuItem,
   Select,
   Stack,
@@ -41,9 +43,11 @@ import { useFireBaseOrganizations } from '../../../hooks/useFireBaseOrganization
 import { useFireBaseUsers } from '../../../../../hooks/useFireBaseUsers';
 
 import AddIcon from '@mui/icons-material/Add';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import PlaceIcon from '@mui/icons-material/Place';
 import WhiteCard from '../../../../../components/ui/WhiteCard';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
@@ -95,7 +99,9 @@ const DashboardEngagements = () => {
   const { section } = useParams();
   const [searchParams] = useSearchParams();
 
-  const activeTab = useMemo(() => tabIndexFromSection(section), [section]);
+  const routeTab = useMemo(() => tabIndexFromSection(section), [section]);
+  const [optimisticTab, setOptimisticTab] = useState(null);
+  const activeTab = optimisticTab ?? routeTab;
 
   /** Umlaut in der URL: …/einsätze → …/einsaetze */
   useEffect(() => {
@@ -125,6 +131,14 @@ const DashboardEngagements = () => {
     navigate({ pathname: location.pathname, search: '' }, { replace: true });
   }, [searchParams, navigate, location.pathname]);
 
+  /** Optimistischen Tab zurücksetzen, sobald Route nachgezogen hat */
+  useEffect(() => {
+    if (optimisticTab == null) return;
+    if (optimisticTab === routeTab) {
+      setOptimisticTab(null);
+    }
+  }, [routeTab, optimisticTab]);
+
   const [engagements, loading, error] = useFireBaseEngagements();
   const [shifts = [], shiftsLoading] = useFireBaseShifts();
   const [jobTypes = [], jobTypesLoading] = useFireBaseJobTypes();
@@ -137,7 +151,7 @@ const DashboardEngagements = () => {
   const [newJobTypeDescription, setNewJobTypeDescription] = useState('');
   const [editingShiftId, setEditingShiftId] = useState(null);
   const [shiftDrafts, setShiftDrafts] = useState({});
-  const [expandedEngagementId, setExpandedEngagementId] = useState(null);
+  const [preloadEinsaetzeTab, setPreloadEinsaetzeTab] = useState(false);
 
   const isLoading =
     loading ||
@@ -146,6 +160,13 @@ const DashboardEngagements = () => {
     locationsLoading ||
     organizationsLoading ||
     usersLoading;
+
+  // Einsaetze-Tab nach initialem Laden im Hintergrund vormounten,
+  // damit der Wechsel von Schichten zu Einsaetze direkt wirkt.
+  useEffect(() => {
+    if (isLoading || preloadEinsaetzeTab) return;
+    setPreloadEinsaetzeTab(true);
+  }, [isLoading, preloadEinsaetzeTab]);
 
   const userLabelMap = useMemo(() => {
     const map = new Map();
@@ -287,7 +308,6 @@ const DashboardEngagements = () => {
       return;
     }
     await removeEngagement(eng.id);
-    setExpandedEngagementId((open) => (open === eng.id ? null : open));
   };
 
   const handleProcessJobTypeRowUpdate = async (newRow) => {
@@ -342,8 +362,12 @@ const DashboardEngagements = () => {
   if (error) return <div>Error loading data</div>;
 
   const goToTab = (index) => {
+    // Sofortiges visuelles Feedback, URL folgt direkt danach
+    setOptimisticTab(index);
     const slug = index === 0 ? 'schichten' : index === 1 ? 'einsaetze' : 'jobtypen';
-    navigate(`/dashboard/engagements/${slug}`);
+    window.requestAnimationFrame(() => {
+      navigate(`/dashboard/engagements/${slug}`);
+    });
   };
 
   const relaContainedSx = {
@@ -391,22 +415,32 @@ const DashboardEngagements = () => {
       <Tabs
         value={activeTab}
         onChange={(_e, value) => goToTab(value)}
+        textColor='inherit'
         sx={{
           mb: 2,
           borderBottom: '1px solid rgba(106, 12, 0, 0.16)',
           '& .MuiTab-root': {
             textTransform: 'none',
             fontWeight: 700,
-            color: 'rgba(106, 12, 0, 0.7)',
+            color: 'rgba(106, 12, 0, 0.78) !important',
             minHeight: 42,
           },
-          '& .Mui-selected': {
-            color: '#6a0c00',
+          '& .MuiTab-root.Mui-selected': {
+            color: '#6a0c00 !important',
+            backgroundColor: 'rgba(106, 12, 0, 0.08)',
+            borderTopLeftRadius: 8,
+            borderTopRightRadius: 8,
           },
           '& .MuiTabs-indicator': { backgroundColor: '#6a0c00', height: 3 },
+          '& .MuiTab-root.Mui-focusVisible': {
+            color: '#6a0c00 !important',
+          },
           '& .MuiButtonBase-root.Mui-focusVisible': {
             outline: '2px solid rgba(106, 12, 0, 0.35)',
             outlineOffset: '-2px',
+          },
+          '& .MuiTab-root:hover': {
+            color: '#6a0c00 !important',
           },
         }}
       >
@@ -435,7 +469,7 @@ const DashboardEngagements = () => {
             </Alert>
           )}
 
-          {sortedShifts.map((shift, idx) => {
+          {sortedShifts.map((shift) => {
             const draft = getShiftDraft(shift);
             const list = engagementsByShift.get(shift.id) || [];
             const regCount = list.reduce(
@@ -449,23 +483,27 @@ const DashboardEngagements = () => {
             return (
               <Accordion
                 key={shift.id}
-                defaultExpanded={idx === 0}
+                expanded
                 disableGutters
                 elevation={0}
                 sx={{
-                  border: '1px solid rgba(106, 12, 0, 0.14)',
-                  borderRadius: '12px !important',
+                  border: '1px solid rgba(97, 7, 0, 0.12)',
+                  borderRadius: '14px !important',
                   '&:before': { display: 'none' },
-                  bgcolor: 'rgba(255,255,255,0.92)',
+                  bgcolor: '#fff',
                 }}
               >
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon sx={{ color: '#6a0c00' }} />}
-                  sx={{ bgcolor: 'rgba(106, 12, 0, 0.06)', px: 2, py: 0.5 }}
+                  sx={{
+                    bgcolor: 'rgba(97, 7, 0, 0.035)',
+                    px: 2,
+                    py: 0.45,
+                    borderRadius: '14px',
+                  }}
                 >
                   <Stack direction='row' justifyContent='space-between' sx={{ width: '100%' }} flexWrap='wrap' useFlexGap>
                     <Box>
-                      <Typography variant='subtitle1' sx={{ fontWeight: 700, color: '#6a0c00' }}>
+                      <Typography variant='subtitle1' sx={{ fontWeight: 700, color: '#610700' }}>
                         {shift.name || 'Unbenannte Schicht'}
                       </Typography>
                       <Typography variant='body2' color='text.secondary'>
@@ -473,8 +511,16 @@ const DashboardEngagements = () => {
                       </Typography>
                     </Box>
                     <Stack direction='row' spacing={0.75}>
-                      <Chip size='small' label={`${list.length} Einsätze`} />
-                      <Chip size='small' label={`${regCount} / ${targetCount || 0} Helfende`} />
+                      <Chip
+                        size='small'
+                        label={`${list.length} Einsätze`}
+                        sx={{ bgcolor: 'rgba(0,0,0,0.06)', color: '#333', fontWeight: 600 }}
+                      />
+                      <Chip
+                        size='small'
+                        label={`${regCount} / ${targetCount || 0} Helfende`}
+                        sx={{ bgcolor: 'rgba(0,0,0,0.06)', color: '#333', fontWeight: 600 }}
+                      />
                     </Stack>
                   </Stack>
                 </AccordionSummary>
@@ -552,86 +598,275 @@ const DashboardEngagements = () => {
                     <Stack spacing={1.25}>
                       {list.map((eng) => {
                         const helpers = Array.isArray(eng.helpers) ? eng.helpers : [];
+                        const target = parseTargetHelpers(eng.targetNumberOfHelpers);
+                        const percent = target > 0 ? Math.min(Math.round((helpers.length / target) * 100), 100) : 0;
+                        const openSlots = Math.max(target - helpers.length, 0);
                         return (
                           <Box
                             key={eng.id}
                             sx={{
-                              p: 1.25,
-                              border: '1px solid rgba(106, 12, 0, 0.12)',
-                              borderRadius: 2,
-                              bgcolor: 'rgba(255,255,255,0.96)',
+                              p: 1.2,
+                              border: '1px solid rgba(245, 191, 190, 0.75)',
+                              borderRadius: '14px',
+                              bgcolor: '#fff',
+                              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                              '&:hover': {
+                                borderColor: 'rgba(106, 12, 0, 0.25)',
+                                boxShadow: '0 4px 14px rgba(37, 13, 10, 0.06)',
+                              },
                             }}
                           >
                             <Stack
                               direction='row'
                               justifyContent='space-between'
-                              flexWrap='wrap'
-                              useFlexGap
+                              alignItems='flex-start'
                               spacing={1}
-                              sx={{ mb: 0.75 }}
+                              sx={{ mb: 0.55 }}
                             >
-                              <Box>
-                                <Typography variant='subtitle2' sx={{ fontWeight: 700 }}>
+                              <Box sx={{ minWidth: 0, flex: 1 }}>
+                                <Typography
+                                  variant='subtitle1'
+                                  sx={{
+                                    fontWeight: 800,
+                                    background: 'linear-gradient(135deg, #6a0c00 0%, #b71c1c 100%)',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                    backgroundClip: 'text',
+                                    lineHeight: 1.15,
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                  }}
+                                >
                                   {jobTypeName(eng.jobType)}
                                 </Typography>
-                                <Typography variant='caption' color='text.secondary'>
+                                <Typography
+                                  sx={{
+                                    color: 'text.secondary',
+                                    fontSize: '0.88rem',
+                                    lineHeight: 1.3,
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                  }}
+                                >
                                   {locationName(eng.location)}
-                                  {eng.organization
-                                    ? ` · ${organizationName(eng.organization)}`
-                                    : ''}
+                                  {eng.organization ? ` · ${organizationName(eng.organization)}` : ''}
                                 </Typography>
                               </Box>
                               <Chip
                                 size='small'
-                                label={`${helpers.length} / ${parseTargetHelpers(
-                                  eng.targetNumberOfHelpers
-                                )} Helfende`}
+                                label={`${helpers.length}/${target}`}
+                                sx={{
+                                  height: 22,
+                                  borderRadius: 999,
+                                  bgcolor: 'rgba(97, 7, 0, 0.08)',
+                                  color: '#610700',
+                                  fontWeight: 700,
+                                  '& .MuiChip-label': { px: 0.9, fontSize: '0.72rem' },
+                                }}
                               />
                             </Stack>
 
-                            <Typography
-                              variant='caption'
-                              color='text.secondary'
-                              sx={{ fontWeight: 600, display: 'block', mb: 0.5 }}
+                            <Box sx={{ mb: 0.7 }} />
+
+                            <Box
+                              sx={{
+                                mt: 0.2,
+                                p: 0.75,
+                                borderRadius: '12px',
+                                border: '1px solid rgba(106, 12, 0, 0.08)',
+                                bgcolor: 'rgba(245, 191, 190, 0.12)',
+                              }}
                             >
-                              Helfende
-                            </Typography>
+                              <Stack direction='row' justifyContent='space-between' alignItems='center' sx={{ mb: 0.45 }}>
+                                <Typography sx={{ color: '#610700', fontWeight: 700, fontSize: '0.84rem' }}>
+                                  Auslastung
+                                </Typography>
+                                <Typography
+                                  sx={{
+                                    color: '#610700',
+                                    fontWeight: 800,
+                                    fontSize: '0.72rem',
+                                    px: 0.75,
+                                    py: 0.05,
+                                    borderRadius: 99,
+                                    bgcolor: '#fff',
+                                    border: '1px solid rgba(97, 7, 0, 0.08)',
+                                  }}
+                                >
+                                  {percent}%
+                                </Typography>
+                              </Stack>
+                              <LinearProgress
+                                variant='determinate'
+                                value={percent}
+                                sx={{
+                                  height: 6,
+                                  borderRadius: 999,
+                                  bgcolor: 'rgba(255,255,255,0.92)',
+                                  '& .MuiLinearProgress-bar': {
+                                    borderRadius: 999,
+                                    background: 'linear-gradient(90deg, #8b2018 0%, #b33b2d 100%)',
+                                  },
+                                }}
+                              />
+                              <Stack direction='row' spacing={0.5} sx={{ mt: 0.6 }} useFlexGap flexWrap='wrap'>
+                                <Chip
+                                  size='small'
+                                  label={`Ziel ${target}`}
+                                  sx={{
+                                    height: 20,
+                                    borderRadius: 999,
+                                    bgcolor: '#fff',
+                                    border: '1px solid rgba(0,0,0,0.04)',
+                                    color: '#444',
+                                    '& .MuiChip-label': { px: 0.7, fontSize: '0.68rem' },
+                                  }}
+                                />
+                                <Chip
+                                  size='small'
+                                  label={`Eingeschrieben ${helpers.length}`}
+                                  sx={{
+                                    height: 20,
+                                    borderRadius: 999,
+                                    bgcolor: '#fff',
+                                    border: '1px solid rgba(0,0,0,0.04)',
+                                    color: '#444',
+                                    '& .MuiChip-label': { px: 0.7, fontSize: '0.68rem' },
+                                  }}
+                                />
+                                <Chip
+                                  size='small'
+                                  label={`Offen ${openSlots}`}
+                                  sx={{
+                                    height: 20,
+                                    borderRadius: 999,
+                                    bgcolor: '#fff',
+                                    border: '1px solid rgba(0,0,0,0.04)',
+                                    color: '#9a4d00',
+                                    fontWeight: 700,
+                                    '& .MuiChip-label': { px: 0.7, fontSize: '0.68rem' },
+                                  }}
+                                />
+                              </Stack>
+                            </Box>
+
+                            <Stack direction='row' justifyContent='space-between' alignItems='center' sx={{ mt: 0.7, mb: 0.25 }}>
+                              <Typography variant='caption' color='text.secondary' sx={{ fontWeight: 600 }}>
+                                Personen im Einsatz
+                              </Typography>
+                              <Chip
+                                size='small'
+                                label={`${helpers.length} Person${helpers.length === 1 ? '' : 'en'}`}
+                                sx={{
+                                  height: 18,
+                                  borderRadius: 999,
+                                  bgcolor: 'rgba(0,0,0,0.045)',
+                                  color: 'text.secondary',
+                                  fontWeight: 600,
+                                  '& .MuiChip-label': { px: 0.7, fontSize: '0.68rem' },
+                                }}
+                              />
+                            </Stack>
                             {helpers.length === 0 ? (
                               <Typography variant='body2' color='text.secondary'>
                                 Noch niemand angemeldet.
                               </Typography>
                             ) : (
-                              <Stack direction='row' spacing={0.75} flexWrap='wrap' useFlexGap>
-                                {helpers.map((uid) => (
-                                  <Chip
-                                    key={uid}
-                                    size='small'
-                                    label={userLabelMap.get(uid) || uid}
-                                    sx={{
-                                      bgcolor: 'rgba(245, 191, 190, 0.22)',
-                                      border: '1px solid rgba(106, 12, 0, 0.18)',
-                                    }}
-                                  />
-                                ))}
+                              <Stack direction='row' spacing={0.5} flexWrap='wrap' useFlexGap>
+                                {helpers.map((uid) => {
+                                  const helperName = userLabelMap.get(uid) || uid;
+                                  const initials = helperName
+                                    .split(' ')
+                                    .filter(Boolean)
+                                    .slice(0, 2)
+                                    .map((part) => part[0])
+                                    .join('')
+                                    .toUpperCase();
+
+                                  return (
+                                    <Box
+                                      key={uid}
+                                      sx={{
+                                        height: 24,
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        borderRadius: 999,
+                                        bgcolor: 'rgba(0,0,0,0.03)',
+                                        border: '1px solid rgba(0,0,0,0.08)',
+                                        pl: 0.6,
+                                        pr: 0.2,
+                                        maxWidth: 180,
+                                      }}
+                                    >
+                                      <Box
+                                        sx={{
+                                          width: 16,
+                                          height: 16,
+                                          borderRadius: '50%',
+                                          bgcolor: 'rgba(0,0,0,0.11)',
+                                          color: '#4a4a4a',
+                                          fontSize: '0.58rem',
+                                          fontWeight: 700,
+                                          display: 'inline-flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          flexShrink: 0,
+                                          mr: 0.45,
+                                        }}
+                                      >
+                                        {initials || '?'}
+                                      </Box>
+                                      <Typography
+                                        sx={{
+                                          fontSize: '0.75rem',
+                                          color: '#3f3f3f',
+                                          whiteSpace: 'nowrap',
+                                          overflow: 'hidden',
+                                          textOverflow: 'ellipsis',
+                                          minWidth: 0,
+                                          mr: 0.1,
+                                        }}
+                                      >
+                                        {helperName}
+                                      </Typography>
+                                      <IconButton
+                                        size='small'
+                                        onClick={() =>
+                                          updateEngagement(eng.id, {
+                                            helpers: helpers.filter((helperId) => helperId !== uid),
+                                          })
+                                        }
+                                        sx={{
+                                          p: 0.2,
+                                          color: 'rgba(106, 12, 0, 0.55)',
+                                          '&:hover': { color: '#b71c1c', bgcolor: 'transparent' },
+                                        }}
+                                      >
+                                        <CloseRoundedIcon sx={{ fontSize: '0.95rem' }} />
+                                      </IconButton>
+                                    </Box>
+                                  );
+                                })}
                               </Stack>
                             )}
 
-                            <Stack direction='row' flexWrap='wrap' useFlexGap spacing={1} sx={{ mt: 1 }}>
+                            <Stack direction='row' flexWrap='wrap' useFlexGap spacing={1} sx={{ mt: 0.75 }}>
                               <Button
                                 size='small'
-                                variant='outlined'
+                                variant='text'
                                 color='error'
                                 startIcon={<DeleteIcon sx={{ fontSize: '1rem' }} />}
                                 onClick={() => updateEngagement(eng.id, { shift: '' })}
                                 sx={{
-                                  ...relaOutlinedSx,
+                                  ...relaTextSx,
                                   color: '#b71c1c',
-                                  borderColor: 'rgba(183, 28, 28, 0.35)',
-                                  fontSize: '0.75rem',
+                                  fontSize: '0.72rem',
                                   lineHeight: 1.2,
-                                  py: 0.25,
-                                  px: 0.75,
-                                  minHeight: 28,
+                                  py: 0.2,
+                                  px: 0.3,
+                                  minHeight: 24,
                                   '& .MuiButton-startIcon': { mr: 0.35, ml: -0.25 },
                                 }}
                               >
@@ -651,7 +886,8 @@ const DashboardEngagements = () => {
         </Stack>
       )}
 
-      {activeTab === 1 && (
+      {(activeTab === 1 || preloadEinsaetzeTab) && (
+        <Box sx={{ display: activeTab === 1 ? 'block' : 'none' }}>
         <Stack spacing={1.5}>
           <Stack direction='row' justifyContent='space-between' alignItems='center' flexWrap='wrap' useFlexGap spacing={1}>
             <Typography variant='h6' sx={{ fontWeight: 700, color: '#6a0c00' }}>
@@ -681,28 +917,40 @@ const DashboardEngagements = () => {
             {sortedEngagements.map((eng) => {
               const helpers = Array.isArray(eng.helpers) ? eng.helpers : [];
               const shift = shiftById.get(eng.shift);
-              const isExpanded = expandedEngagementId === eng.id;
               return (
                 <Accordion
                   key={eng.id}
-                  expanded={isExpanded}
-                  onChange={(_, expanded) =>
-                    setExpandedEngagementId(expanded ? eng.id : null)
-                  }
-                  TransitionProps={{ unmountOnExit: true }}
+                  expanded
+                  TransitionProps={{ timeout: 0 }}
                   disableGutters
                   elevation={0}
                   sx={{
-                    border: '1px solid rgba(106, 12, 0, 0.12)',
-                    borderRadius: 2,
+                    border: '1px solid rgba(245, 191, 190, 0.75)',
+                    borderRadius: '14px !important',
                     '&:before': { display: 'none' },
-                    bgcolor: 'rgba(255,255,255,0.96)',
+                    bgcolor: '#fff',
                   }}
                 >
-                  <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: '#6a0c00' }} />}>
+                  <AccordionSummary
+                    sx={{
+                      bgcolor: 'rgba(97, 7, 0, 0.035)',
+                      px: 2,
+                      py: 0.45,
+                      borderRadius: '14px',
+                    }}
+                  >
                     <Stack direction='row' justifyContent='space-between' sx={{ width: '100%' }} flexWrap='wrap' useFlexGap spacing={1}>
                       <Box>
-                        <Typography variant='subtitle2' sx={{ fontWeight: 700 }}>
+                        <Typography
+                          variant='subtitle2'
+                          sx={{
+                            fontWeight: 800,
+                            background: 'linear-gradient(135deg, #6a0c00 0%, #b71c1c 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                          }}
+                        >
                           {jobTypeName(eng.jobType)}
                         </Typography>
                         <Typography variant='caption' color='text.secondary'>
@@ -741,7 +989,7 @@ const DashboardEngagements = () => {
                       </Button>
                     </Stack>
 
-                    <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} sx={{ mb: 1.25 }}>
+                    <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} sx={{ mb: 1.1 }}>
                       <FormControl size='small' sx={{ ...relaFieldSx, minWidth: 180 }}>
                         <InputLabel>Jobtyp</InputLabel>
                         <Select
@@ -819,8 +1067,11 @@ const DashboardEngagements = () => {
                             size='small'
                             label={userLabelMap.get(uid) || uid}
                             sx={{
-                              bgcolor: 'rgba(245, 191, 190, 0.22)',
-                              border: '1px solid rgba(106, 12, 0, 0.18)',
+                              height: 22,
+                              borderRadius: 999,
+                              bgcolor: 'rgba(0,0,0,0.03)',
+                              border: '1px solid rgba(0,0,0,0.08)',
+                              '& .MuiChip-label': { px: 0.75, fontSize: '0.7rem' },
                             }}
                           />
                         ))
@@ -832,6 +1083,7 @@ const DashboardEngagements = () => {
             })}
           </Stack>
         </Stack>
+        </Box>
       )}
 
       {activeTab === 2 && (
