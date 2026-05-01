@@ -833,11 +833,15 @@ const DashboardEngagements = () => {
                                       </Typography>
                                       <IconButton
                                         size='small'
-                                        onClick={() =>
+                                        onClick={() => {
+                                          const shouldRemove = window.confirm(
+                                            `${helperName} wirklich aus diesem Einsatz entfernen?`
+                                          );
+                                          if (!shouldRemove) return;
                                           updateEngagement(eng.id, {
                                             helpers: helpers.filter((helperId) => helperId !== uid),
-                                          })
-                                        }
+                                          });
+                                        }}
                                         sx={{
                                           p: 0.2,
                                           color: 'rgba(106, 12, 0, 0.55)',
