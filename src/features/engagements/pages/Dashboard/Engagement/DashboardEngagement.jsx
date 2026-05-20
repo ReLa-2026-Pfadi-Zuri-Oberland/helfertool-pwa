@@ -49,7 +49,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PlaceIcon from '@mui/icons-material/Place';
 import WhiteCard from '../../../../../components/ui/WhiteCard';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 
 const formatToDateTimeLocal = (isoString) => {
   if (!isoString) return '';
@@ -184,7 +189,11 @@ const DashboardEngagements = () => {
     organizations.find((o) => o.id === id)?.name || 'Nicht zugewiesen';
 
   const sortedShifts = useMemo(() => {
-    return [...shifts].sort((a, b) => {
+    // Deduplicate shifts by ID to prevent duplicate keys in rendering
+    const uniqueShifts = Array.from(
+      new Map(shifts.map((shift) => [shift.id, shift])).values(),
+    );
+    return uniqueShifts.sort((a, b) => {
       const ta = a.startDate ? new Date(a.startDate).getTime() : 0;
       const tb = b.startDate ? new Date(b.startDate).getTime() : 0;
       return ta - tb;
@@ -239,8 +248,12 @@ const DashboardEngagements = () => {
     const draft = getShiftDraft(shift);
     await updateShift(shift.id, {
       name: draft.name || shift.name || 'Unbenannte Schicht',
-      startDate: draft.startDate ? new Date(draft.startDate).toISOString() : shift.startDate,
-      endDate: draft.endDate ? new Date(draft.endDate).toISOString() : shift.endDate,
+      startDate: draft.startDate
+        ? new Date(draft.startDate).toISOString()
+        : shift.startDate,
+      endDate: draft.endDate
+        ? new Date(draft.endDate).toISOString()
+        : shift.endDate,
     });
     setEditingShiftId(null);
   };
@@ -291,7 +304,7 @@ const DashboardEngagements = () => {
     });
     if (!newId) {
       window.alert(
-        'Der Jobtyp konnte nicht angelegt werden. Bitte prüfe die Konsole und die Firestore-Berechtigungen.'
+        'Der Jobtyp konnte nicht angelegt werden. Bitte prüfe die Konsole und die Firestore-Berechtigungen.',
       );
       return;
     }
@@ -302,7 +315,7 @@ const DashboardEngagements = () => {
   const handleDeleteEngagement = async (eng) => {
     if (
       !window.confirm(
-        'Diesen Einsatz unwiderruflich löschen? Alle zugehörigen Daten (Anmeldungen, Zuordnung) gehen verloren.'
+        'Diesen Einsatz unwiderruflich löschen? Alle zugehörigen Daten (Anmeldungen, Zuordnung) gehen verloren.',
       )
     ) {
       return;
@@ -318,7 +331,13 @@ const DashboardEngagements = () => {
 
   const jobTypeColumns = useMemo(
     () => [
-      { field: 'name', headerName: 'Jobtyp', flex: 1, minWidth: 180, editable: true },
+      {
+        field: 'name',
+        headerName: 'Jobtyp',
+        flex: 1,
+        minWidth: 180,
+        editable: true,
+      },
       {
         field: 'description',
         headerName: 'Beschreibung',
@@ -355,7 +374,7 @@ const DashboardEngagements = () => {
         ],
       },
     ],
-    [jobTypesGridApiRef]
+    [jobTypesGridApiRef],
   );
 
   if (isLoading) return <div>Loading...</div>;
@@ -364,7 +383,8 @@ const DashboardEngagements = () => {
   const goToTab = (index) => {
     // Sofortiges visuelles Feedback, URL folgt direkt danach
     setOptimisticTab(index);
-    const slug = index === 0 ? 'schichten' : index === 1 ? 'einsaetze' : 'jobtypen';
+    const slug =
+      index === 0 ? 'schichten' : index === 1 ? 'einsaetze' : 'jobtypen';
     window.requestAnimationFrame(() => {
       navigate(`/dashboard/engagements/${slug}`);
     });
@@ -473,16 +493,17 @@ const DashboardEngagements = () => {
             const draft = getShiftDraft(shift);
             const list = engagementsByShift.get(shift.id) || [];
             const regCount = list.reduce(
-              (sum, e) => sum + (Array.isArray(e.helpers) ? e.helpers.length : 0),
-              0
+              (sum, e) =>
+                sum + (Array.isArray(e.helpers) ? e.helpers.length : 0),
+              0,
             );
             const targetCount = list.reduce(
               (sum, e) => sum + parseTargetHelpers(e.targetNumberOfHelpers),
-              0
+              0,
             );
             return (
               <Accordion
-                key={shift.id}
+                key={`shift-accordion-${shift.id}`}
                 expanded
                 disableGutters
                 elevation={0}
@@ -501,9 +522,18 @@ const DashboardEngagements = () => {
                     borderRadius: '14px',
                   }}
                 >
-                  <Stack direction='row' justifyContent='space-between' sx={{ width: '100%' }} flexWrap='wrap' useFlexGap>
+                  <Stack
+                    direction='row'
+                    justifyContent='space-between'
+                    sx={{ width: '100%' }}
+                    flexWrap='wrap'
+                    useFlexGap
+                  >
                     <Box>
-                      <Typography variant='subtitle1' sx={{ fontWeight: 700, color: '#610700' }}>
+                      <Typography
+                        variant='subtitle1'
+                        sx={{ fontWeight: 700, color: '#610700' }}
+                      >
                         {shift.name || 'Unbenannte Schicht'}
                       </Typography>
                       <Typography variant='body2' color='text.secondary'>
@@ -514,21 +544,40 @@ const DashboardEngagements = () => {
                       <Chip
                         size='small'
                         label={`${list.length} Einsätze`}
-                        sx={{ bgcolor: 'rgba(0,0,0,0.06)', color: '#333', fontWeight: 600 }}
+                        sx={{
+                          bgcolor: 'rgba(0,0,0,0.06)',
+                          color: '#333',
+                          fontWeight: 600,
+                        }}
                       />
                       <Chip
                         size='small'
                         label={`${regCount} / ${targetCount || 0} Helfende`}
-                        sx={{ bgcolor: 'rgba(0,0,0,0.06)', color: '#333', fontWeight: 600 }}
+                        sx={{
+                          bgcolor: 'rgba(0,0,0,0.06)',
+                          color: '#333',
+                          fontWeight: 600,
+                        }}
                       />
                     </Stack>
                   </Stack>
                 </AccordionSummary>
                 <AccordionDetails sx={{ pt: 1.5, px: 2, pb: 2 }}>
-                  <Stack direction='row' spacing={1} flexWrap='wrap' useFlexGap sx={{ mb: editingShiftId === shift.id ? 1.25 : 1 }}>
+                  <Stack
+                    direction='row'
+                    spacing={1}
+                    flexWrap='wrap'
+                    useFlexGap
+                    sx={{ mb: editingShiftId === shift.id ? 1.25 : 1 }}
+                  >
                     {editingShiftId === shift.id ? (
                       <>
-                        <Button size='small' variant='contained' onClick={() => saveShift(shift)} sx={relaContainedSx}>
+                        <Button
+                          size='small'
+                          variant='contained'
+                          onClick={() => saveShift(shift)}
+                          sx={relaContainedSx}
+                        >
                           Speichern
                         </Button>
                         <Button
@@ -541,7 +590,12 @@ const DashboardEngagements = () => {
                         </Button>
                       </>
                     ) : (
-                      <Button size='small' variant='outlined' onClick={() => setEditingShiftId(shift.id)} sx={relaOutlinedSx}>
+                      <Button
+                        size='small'
+                        variant='outlined'
+                        onClick={() => setEditingShiftId(shift.id)}
+                        sx={relaOutlinedSx}
+                      >
                         Schicht bearbeiten
                       </Button>
                     )}
@@ -551,22 +605,38 @@ const DashboardEngagements = () => {
                       color='error'
                       startIcon={<DeleteIcon />}
                       onClick={() => removeShift(shift.id)}
-                      sx={{ ...relaOutlinedSx, color: '#b71c1c', borderColor: 'rgba(183, 28, 28, 0.35)' }}
+                      sx={{
+                        ...relaOutlinedSx,
+                        color: '#b71c1c',
+                        borderColor: 'rgba(183, 28, 28, 0.35)',
+                      }}
                     >
                       Schicht löschen
                     </Button>
-                    <Button size='small' variant='outlined' startIcon={<AddIcon />} onClick={() => addEngagementToShift(shift.id)} sx={relaOutlinedSx}>
+                    <Button
+                      size='small'
+                      variant='outlined'
+                      startIcon={<AddIcon />}
+                      onClick={() => addEngagementToShift(shift.id)}
+                      sx={relaOutlinedSx}
+                    >
                       Einsatz in Schicht hinzufügen
                     </Button>
                   </Stack>
 
                   {editingShiftId === shift.id && (
-                    <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} sx={{ mb: 1.5 }}>
+                    <Stack
+                      direction={{ xs: 'column', md: 'row' }}
+                      spacing={1}
+                      sx={{ mb: 1.5 }}
+                    >
                       <TextField
                         size='small'
                         label='Name'
                         value={draft.name}
-                        onChange={(e) => updateShiftDraft(shift.id, 'name', e.target.value)}
+                        onChange={(e) =>
+                          updateShiftDraft(shift.id, 'name', e.target.value)
+                        }
                         sx={{ ...relaFieldSx, minWidth: 220, flex: 1 }}
                       />
                       <TextField
@@ -575,7 +645,13 @@ const DashboardEngagements = () => {
                         label='Beginn'
                         InputLabelProps={{ shrink: true }}
                         value={draft.startDate}
-                        onChange={(e) => updateShiftDraft(shift.id, 'startDate', e.target.value)}
+                        onChange={(e) =>
+                          updateShiftDraft(
+                            shift.id,
+                            'startDate',
+                            e.target.value,
+                          )
+                        }
                         sx={{ ...relaFieldSx, minWidth: 220 }}
                       />
                       <TextField
@@ -584,7 +660,9 @@ const DashboardEngagements = () => {
                         label='Ende'
                         InputLabelProps={{ shrink: true }}
                         value={draft.endDate}
-                        onChange={(e) => updateShiftDraft(shift.id, 'endDate', e.target.value)}
+                        onChange={(e) =>
+                          updateShiftDraft(shift.id, 'endDate', e.target.value)
+                        }
                         sx={{ ...relaFieldSx, minWidth: 220 }}
                       />
                     </Stack>
@@ -597,19 +675,30 @@ const DashboardEngagements = () => {
                   ) : (
                     <Stack spacing={1.25}>
                       {list.map((eng) => {
-                        const helpers = Array.isArray(eng.helpers) ? eng.helpers : [];
-                        const target = parseTargetHelpers(eng.targetNumberOfHelpers);
-                        const percent = target > 0 ? Math.min(Math.round((helpers.length / target) * 100), 100) : 0;
+                        const helpers = Array.isArray(eng.helpers)
+                          ? eng.helpers
+                          : [];
+                        const target = parseTargetHelpers(
+                          eng.targetNumberOfHelpers,
+                        );
+                        const percent =
+                          target > 0
+                            ? Math.min(
+                                Math.round((helpers.length / target) * 100),
+                                100,
+                              )
+                            : 0;
                         const openSlots = Math.max(target - helpers.length, 0);
                         return (
                           <Box
-                            key={eng.id}
+                            key={`shift-${shift.id}-eng-${eng.id}`}
                             sx={{
                               p: 1.2,
                               border: '1px solid rgba(245, 191, 190, 0.75)',
                               borderRadius: '14px',
                               bgcolor: '#fff',
-                              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                              transition:
+                                'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                               '&:hover': {
                                 borderColor: 'rgba(106, 12, 0, 0.25)',
                                 boxShadow: '0 4px 14px rgba(37, 13, 10, 0.06)',
@@ -628,7 +717,8 @@ const DashboardEngagements = () => {
                                   variant='subtitle1'
                                   sx={{
                                     fontWeight: 800,
-                                    background: 'linear-gradient(135deg, #6a0c00 0%, #b71c1c 100%)',
+                                    background:
+                                      'linear-gradient(135deg, #6a0c00 0%, #b71c1c 100%)',
                                     WebkitBackgroundClip: 'text',
                                     WebkitTextFillColor: 'transparent',
                                     backgroundClip: 'text',
@@ -651,7 +741,9 @@ const DashboardEngagements = () => {
                                   }}
                                 >
                                   {locationName(eng.location)}
-                                  {eng.organization ? ` · ${organizationName(eng.organization)}` : ''}
+                                  {eng.organization
+                                    ? ` · ${organizationName(eng.organization)}`
+                                    : ''}
                                 </Typography>
                               </Box>
                               <Chip
@@ -663,7 +755,10 @@ const DashboardEngagements = () => {
                                   bgcolor: 'rgba(97, 7, 0, 0.08)',
                                   color: '#610700',
                                   fontWeight: 700,
-                                  '& .MuiChip-label': { px: 0.9, fontSize: '0.72rem' },
+                                  '& .MuiChip-label': {
+                                    px: 0.9,
+                                    fontSize: '0.72rem',
+                                  },
                                 }}
                               />
                             </Stack>
@@ -679,8 +774,19 @@ const DashboardEngagements = () => {
                                 bgcolor: 'rgba(245, 191, 190, 0.12)',
                               }}
                             >
-                              <Stack direction='row' justifyContent='space-between' alignItems='center' sx={{ mb: 0.45 }}>
-                                <Typography sx={{ color: '#610700', fontWeight: 700, fontSize: '0.84rem' }}>
+                              <Stack
+                                direction='row'
+                                justifyContent='space-between'
+                                alignItems='center'
+                                sx={{ mb: 0.45 }}
+                              >
+                                <Typography
+                                  sx={{
+                                    color: '#610700',
+                                    fontWeight: 700,
+                                    fontSize: '0.84rem',
+                                  }}
+                                >
                                   Auslastung
                                 </Typography>
                                 <Typography
@@ -707,11 +813,18 @@ const DashboardEngagements = () => {
                                   bgcolor: 'rgba(255,255,255,0.92)',
                                   '& .MuiLinearProgress-bar': {
                                     borderRadius: 999,
-                                    background: 'linear-gradient(90deg, #8b2018 0%, #b33b2d 100%)',
+                                    background:
+                                      'linear-gradient(90deg, #8b2018 0%, #b33b2d 100%)',
                                   },
                                 }}
                               />
-                              <Stack direction='row' spacing={0.5} sx={{ mt: 0.6 }} useFlexGap flexWrap='wrap'>
+                              <Stack
+                                direction='row'
+                                spacing={0.5}
+                                sx={{ mt: 0.6 }}
+                                useFlexGap
+                                flexWrap='wrap'
+                              >
                                 <Chip
                                   size='small'
                                   label={`Ziel ${target}`}
@@ -721,7 +834,10 @@ const DashboardEngagements = () => {
                                     bgcolor: '#fff',
                                     border: '1px solid rgba(0,0,0,0.04)',
                                     color: '#444',
-                                    '& .MuiChip-label': { px: 0.7, fontSize: '0.68rem' },
+                                    '& .MuiChip-label': {
+                                      px: 0.7,
+                                      fontSize: '0.68rem',
+                                    },
                                   }}
                                 />
                                 <Chip
@@ -733,7 +849,10 @@ const DashboardEngagements = () => {
                                     bgcolor: '#fff',
                                     border: '1px solid rgba(0,0,0,0.04)',
                                     color: '#444',
-                                    '& .MuiChip-label': { px: 0.7, fontSize: '0.68rem' },
+                                    '& .MuiChip-label': {
+                                      px: 0.7,
+                                      fontSize: '0.68rem',
+                                    },
                                   }}
                                 />
                                 <Chip
@@ -746,14 +865,26 @@ const DashboardEngagements = () => {
                                     border: '1px solid rgba(0,0,0,0.04)',
                                     color: '#9a4d00',
                                     fontWeight: 700,
-                                    '& .MuiChip-label': { px: 0.7, fontSize: '0.68rem' },
+                                    '& .MuiChip-label': {
+                                      px: 0.7,
+                                      fontSize: '0.68rem',
+                                    },
                                   }}
                                 />
                               </Stack>
                             </Box>
 
-                            <Stack direction='row' justifyContent='space-between' alignItems='center' sx={{ mt: 0.7, mb: 0.25 }}>
-                              <Typography variant='caption' color='text.secondary' sx={{ fontWeight: 600 }}>
+                            <Stack
+                              direction='row'
+                              justifyContent='space-between'
+                              alignItems='center'
+                              sx={{ mt: 0.7, mb: 0.25 }}
+                            >
+                              <Typography
+                                variant='caption'
+                                color='text.secondary'
+                                sx={{ fontWeight: 600 }}
+                              >
                                 Personen im Einsatz
                               </Typography>
                               <Chip
@@ -765,18 +896,30 @@ const DashboardEngagements = () => {
                                   bgcolor: 'rgba(0,0,0,0.045)',
                                   color: 'text.secondary',
                                   fontWeight: 600,
-                                  '& .MuiChip-label': { px: 0.7, fontSize: '0.68rem' },
+                                  '& .MuiChip-label': {
+                                    px: 0.7,
+                                    fontSize: '0.68rem',
+                                  },
                                 }}
                               />
                             </Stack>
                             {helpers.length === 0 ? (
-                              <Typography variant='body2' color='text.secondary'>
+                              <Typography
+                                variant='body2'
+                                color='text.secondary'
+                              >
                                 Noch niemand angemeldet.
                               </Typography>
                             ) : (
-                              <Stack direction='row' spacing={0.5} flexWrap='wrap' useFlexGap>
+                              <Stack
+                                direction='row'
+                                spacing={0.5}
+                                flexWrap='wrap'
+                                useFlexGap
+                              >
                                 {helpers.map((uid) => {
-                                  const helperName = userLabelMap.get(uid) || uid;
+                                  const helperName =
+                                    userLabelMap.get(uid) || uid;
                                   const initials = helperName
                                     .split(' ')
                                     .filter(Boolean)
@@ -787,7 +930,7 @@ const DashboardEngagements = () => {
 
                                   return (
                                     <Box
-                                      key={uid}
+                                      key={`shift-${shift.id}-eng-${eng.id}-helper-${uid}`}
                                       sx={{
                                         height: 24,
                                         display: 'inline-flex',
@@ -835,20 +978,27 @@ const DashboardEngagements = () => {
                                         size='small'
                                         onClick={() => {
                                           const shouldRemove = window.confirm(
-                                            `${helperName} wirklich aus diesem Einsatz entfernen?`
+                                            `${helperName} wirklich aus diesem Einsatz entfernen?`,
                                           );
                                           if (!shouldRemove) return;
                                           updateEngagement(eng.id, {
-                                            helpers: helpers.filter((helperId) => helperId !== uid),
+                                            helpers: helpers.filter(
+                                              (helperId) => helperId !== uid,
+                                            ),
                                           });
                                         }}
                                         sx={{
                                           p: 0.2,
                                           color: 'rgba(106, 12, 0, 0.55)',
-                                          '&:hover': { color: '#b71c1c', bgcolor: 'transparent' },
+                                          '&:hover': {
+                                            color: '#b71c1c',
+                                            bgcolor: 'transparent',
+                                          },
                                         }}
                                       >
-                                        <CloseRoundedIcon sx={{ fontSize: '0.95rem' }} />
+                                        <CloseRoundedIcon
+                                          sx={{ fontSize: '0.95rem' }}
+                                        />
                                       </IconButton>
                                     </Box>
                                   );
@@ -856,13 +1006,23 @@ const DashboardEngagements = () => {
                               </Stack>
                             )}
 
-                            <Stack direction='row' flexWrap='wrap' useFlexGap spacing={1} sx={{ mt: 0.75 }}>
+                            <Stack
+                              direction='row'
+                              flexWrap='wrap'
+                              useFlexGap
+                              spacing={1}
+                              sx={{ mt: 0.75 }}
+                            >
                               <Button
                                 size='small'
                                 variant='text'
                                 color='error'
-                                startIcon={<DeleteIcon sx={{ fontSize: '1rem' }} />}
-                                onClick={() => updateEngagement(eng.id, { shift: '' })}
+                                startIcon={
+                                  <DeleteIcon sx={{ fontSize: '1rem' }} />
+                                }
+                                onClick={() =>
+                                  updateEngagement(eng.id, { shift: '' })
+                                }
                                 sx={{
                                   ...relaTextSx,
                                   color: '#b71c1c',
@@ -871,7 +1031,10 @@ const DashboardEngagements = () => {
                                   py: 0.2,
                                   px: 0.3,
                                   minHeight: 24,
-                                  '& .MuiButton-startIcon': { mr: 0.35, ml: -0.25 },
+                                  '& .MuiButton-startIcon': {
+                                    mr: 0.35,
+                                    ml: -0.25,
+                                  },
                                 }}
                               >
                                 Einsatz löschen
@@ -886,213 +1049,304 @@ const DashboardEngagements = () => {
               </Accordion>
             );
           })}
-
         </Stack>
       )}
 
       {(activeTab === 1 || preloadEinsaetzeTab) && (
         <Box sx={{ display: activeTab === 1 ? 'block' : 'none' }}>
-        <Stack spacing={1.5}>
-          <Stack direction='row' justifyContent='space-between' alignItems='center' flexWrap='wrap' useFlexGap spacing={1}>
-            <Typography variant='h6' sx={{ fontWeight: 700, color: '#6a0c00' }}>
-              Einsätze
-            </Typography>
-            <Button variant='contained' size='small' startIcon={<AddIcon />} onClick={handleAddEngagement} sx={relaContainedSx}>
-              Neuer Einsatz
-            </Button>
-          </Stack>
-
-          {orphanEngagements.length > 0 && (
-            <Alert severity='warning'>
-              {orphanEngagements.length} Einsatz
-              {orphanEngagements.length === 1 ? '' : 'e'} ohne gültige Schicht. Bitte
-              einer Schicht zuweisen.
-            </Alert>
-          )}
-
-          {sortedEngagements.length === 0 && (
-            <Alert severity='info'>
-              Noch keine Einsätze vorhanden. Mit „Neuer Einsatz“ kannst du den
-              ersten Einsatz erstellen.
-            </Alert>
-          )}
-
           <Stack spacing={1.5}>
-            {sortedEngagements.map((eng) => {
-              const helpers = Array.isArray(eng.helpers) ? eng.helpers : [];
-              const shift = shiftById.get(eng.shift);
-              return (
-                <Accordion
-                  key={eng.id}
-                  expanded
-                  TransitionProps={{ timeout: 0 }}
-                  disableGutters
-                  elevation={0}
-                  sx={{
-                    border: '1px solid rgba(245, 191, 190, 0.75)',
-                    borderRadius: '14px !important',
-                    '&:before': { display: 'none' },
-                    bgcolor: '#fff',
-                  }}
-                >
-                  <AccordionSummary
+            <Stack
+              direction='row'
+              justifyContent='space-between'
+              alignItems='center'
+              flexWrap='wrap'
+              useFlexGap
+              spacing={1}
+            >
+              <Typography
+                variant='h6'
+                sx={{ fontWeight: 700, color: '#6a0c00' }}
+              >
+                Einsätze
+              </Typography>
+              <Button
+                variant='contained'
+                size='small'
+                startIcon={<AddIcon />}
+                onClick={handleAddEngagement}
+                sx={relaContainedSx}
+              >
+                Neuer Einsatz
+              </Button>
+            </Stack>
+
+            {orphanEngagements.length > 0 && (
+              <Alert severity='warning'>
+                {orphanEngagements.length} Einsatz
+                {orphanEngagements.length === 1 ? '' : 'e'} ohne gültige
+                Schicht. Bitte einer Schicht zuweisen.
+              </Alert>
+            )}
+
+            {sortedEngagements.length === 0 && (
+              <Alert severity='info'>
+                Noch keine Einsätze vorhanden. Mit „Neuer Einsatz“ kannst du den
+                ersten Einsatz erstellen.
+              </Alert>
+            )}
+
+            <Stack spacing={1.5}>
+              {sortedEngagements.map((eng) => {
+                const helpers = Array.isArray(eng.helpers) ? eng.helpers : [];
+                const shift = shiftById.get(eng.shift);
+                return (
+                  <Accordion
+                    key={`all-eng-${eng.id}`}
+                    expanded
+                    TransitionProps={{ timeout: 0 }}
+                    disableGutters
+                    elevation={0}
                     sx={{
-                      bgcolor: 'rgba(97, 7, 0, 0.035)',
-                      px: 2,
-                      py: 0.45,
-                      borderRadius: '14px',
+                      border: '1px solid rgba(245, 191, 190, 0.75)',
+                      borderRadius: '14px !important',
+                      '&:before': { display: 'none' },
+                      bgcolor: '#fff',
                     }}
                   >
-                    <Stack direction='row' justifyContent='space-between' sx={{ width: '100%' }} flexWrap='wrap' useFlexGap spacing={1}>
-                      <Box>
-                        <Typography
-                          variant='subtitle2'
+                    <AccordionSummary
+                      sx={{
+                        bgcolor: 'rgba(97, 7, 0, 0.035)',
+                        px: 2,
+                        py: 0.45,
+                        borderRadius: '14px',
+                      }}
+                    >
+                      <Stack
+                        direction='row'
+                        justifyContent='space-between'
+                        sx={{ width: '100%' }}
+                        flexWrap='wrap'
+                        useFlexGap
+                        spacing={1}
+                      >
+                        <Box>
+                          <Typography
+                            variant='subtitle2'
+                            sx={{
+                              fontWeight: 800,
+                              background:
+                                'linear-gradient(135deg, #6a0c00 0%, #b71c1c 100%)',
+                              WebkitBackgroundClip: 'text',
+                              WebkitTextFillColor: 'transparent',
+                              backgroundClip: 'text',
+                            }}
+                          >
+                            {jobTypeName(eng.jobType)}
+                          </Typography>
+                          <Typography variant='caption' color='text.secondary'>
+                            {formatShiftWindow(
+                              shift?.startDate,
+                              shift?.endDate,
+                            )}
+                          </Typography>
+                        </Box>
+                        <Chip
+                          size='small'
+                          label={`${helpers.length} Helfende`}
+                        />
+                      </Stack>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ pt: 0.5 }}>
+                      <Stack
+                        direction={{ xs: 'column', md: 'row' }}
+                        spacing={1}
+                        sx={{ mb: 1.1 }}
+                      >
+                        <FormControl
+                          size='small'
+                          sx={{ ...relaFieldSx, minWidth: 180 }}
+                        >
+                          <InputLabel>Jobtyp</InputLabel>
+                          <Select
+                            label='Jobtyp'
+                            value={eng.jobType || ''}
+                            onChange={(e) =>
+                              updateEngagement(eng.id, {
+                                jobType: e.target.value,
+                              })
+                            }
+                          >
+                            <MenuItem value=''>Nicht zugewiesen</MenuItem>
+                            {jobTypes.map((jt) => (
+                              <MenuItem key={jt.id} value={jt.id}>
+                                {jt.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                        <FormControl
+                          size='small'
+                          sx={{ ...relaFieldSx, minWidth: 180 }}
+                        >
+                          <InputLabel>Schicht</InputLabel>
+                          <Select
+                            label='Schicht'
+                            value={eng.shift || ''}
+                            onChange={(e) =>
+                              updateEngagement(eng.id, {
+                                shift: e.target.value,
+                              })
+                            }
+                          >
+                            <MenuItem value=''>Nicht zugewiesen</MenuItem>
+                            {sortedShifts.map((s) => (
+                              <MenuItem key={s.id} value={s.id}>
+                                {s.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                        <FormControl
+                          size='small'
+                          sx={{ ...relaFieldSx, minWidth: 180 }}
+                        >
+                          <InputLabel>Ort</InputLabel>
+                          <Select
+                            label='Ort'
+                            value={eng.location || ''}
+                            onChange={(e) =>
+                              updateEngagement(eng.id, {
+                                location: e.target.value,
+                              })
+                            }
+                          >
+                            <MenuItem value=''>Nicht zugewiesen</MenuItem>
+                            {locations.map((loc) => (
+                              <MenuItem key={loc.id} value={loc.id}>
+                                {loc.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                        <FormControl
+                          size='small'
+                          sx={{ ...relaFieldSx, minWidth: 200 }}
+                        >
+                          <InputLabel>Organisation</InputLabel>
+                          <Select
+                            label='Organisation'
+                            value={eng.organization || ''}
+                            onChange={(e) =>
+                              updateEngagement(eng.id, {
+                                organization: e.target.value,
+                              })
+                            }
+                          >
+                            <MenuItem value=''>Nicht zugewiesen</MenuItem>
+                            {organizations.map((org) => (
+                              <MenuItem key={org.id} value={org.id}>
+                                {org.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                        <TextField
+                          size='small'
+                          type='number'
+                          label='Anzahl Helfende'
+                          value={eng.targetNumberOfHelpers || '1'}
+                          onChange={(e) => {
+                            const newValue = e.target.value;
+                            const numValue = Number.parseInt(newValue, 10);
+                            if (
+                              newValue === '' ||
+                              (Number.isFinite(numValue) && numValue > 0)
+                            ) {
+                              updateEngagement(eng.id, {
+                                targetNumberOfHelpers: newValue || '1',
+                              });
+                            }
+                          }}
+                          inputProps={{
+                            min: 1,
+                            step: 1,
+                          }}
+                          sx={{ ...relaFieldSx, minWidth: 140 }}
+                        />
+                        <Button
+                          size='small'
+                          variant='outlined'
+                          color='error'
+                          startIcon={<DeleteIcon />}
+                          onClick={() => handleDeleteEngagement(eng)}
                           sx={{
-                            fontWeight: 800,
-                            background: 'linear-gradient(135deg, #6a0c00 0%, #b71c1c 100%)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            backgroundClip: 'text',
+                            ...relaOutlinedSx,
+                            color: '#b71c1c',
+                            borderColor: 'rgba(183, 28, 28, 0.35)',
                           }}
                         >
-                          {jobTypeName(eng.jobType)}
-                        </Typography>
-                        <Typography variant='caption' color='text.secondary'>
-                          {formatShiftWindow(shift?.startDate, shift?.endDate)}
-                        </Typography>
-                      </Box>
-                      <Chip size='small' label={`${helpers.length} Helfende`} />
-                    </Stack>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ pt: 0.5 }}>
-                    <Stack
-                      direction='row'
-                      justifyContent='flex-end'
-                      alignItems='center'
-                      flexWrap='wrap'
-                      useFlexGap
-                      spacing={1}
-                      sx={{ mb: 1 }}
-                    >
-                      <Button size='small' variant='text' onClick={() => navigate(`/dashboard/engagement/${eng.id}`)} sx={relaTextSx}>
-                        Detail bearbeiten
-                      </Button>
-                      <Button
-                        size='small'
-                        variant='outlined'
-                        color='error'
-                        startIcon={<DeleteIcon />}
-                        onClick={() => handleDeleteEngagement(eng)}
-                        sx={{
-                          ...relaOutlinedSx,
-                          color: '#b71c1c',
-                          borderColor: 'rgba(183, 28, 28, 0.35)',
-                        }}
+                          Einsatz löschen
+                        </Button>
+                      </Stack>
+
+                      <Typography
+                        variant='caption'
+                        color='text.secondary'
+                        sx={{ fontWeight: 600 }}
                       >
-                        Einsatz löschen
-                      </Button>
-                    </Stack>
-
-                    <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} sx={{ mb: 1.1 }}>
-                      <FormControl size='small' sx={{ ...relaFieldSx, minWidth: 180 }}>
-                        <InputLabel>Jobtyp</InputLabel>
-                        <Select
-                          label='Jobtyp'
-                          value={eng.jobType || ''}
-                          onChange={(e) => updateEngagement(eng.id, { jobType: e.target.value })}
-                        >
-                          <MenuItem value=''>Nicht zugewiesen</MenuItem>
-                          {jobTypes.map((jt) => (
-                            <MenuItem key={jt.id} value={jt.id}>
-                              {jt.name}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                      <FormControl size='small' sx={{ ...relaFieldSx, minWidth: 180 }}>
-                        <InputLabel>Schicht</InputLabel>
-                        <Select
-                          label='Schicht'
-                          value={eng.shift || ''}
-                          onChange={(e) => updateEngagement(eng.id, { shift: e.target.value })}
-                        >
-                          <MenuItem value=''>Nicht zugewiesen</MenuItem>
-                          {sortedShifts.map((s) => (
-                            <MenuItem key={s.id} value={s.id}>
-                              {s.name}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                      <FormControl size='small' sx={{ ...relaFieldSx, minWidth: 180 }}>
-                        <InputLabel>Ort</InputLabel>
-                        <Select
-                          label='Ort'
-                          value={eng.location || ''}
-                          onChange={(e) => updateEngagement(eng.id, { location: e.target.value })}
-                        >
-                          <MenuItem value=''>Nicht zugewiesen</MenuItem>
-                          {locations.map((loc) => (
-                            <MenuItem key={loc.id} value={loc.id}>
-                              {loc.name}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                      <FormControl size='small' sx={{ ...relaFieldSx, minWidth: 200 }}>
-                        <InputLabel>Organisation</InputLabel>
-                        <Select
-                          label='Organisation'
-                          value={eng.organization || ''}
-                          onChange={(e) => updateEngagement(eng.id, { organization: e.target.value })}
-                        >
-                          <MenuItem value=''>Nicht zugewiesen</MenuItem>
-                          {organizations.map((org) => (
-                            <MenuItem key={org.id} value={org.id}>
-                              {org.name}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Stack>
-
-                    <Typography variant='caption' color='text.secondary' sx={{ fontWeight: 600 }}>
-                      Helfende ({helpers.length} / {parseTargetHelpers(eng.targetNumberOfHelpers)})
-                    </Typography>
-                    <Stack direction='row' spacing={0.75} flexWrap='wrap' useFlexGap sx={{ mt: 0.5, mb: 1 }}>
-                      {helpers.length === 0 ? (
-                        <Typography variant='body2' color='text.secondary'>
-                          Noch niemand angemeldet.
-                        </Typography>
-                      ) : (
-                        helpers.map((uid) => (
-                          <Chip
-                            key={uid}
-                            size='small'
-                            label={userLabelMap.get(uid) || uid}
-                            sx={{
-                              height: 22,
-                              borderRadius: 999,
-                              bgcolor: 'rgba(0,0,0,0.03)',
-                              border: '1px solid rgba(0,0,0,0.08)',
-                              '& .MuiChip-label': { px: 0.75, fontSize: '0.7rem' },
-                            }}
-                          />
-                        ))
-                      )}
-                    </Stack>
-                  </AccordionDetails>
-                </Accordion>
-              );
-            })}
+                        Helfende ({helpers.length} /{' '}
+                        {parseTargetHelpers(eng.targetNumberOfHelpers)})
+                      </Typography>
+                      <Stack
+                        direction='row'
+                        spacing={0.75}
+                        flexWrap='wrap'
+                        useFlexGap
+                        sx={{ mt: 0.5, mb: 1 }}
+                      >
+                        {helpers.length === 0 ? (
+                          <Typography variant='body2' color='text.secondary'>
+                            Noch niemand angemeldet.
+                          </Typography>
+                        ) : (
+                          helpers.map((uid) => (
+                            <Chip
+                              key={`all-eng-${eng.id}-helper-${uid}`}
+                              size='small'
+                              label={userLabelMap.get(uid) || uid}
+                              sx={{
+                                height: 22,
+                                borderRadius: 999,
+                                bgcolor: 'rgba(0,0,0,0.03)',
+                                border: '1px solid rgba(0,0,0,0.08)',
+                                '& .MuiChip-label': {
+                                  px: 0.75,
+                                  fontSize: '0.7rem',
+                                },
+                              }}
+                            />
+                          ))
+                        )}
+                      </Stack>
+                    </AccordionDetails>
+                  </Accordion>
+                );
+              })}
+            </Stack>
           </Stack>
-        </Stack>
         </Box>
       )}
 
       {activeTab === 2 && (
         <Stack spacing={1.5}>
-          <Stack direction='row' justifyContent='space-between' alignItems='center' flexWrap='wrap' useFlexGap spacing={1}>
+          <Stack
+            direction='row'
+            justifyContent='space-between'
+            alignItems='center'
+            flexWrap='wrap'
+            useFlexGap
+            spacing={1}
+          >
             <Typography variant='h6' sx={{ fontWeight: 700, color: '#6a0c00' }}>
               Jobtypen
             </Typography>
@@ -1110,7 +1364,8 @@ const DashboardEngagements = () => {
 
           {jobTypes.length === 0 && (
             <Alert severity='info'>
-              Noch keine Jobtypen. Namen und optional Beschreibung eintragen, dann „Jobtyp anlegen“.
+              Noch keine Jobtypen. Namen und optional Beschreibung eintragen,
+              dann „Jobtyp anlegen“.
             </Alert>
           )}
 
@@ -1126,10 +1381,20 @@ const DashboardEngagements = () => {
               bgcolor: 'rgba(255,255,255,0.96)',
             }}
           >
-            <Typography variant='caption' color='text.secondary' sx={{ fontWeight: 600 }}>
+            <Typography
+              variant='caption'
+              color='text.secondary'
+              sx={{ fontWeight: 600 }}
+            >
               Neuen Jobtyp anlegen
             </Typography>
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} alignItems={{ sm: 'flex-end' }} flexWrap='wrap' useFlexGap>
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={1}
+              alignItems={{ sm: 'flex-end' }}
+              flexWrap='wrap'
+              useFlexGap
+            >
               <TextField
                 size='small'
                 label='Name'
@@ -1147,7 +1412,8 @@ const DashboardEngagements = () => {
               />
             </Stack>
             <Typography variant='body2' color='text.secondary'>
-              In der Liste unten per Doppelklick oder „Bearbeiten“ Name und Beschreibung anpassen.
+              In der Liste unten per Doppelklick oder „Bearbeiten“ Name und
+              Beschreibung anpassen.
             </Typography>
           </Stack>
 
@@ -1185,12 +1451,14 @@ const DashboardEngagements = () => {
                   '& .MuiDataGrid-row:nth-of-type(even)': {
                     backgroundColor: 'rgba(245, 191, 190, 0.06)',
                   },
-                  '& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within': {
-                    outline: '1px solid rgba(106, 12, 0, 0.5)',
-                  },
-                  '& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-columnHeader:focus-within': {
-                    outline: '1px solid rgba(106, 12, 0, 0.5)',
-                  },
+                  '& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within':
+                    {
+                      outline: '1px solid rgba(106, 12, 0, 0.5)',
+                    },
+                  '& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-columnHeader:focus-within':
+                    {
+                      outline: '1px solid rgba(106, 12, 0, 0.5)',
+                    },
                   '& .MuiDataGrid-row.Mui-selected': {
                     backgroundColor: 'rgba(245, 191, 190, 0.22)',
                   },
