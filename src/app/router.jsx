@@ -2,6 +2,9 @@ import { Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
 
 import DashboardEngagement from '../features/engagements/pages/Dashboard/Engagement/DashboardEngagement';
 import DashboardEngagementDetail from '../features/engagements/pages/Dashboard/Engagement/DashboardEngagementDetail';
+import SchichtenTab from '../features/engagements/pages/Dashboard/Engagement/SchichtenTab';
+import EinsaetzeTab from '../features/engagements/pages/Dashboard/Engagement/EinsaetzeTab';
+import JobtypenTab from '../features/engagements/pages/Dashboard/Engagement/JobtypenTab';
 import DashboardOrganization from '../features/engagements/pages/Dashboard/Organization/DashboardOrganization';
 import DashboardOrganizationDetail from '../features/engagements/pages/Dashboard/Organization/DashboardOrganizationDetail';
 import DashboardOverview from '../features/engagements/pages/Dashboard/Overview/DashboardOverview';
@@ -135,7 +138,9 @@ const Router = () => {
                   <DashboardEngagement />
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route index element={<SchichtenTab />} />
+            </Route>
             <Route
               path='/dashboard/engagement/:engagementId'
               element={
